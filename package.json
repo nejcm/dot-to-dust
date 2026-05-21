@@ -2,7 +2,7 @@
   "name": "dot-to-dust",
   "version": "1.0.0",
   "private": true,
-  "license": "MIT",
+  "license": "UNLICENSED",
   "packageManager": "pnpm@10.33.3",
   "engines": {
     "node": "^22.13.0 || >=24"

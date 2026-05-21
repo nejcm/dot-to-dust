@@ -49,4 +49,4 @@ Clone Spendwise tooling where applicable (ESLint, Husky, commitlint, Jest config
 
 ## License
 
-MIT
+Proprietary. All rights reserved.
