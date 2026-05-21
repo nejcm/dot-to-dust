@@ -1,5 +1,9 @@
-import { View } from 'react-native';
+import { Redirect } from 'expo-router';
+
+import { usePreferencesStore } from '@/lib/storage/preferences-store';
 
 export default function Index() {
-  return <View className="flex-1" />;
+  const dob = usePreferencesStore((s) => s.dob);
+
+  return <Redirect href={dob === null ? '/(onboarding)' : '/(app)'} />;
 }

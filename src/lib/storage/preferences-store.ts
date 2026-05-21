@@ -4,9 +4,31 @@ import { create } from 'zustand';
 import { mmkv } from './mmkv';
 
 const STORAGE_KEY = 'preferences';
+const CIVIL_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] as const;
+
+function isLeapYear(year: number): boolean {
+  return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+}
+
+function isCivilDate(value: string): boolean {
+  if (!CIVIL_DATE_PATTERN.test(value)) return false;
+
+  const [yearRaw, monthRaw, dayRaw] = value.split('-');
+  const year = Number(yearRaw);
+  const month = Number(monthRaw);
+  const day = Number(dayRaw);
+
+  if (month < 1 || month > 12) return false;
+
+  const maxDay = month === 2 && isLeapYear(year) ? 29 : DAYS_IN_MONTH[month - 1];
+  return day >= 1 && day <= maxDay;
+}
+
+const dobSchema = z.string().refine(isCivilDate).nullable().default(null);
 
 const prefsSchema = z.object({
-  dob: z.string().nullable().default(null),
+  dob: dobSchema,
   theme: z.enum(['light', 'dark', 'system']).default('system'),
   defaultView: z.enum(['weeks', 'months', 'years']).default('weeks'),
 });
@@ -21,7 +43,11 @@ function loadStoredPrefs(): Prefs {
       if (parsed.success) return parsed.data;
     }
   }
-  catch {}
+  catch (error) {
+    if (__DEV__) {
+      console.warn('Failed to load preferences from MMKV.', error);
+    }
+  }
   return prefsSchema.parse({});
 }
 

@@ -11,7 +11,7 @@ import { useTheme } from '@/lib/theme/use-theme';
 
 import '@/global.css';
 
-SplashScreen.preventAutoHideAsync();
+void SplashScreen.preventAutoHideAsync().catch(() => {});
 
 function RootNavigator() {
   const { colorScheme } = useTheme();

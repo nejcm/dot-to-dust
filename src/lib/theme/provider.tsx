@@ -1,7 +1,8 @@
 import type { ColorTokens } from './tokens';
-import { createContext } from 'react';
+import { createContext, useEffect } from 'react';
 
 import { useColorScheme } from 'react-native';
+import { Uniwind } from 'uniwind';
 
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
 import { darkTokens, lightTokens } from './tokens';
@@ -24,6 +25,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const systemColorScheme: 'light' | 'dark'
     = systemRaw === 'dark' ? 'dark' : 'light';
   const themePref = usePreferencesStore((s) => s.theme);
+
+  useEffect(() => {
+    Uniwind.setTheme(themePref);
+  }, [themePref]);
 
   const colorScheme: 'light' | 'dark'
     = themePref === 'system' ? systemColorScheme : themePref;

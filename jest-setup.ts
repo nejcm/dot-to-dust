@@ -3,6 +3,32 @@
 
 import { Uniwind } from 'uniwind';
 
+const mockMmkvData = new Map<string, string | number | boolean>();
+const mockMmkvInstance = {
+  set: jest.fn((key: string, value: string | number | boolean) => {
+    mockMmkvData.set(key, value);
+  }),
+  getString: jest.fn((key: string) => {
+    const value = mockMmkvData.get(key);
+    return typeof value === 'string' ? value : undefined;
+  }),
+  getNumber: jest.fn((key: string) => {
+    const value = mockMmkvData.get(key);
+    return typeof value === 'number' ? value : undefined;
+  }),
+  getBoolean: jest.fn((key: string) => {
+    const value = mockMmkvData.get(key);
+    return typeof value === 'boolean' ? value : undefined;
+  }),
+  delete: jest.fn((key: string) => {
+    mockMmkvData.delete(key);
+  }),
+  clearAll: jest.fn(() => {
+    mockMmkvData.clear();
+  }),
+  getAllKeys: jest.fn(() => [...mockMmkvData.keys()]),
+};
+
 // Suppress CSS variable resolution warnings in the Jest RN environment.
 Uniwind.updateCSSVariables('light', {
   '--color-background': '#faf8f5',
@@ -81,15 +107,12 @@ jest.mock('expo-localization', () => ({
 
 // Mock react-native-mmkv
 jest.mock('react-native-mmkv', () => ({
-  MMKV: jest.fn(() => ({
-    set: jest.fn(),
-    getString: jest.fn(),
-    getNumber: jest.fn(),
-    getBoolean: jest.fn(),
-    delete: jest.fn(),
-    clearAll: jest.fn(),
-    getAllKeys: jest.fn(() => []),
-  })),
+  __mockMmkvClear: jest.fn(() => mockMmkvData.clear()),
+  __mockMmkvSetString: jest.fn((key: string, value: string) => {
+    mockMmkvData.set(key, value);
+  }),
+  createMMKV: jest.fn(() => mockMmkvInstance),
+  MMKV: jest.fn(() => mockMmkvInstance),
   useMMKVString: jest.fn((_key: string) => [undefined, jest.fn()]),
   useMMKVNumber: jest.fn((_key: string) => [undefined, jest.fn()]),
   useMMKVBoolean: jest.fn((_key: string) => [undefined, jest.fn()]),
