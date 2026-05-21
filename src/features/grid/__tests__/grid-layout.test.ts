@@ -44,4 +44,21 @@ describe('computeGridLayout', () => {
     expect(layout.cols).toBe(10);
     expect(layout.rows).toBe(8);
   });
+
+  // Regression: a tight canvas can push the floor of dotSize*GAP_RATIO to 0,
+  // making the minimum-1 gap overflow the canvas dimension. The algorithm must
+  // step dotSize down until the integer pair fits.
+  it('does not overflow on tight canvases where gap=1 exceeds the ratio bound', () => {
+    const layout = computeGridLayout('weeks', 375, 390);
+    expect(fitsCanvas(layout, 375, 390)).toBe(true);
+  });
+
+  it.each([
+    { view: 'weeks' as const, width: 250, height: 250 },
+    { view: 'months' as const, width: 200, height: 300 },
+    { view: 'years' as const, width: 80, height: 80 },
+  ])('view=$view at $width × $height fits without overflow', ({ view, width, height }) => {
+    const layout = computeGridLayout(view, width, height);
+    expect(fitsCanvas(layout, width, height)).toBe(true);
+  });
 });
