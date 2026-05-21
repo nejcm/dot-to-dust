@@ -1,5 +1,6 @@
 {
   "common": {
-    "placeholder": "placeholder"
+    "placeholder": "placeholder",
+    "weeksRemaining": "{count, plural, one {# week remaining} other {# weeks remaining}}"
   }
 }

@@ -20,7 +20,7 @@ This plan adopts the conventions and tooling already proven in the sibling **Spe
 | Color encoding | **5-stage life gradient** on past+future dots only differs by spent/unspent; future is one muted color (no stage tinting) |
 | Life stages | **0–11 · 12–22 · 23–39 · 40–59 · 60–80** (floor by completed-year) |
 | Palette signal | **Lightness-driven** — stages encoded by OKLCH L first; hue/chroma for warmth, not signal. No CVD toggle. |
-| Headline | "X weeks/months/years **ahead**" — matches active view. Bonus time: `+X` count-up. ICU plurals in en+de. |
+| Headline | "X weeks/months/years **ahead**" — matches active view. Bonus time: `+X` count-up. ICU plurals for count-bearing English strings. |
 | Visual weight | **Grid-as-hero** — grid fills primary canvas; headline is slim Inter caption; segmented control + caption top-docked. |
 | Today's dot | Last-lived stage color + ring. **Pulse on Weeks/Months**; **static ring on Years**. No ring at all in bonus time. |
 | Screens | **3**: Welcome+Onboarding · Main · Settings |
@@ -60,7 +60,7 @@ This plan adopts the conventions and tooling already proven in the sibling **Spe
 
 ### i18n
 - **i18next** + **react-i18next** + **expo-localization**
-- Languages v1: **en**, **de** (parity required, mirrors Spendwise). Bonus-time + welcome copy flagged for native-de review.
+- Languages v1: **en** only. Keep i18next/react-i18next/expo-localization in place so more locales can be added later.
 - ICU plural rules across all count-bearing strings.
 
 ### Utilities
@@ -152,8 +152,7 @@ dot-to-dust/
 │   │   └── a11y/
 │   │       └── use-reduced-motion.ts   # consumed by pulse + view-switch
 │   ├── translations/
-│   │   ├── en.json
-│   │   └── de.json
+│   │   └── en.json
 │   └── global.css                      # @import 'uniwind'
 ├── app.config.ts
 ├── babel.config.js
@@ -264,7 +263,7 @@ Route transitions are not touched here — the OS attenuates them when the flag 
 
 1. **Scaffold** — `pnpm create expo-app dot-to-dust`, then port Spendwise's `package.json` deps/scripts, `eslint.config.mjs`, `tsconfig.json`, `babel.config.js`, `metro.config.js`, `commitlint.config.js`, `lint-staged.config.js`, `jest.config.js`, `jest-setup.ts`, husky hooks, `env.ts` skeleton, `eas.json`. Verify `pnpm verify` is green on the empty skeleton.
 2. **Theme + tokens + Uniwind** — `global.css` with OKLCH variables for light/dark, Fraunces + Inter via `expo-font`, theme provider in `_layout.tsx`. Defaults `theme = system`.
-3. **i18n** — `en.json` + `de.json` with all strings (welcome, picker, headline, bonus-time copy, settings). ICU plurals on every count-bearing string. ESLint i18n-json plugin enforces parity.
+3. **i18n** — `en.json` with all strings (welcome, picker, headline, bonus-time copy, settings). ICU plurals on every count-bearing string. Keep i18n setup and translation linting in place for future locales.
 4. **`life-math.ts` + tests first (TDD)** — pure, full coverage. Civil-date semantics; bonus-time helpers; new stage boundaries.
 5. **`grid-layout.ts` + tests** — fit-to-screen math for all 3 views.
 6. **Onboarding** —
@@ -316,7 +315,6 @@ Manual checklist:
 ## Pre-ship admin (not code; sign-off only)
 
 - **App name trademark check** on "Dot to Dust" in iOS/Android app stores and target jurisdictions before production EAS submission.
-- **Native-de copy review** for bonus-time string (`jede Woche ist Zugabe`), welcome headline (`Ein Leben, auf einen Blick`), and all ICU plural forms before TestFlight/Play Internal release.
 
 ## Out of scope (defer, do not build)
 
@@ -325,7 +323,7 @@ Manual checklist:
 - Days view
 - Tagging individual dots with life events
 - Account / paid tier / IAP themes
-- Languages beyond en + de
+- Languages beyond English
 - Color-blind specific palette toggle (palette is lightness-driven by design)
 - Bespoke screen-reader grid labeling
 - Custom date picker UI (platform defaults are sufficient)

@@ -4,7 +4,7 @@
 
 ## Problem Statement
 
-People in the target audience (en/de, smartphone-native) intellectually know their life is finite but rarely *feel* it. Existing memento-mori tools fall into two failure modes:
+People in the target audience (English-speaking, smartphone-native) intellectually know their life is finite but rarely *feel* it. Existing memento-mori tools fall into two failure modes:
 
 - **Calculator-grade utility** — "weeks lived" counters that present a number and stop. The number is forgettable; the app gets uninstalled the same week.
 - **Generic productivity skins** — life-grid widgets bolted onto habit trackers or journaling apps, where the grid is one feature competing for attention with checklists, streaks, and tags.
@@ -47,13 +47,12 @@ The product's distinguishing commitments:
 21. As a user who mistyped my date of birth, I want to correct it from the Settings DOB row, so I do not have to reinstall the app.
 22. As a user, I want my date of birth and preferences to survive a phone upgrade or OS restore via iCloud/Google Auto Backup, so I do not have to re-onboard on a new device.
 23. As a user, I want the app to remain readable when I increase the OS text size, so accessibility settings affect non-grid text appropriately.
-24. As a German-speaking user, I want every string — including pluralized counts and the bonus-time headline — to read naturally in German, not as a literal English translation.
-25. As a user, I want the app to launch from cold without flashing the welcome screen if I have already onboarded, so the first frame after a tap is correct.
-26. As a user, I want no notifications, no daily streaks, no account, no in-app purchases, and no ads, so the app remains a quiet object I trust on my home screen.
-27. As a user, I want the future part of the grid to be a single muted color, so the visual contrast between *lived* and *unlived* time is the dominant signal.
-28. As a user travelling across timezones, I want today's dot to track the local civil date rather than UTC, so the "today" marker stays correct in the place I am.
-29. As a user, I want a 240ms cross-fade between views when toggling, so transitions feel intentional rather than abrupt — and zero-duration when reduced-motion is on.
-30. As a designer of my own home screen, I want the headline subordinated to the grid, so what I read first is the visualization, not a number.
+24. As a user, I want the app to launch from cold without flashing the welcome screen if I have already onboarded, so the first frame after a tap is correct.
+25. As a user, I want no notifications, no daily streaks, no account, no in-app purchases, and no ads, so the app remains a quiet object I trust on my home screen.
+26. As a user, I want the future part of the grid to be a single muted color, so the visual contrast between *lived* and *unlived* time is the dominant signal.
+27. As a user travelling across timezones, I want today's dot to track the local civil date rather than UTC, so the "today" marker stays correct in the place I am.
+28. As a user, I want a 240ms cross-fade between views when toggling, so transitions feel intentional rather than abrupt — and zero-duration when reduced-motion is on.
+29. As a designer of my own home screen, I want the headline subordinated to the grid, so what I read first is the visualization, not a number.
 
 ## Implementation Decisions
 
@@ -85,7 +84,7 @@ A fifth narrower module — **`use-reduced-motion`** — exposes a single boolea
 - **OS backup is in scope** (iCloud, Android Auto Backup). The phrase "device-local only" in this product refers to the absence of a cloud sync service we operate, not to the absence of OS backup.
 - **Reduced-motion gates pulse + view-switch cross-fade.** Pulse paints at constant 0.8 opacity; view-switch becomes an instant key-swap (still mount/unmount, just no tween). Route transitions defer to OS-level attenuation.
 - **The pulse animation lives entirely inside Skia**, driven by Skia's own clock (`useClock` / `useComputedValue`). Reanimated is not bridged into the pulse path. Reanimated remains the owner of the segmented-control thumb and the view-switch cross-fade — two animation systems, clean boundary, no shared state.
-- **Headline framing is "ahead", not "left".** ICU plurals in both en and de. Bonus-time copy is `every week is bonus` / `jede Woche ist Zugabe` (German copy flagged for native review before release).
+- **Headline framing is "ahead", not "left".** ICU plurals for count-bearing English strings. Bonus-time copy is `every week is bonus`.
 - **Grid is the visual hero**; headline is a slim Inter caption docked at the top alongside the segmented control. Skia owns the rest of the canvas.
 - **Defaults on first launch**: theme = system, defaultView = weeks, dob = null.
 
@@ -134,7 +133,7 @@ End-to-end coverage is one Maestro happy path covering: fresh install → welcom
 - Days view
 - Tagging individual dots with life events
 - Account / paid tier / IAP themes
-- Languages beyond en + de
+- Languages beyond English
 - Color-blind specific palette toggle (palette is lightness-driven by design)
 - Bespoke screen-reader grid labeling
 - Custom date picker UI
@@ -145,5 +144,5 @@ End-to-end coverage is one Maestro happy path covering: fresh install → welcom
 ## Further Notes
 
 - **Publishing status**: this PRD lives locally as `plans/PRD.md`. The project is not yet a git repository and has no configured issue tracker, so the standard `/to-prd` "publish to issue tracker + apply `ready-for-agent`" step did not run. When the repo is initialized, this PRD should be filed as the first issue against the new repository.
-- **Pre-ship admin** (not engineering work): trademark check on "Dot to Dust" before production EAS submission; native-de copy review for bonus-time string, welcome headline, and ICU plural forms before TestFlight/Play Internal release.
+- **Pre-ship admin** (not engineering work): trademark check on "Dot to Dust" before production EAS submission.
 - **Reference implementation**: tooling, scripts, and project structure mirror the sibling Spendwise project at `C:\Work\Personal\Spendwise`. Diverge only where documented (no `@date-fns/utc`, no SQLite, Skia clock instead of Reanimated for the pulse).

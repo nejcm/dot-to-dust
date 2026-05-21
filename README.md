@@ -46,7 +46,6 @@ Clone Spendwise tooling where applicable (ESLint, Husky, commitlint, Jest config
 ## Pre-Ship Admin
 
 - [ ] Trademark check: "Dot to Dust" in iOS/Android app stores + target jurisdictions
-- [ ] Native-de copy review: bonus-time string, welcome headline, ICU plurals
 
 ## License
 

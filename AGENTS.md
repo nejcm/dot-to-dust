@@ -9,7 +9,7 @@ A mobile app that visualizes a user's life as a grid of colored dots. Inspired b
 - `src/features/onboarding/` — DOB picker component
 - `src/features/settings/` — settings row components
 - `src/lib/` — storage, theme, i18n, a11y
-- `src/translations/` — en.json + de.json (must be in parity)
+- `src/translations/` — en.json only for now; keep i18n tooling ready for future locales
 - `plans/` — PRD and implementation plan (read-only reference)
 
 ## Key invariants
@@ -37,4 +37,4 @@ pnpm knip:check   # dead code scan
 - Filenames: kebab-case enforced by ESLint
 - Path alias: `@/` → `src/`
 - Conventional commits enforced by commitlint
-- All count-bearing strings use ICU plural rules in both en and de
+- All count-bearing strings use ICU plural rules

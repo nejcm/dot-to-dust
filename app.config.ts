@@ -6,8 +6,7 @@ import 'tsx/cjs';
 import Env from './env';
 
 const EXPO_ACCOUNT_OWNER = 'ncncm';
-// Set after creating the EAS project via `eas project:init`
-const EAS_PROJECT_ID = '';
+const EAS_PROJECT_ID = process.env.EAS_PROJECT_ID;
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
@@ -18,12 +17,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: 'dot-to-dust',
   version: Env.EXPO_PUBLIC_VERSION.toString(),
   orientation: 'portrait',
-  icon: './assets/icon.png',
   userInterfaceStyle: 'automatic',
-  updates: {
-    fallbackToCacheTimeout: 0,
-    url: `https://u.expo.dev/${EAS_PROJECT_ID}`,
-  },
+  ...(EAS_PROJECT_ID
+    ? {
+        updates: {
+          fallbackToCacheTimeout: 0,
+          url: `https://u.expo.dev/${EAS_PROJECT_ID}`,
+        },
+      }
+    : {}),
   assetBundlePatterns: ['**/*'],
   ios: {
     supportsTablet: false,
@@ -36,14 +38,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     typedRoutes: true,
   },
   android: {
-    adaptiveIcon: {
-      foregroundImage: './assets/icon.png',
-      backgroundColor: '#faf8f5',
-    },
     package: Env.EXPO_PUBLIC_PACKAGE,
   },
   web: {
-    favicon: './assets/icon.png',
     bundler: 'metro',
   },
   plugins: [
@@ -97,11 +94,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ],
   ],
-  extra: {
-    eas: {
-      projectId: EAS_PROJECT_ID,
-    },
-  },
+  ...(EAS_PROJECT_ID
+    ? {
+        extra: {
+          eas: {
+            projectId: EAS_PROJECT_ID,
+          },
+        },
+      }
+    : {}),
   runtimeVersion: {
     policy: 'appVersion',
   },
