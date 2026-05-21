@@ -57,12 +57,28 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       {
         ios: {
           fonts: [
+            'node_modules/@expo-google-fonts/fraunces/300Light/Fraunces_300Light.ttf',
+            'node_modules/@expo-google-fonts/fraunces/300Light_Italic/Fraunces_300Light_Italic.ttf',
             'node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf',
             'node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.ttf',
           ],
         },
         android: {
           fonts: [
+            {
+              fontFamily: 'Fraunces',
+              fontDefinitions: [
+                {
+                  path: 'node_modules/@expo-google-fonts/fraunces/300Light/Fraunces_300Light.ttf',
+                  weight: 300,
+                },
+                {
+                  path: 'node_modules/@expo-google-fonts/fraunces/300Light_Italic/Fraunces_300Light_Italic.ttf',
+                  weight: 300,
+                  style: 'italic',
+                },
+              ],
+            },
             {
               fontFamily: 'Inter',
               fontDefinitions: [

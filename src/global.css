@@ -1,1 +1,64 @@
+@import 'tailwindcss/theme.css';
 @import 'uniwind';
+
+/* ─── Light mode ─────────────────────────────────────────── */
+:root {
+  --color-bg: oklch(97% 0.01 80);
+  --color-text: oklch(22% 0.02 80);
+
+  /* 5-stage life gradient — lightness carries the signal */
+  --color-stage-0: oklch(35% 0.08 55);
+  --color-stage-1: oklch(45% 0.10 52);
+  --color-stage-2: oklch(55% 0.12 48);
+  --color-stage-3: oklch(65% 0.10 55);
+  --color-stage-4: oklch(75% 0.08 60);
+
+  --color-dot-future: oklch(90% 0.005 80);
+  --color-accent: oklch(55% 0.18 30);
+}
+
+/* ─── Dark mode ──────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: oklch(12% 0.01 80);
+    --color-text: oklch(92% 0.01 80);
+
+    --color-stage-0: oklch(45% 0.08 55);
+    --color-stage-1: oklch(55% 0.10 52);
+    --color-stage-2: oklch(65% 0.12 48);
+    --color-stage-3: oklch(73% 0.10 55);
+    --color-stage-4: oklch(82% 0.08 60);
+
+    --color-dot-future: oklch(22% 0.008 80);
+    --color-accent: oklch(62% 0.18 30);
+  }
+}
+
+/* Class-based dark override (user-forced dark from settings) */
+.dark {
+  --color-bg: oklch(12% 0.01 80);
+  --color-text: oklch(92% 0.01 80);
+
+  --color-stage-0: oklch(45% 0.08 55);
+  --color-stage-1: oklch(55% 0.10 52);
+  --color-stage-2: oklch(65% 0.12 48);
+  --color-stage-3: oklch(73% 0.10 55);
+  --color-stage-4: oklch(82% 0.08 60);
+
+  --color-dot-future: oklch(22% 0.008 80);
+  --color-accent: oklch(62% 0.18 30);
+}
+
+.light {
+  --color-bg: oklch(97% 0.01 80);
+  --color-text: oklch(22% 0.02 80);
+
+  --color-stage-0: oklch(35% 0.08 55);
+  --color-stage-1: oklch(45% 0.10 52);
+  --color-stage-2: oklch(55% 0.12 48);
+  --color-stage-3: oklch(65% 0.10 55);
+  --color-stage-4: oklch(75% 0.08 60);
+
+  --color-dot-future: oklch(90% 0.005 80);
+  --color-accent: oklch(55% 0.18 30);
+}
