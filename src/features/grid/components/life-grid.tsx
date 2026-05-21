@@ -46,28 +46,14 @@ export function LifeGrid({ view, dob, today, width, height }: LifeGridProps) {
                 cx={cx}
                 cy={cy}
                 r={radius}
-                color={tokens.dotFuture}
+                color={tokens.skia.dotFuture}
               />
             );
           }
 
-          const fill = tokens.stages[dot.stage];
+          const fill = tokens.skia.stages[dot.stage];
 
-          return (
-            <Group key={index}>
-              <Circle cx={cx} cy={cy} r={radius} color={fill} />
-              {dot.isToday && (
-                <Circle
-                  cx={cx}
-                  cy={cy}
-                  r={radius + 1.5}
-                  color={tokens.accent}
-                  style="stroke"
-                  strokeWidth={1.5}
-                />
-              )}
-            </Group>
-          );
+          return <Circle key={index} cx={cx} cy={cy} r={radius} color={fill} />;
         })}
       </Group>
     </Canvas>
