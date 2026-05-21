@@ -1,4 +1,4 @@
-import { isCivilDate, parseCivilDate } from '../index';
+import { isCivilDate, isPastOrTodayCivilDate, parseCivilDate, toCivilDateString } from '../index';
 
 describe('isCivilDate', () => {
   it('accepts well-formed calendar dates', () => {
@@ -45,5 +45,23 @@ describe('parseCivilDate', () => {
   it('throws on invalid calendar dates instead of silently normalizing', () => {
     expect(() => parseCivilDate('2023-02-29')).toThrow(/Invalid civil date/);
     expect(() => parseCivilDate('2024-02-31')).toThrow(/Invalid civil date/);
+  });
+});
+
+describe('toCivilDateString', () => {
+  it('formats local dates as civil strings', () => {
+    expect(toCivilDateString(new Date(2024, 0, 2))).toBe('2024-01-02');
+  });
+});
+
+describe('isPastOrTodayCivilDate', () => {
+  it('accepts past and current civil dates', () => {
+    expect(isPastOrTodayCivilDate('2024-01-01', '2024-01-02')).toBe(true);
+    expect(isPastOrTodayCivilDate('2024-01-02', '2024-01-02')).toBe(true);
+  });
+
+  it('rejects future and invalid civil dates', () => {
+    expect(isPastOrTodayCivilDate('2024-01-03', '2024-01-02')).toBe(false);
+    expect(isPastOrTodayCivilDate('2024-02-31', '2024-01-02')).toBe(false);
   });
 });

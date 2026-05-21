@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+
 // Civil date = local-calendar YYYY-MM-DD with no timezone semantics.
 // Single source of truth for parsing and validating civil dates so that the
 // DOB intake (preferences store) and the date math (life-math) cannot drift —
@@ -36,4 +38,16 @@ export function isCivilDate(value: string): boolean {
     if (e instanceof Error) return false;
     throw e; // re-throw non-Error throws so programming errors surface
   }
+}
+
+export function toCivilDateString(date: Date): string {
+  return format(date, 'yyyy-MM-dd');
+}
+
+export function todayCivilDate(): string {
+  return toCivilDateString(new Date());
+}
+
+export function isPastOrTodayCivilDate(value: string, today = todayCivilDate()): boolean {
+  return isCivilDate(value) && value <= today;
 }

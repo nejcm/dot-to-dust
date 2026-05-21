@@ -19,6 +19,12 @@ function loadStore(): typeof usePreferencesStoreType {
 describe('preferences store', () => {
   beforeEach(() => {
     mmkvMock().__mockMmkvClear();
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date(2024, 2, 1));
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it('uses first-launch defaults', () => {
@@ -70,6 +76,29 @@ describe('preferences store', () => {
       theme: 'system',
       defaultView: 'weeks',
     });
+  });
+
+  it('falls back to defaults for future persisted DOB values', () => {
+    mmkvMock().__mockMmkvSetString(
+      STORAGE_KEY,
+      JSON.stringify({ dob: '2024-03-02', theme: 'dark', defaultView: 'months' }),
+    );
+
+    const usePreferencesStore = loadStore();
+
+    expect(usePreferencesStore.getState()).toMatchObject({
+      dob: null,
+      theme: 'system',
+      defaultView: 'weeks',
+    });
+  });
+
+  it('rejects future DOB setter values', () => {
+    const usePreferencesStore = loadStore();
+
+    usePreferencesStore.getState().setDob('2024-03-02');
+
+    expect(usePreferencesStore.getState().dob).toBeNull();
   });
 
   it('persists setter mutations so they survive a reload', () => {

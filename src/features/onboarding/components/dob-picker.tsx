@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { useState } from 'react';
 import { Platform, Pressable, Text, View } from 'react-native';
 
+import { toCivilDateString } from '@/lib/civil-date';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 
 // Reasonable starting position for the picker — 30 years back
@@ -33,7 +34,7 @@ export function DobPicker({ onConfirm }: DobPickerProps) {
   };
 
   const handleConfirm = () => {
-    onConfirm(format(date, 'yyyy-MM-dd'));
+    onConfirm(toCivilDateString(date));
   };
 
   return (

@@ -3,13 +3,15 @@ import { z } from 'zod/v4';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { isCivilDate } from '@/lib/civil-date';
+import { isPastOrTodayCivilDate } from '@/lib/civil-date';
 import { mmkv } from './mmkv';
 
 export const STORAGE_KEY = 'preferences';
 
+const dobSchema = z.string().refine(isPastOrTodayCivilDate).nullable().default(null);
+
 const prefsSchema = z.object({
-  dob: z.string().refine(isCivilDate).nullable().default(null),
+  dob: dobSchema,
   theme: z.enum(['light', 'dark', 'system']).default('system'),
   defaultView: z.enum(['weeks', 'months', 'years']).default('weeks'),
 });
@@ -52,7 +54,7 @@ export const usePreferencesStore = create<PreferencesStore>()(
   persist(
     (set) => ({
       ...prefsSchema.parse({}),
-      setDob: (dob) => set({ dob }),
+      setDob: (dob) => set({ dob: dobSchema.catch(null).parse(dob) }),
       setTheme: (theme) => set({ theme }),
       setDefaultView: (defaultView) => set({ defaultView }),
     }),
