@@ -20,7 +20,7 @@ const mockMmkvInstance = {
     const value = mockMmkvData.get(key);
     return typeof value === 'boolean' ? value : undefined;
   }),
-  delete: jest.fn((key: string) => {
+  remove: jest.fn((key: string) => {
     mockMmkvData.delete(key);
   }),
   clearAll: jest.fn(() => {

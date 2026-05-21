@@ -1,30 +1,13 @@
 import { differenceInMonths, differenceInWeeks, differenceInYears } from 'date-fns';
 
+import { parseCivilDate } from '@/lib/civil-date';
+
 export const LIFE_YEARS = 80;
 export const WEEKS_TOTAL = LIFE_YEARS * 52; // 4160
 export const MONTHS_TOTAL = LIFE_YEARS * 12; // 960
 export const YEARS_TOTAL = LIFE_YEARS; // 80
 
 export type View = 'weeks' | 'months' | 'years';
-
-const CIVIL_DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
-
-// Parse a civil YYYY-MM-DD string as local midnight, avoiding UTC interpretation.
-// Throws on malformed input or invalid calendar dates (e.g. 2023-02-31) instead of
-// silently normalizing — life-math is the single source of truth and must not
-// accept dates that have been quietly shifted to a different day.
-function parseCivilDate(s: string): Date {
-  const match = CIVIL_DATE_RE.exec(s);
-  if (!match) throw new Error(`Invalid civil date format: ${s}`);
-  const y = Number(match[1]);
-  const m = Number(match[2]);
-  const d = Number(match[3]);
-  const date = new Date(y, m - 1, d);
-  if (date.getFullYear() !== y || date.getMonth() !== m - 1 || date.getDate() !== d) {
-    throw new Error(`Invalid civil date: ${s}`);
-  }
-  return date;
-}
 
 export function weeksLived(dob: string, today: string): number {
   return Math.max(0, differenceInWeeks(parseCivilDate(today), parseCivilDate(dob)));

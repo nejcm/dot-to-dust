@@ -1,11 +1,11 @@
 import type { usePreferencesStore as usePreferencesStoreType } from './preferences-store';
+import { STORAGE_KEY } from './preferences-store';
 
 interface MmkvMock {
   __mockMmkvClear: () => void;
   __mockMmkvSetString: (key: string, value: string) => void;
+  __mockMmkvGetString: (key: string) => string | undefined;
 }
-
-const STORAGE_KEY = 'preferences';
 
 function mmkvMock(): MmkvMock {
   return jest.requireMock('react-native-mmkv') as MmkvMock;
@@ -69,6 +69,23 @@ describe('preferences store', () => {
       dob: null,
       theme: 'system',
       defaultView: 'weeks',
+    });
+  });
+
+  it('persists setter mutations so they survive a reload', () => {
+    const usePreferencesStore = loadStore();
+
+    usePreferencesStore.getState().setDob('1990-06-15');
+    usePreferencesStore.getState().setTheme('dark');
+    usePreferencesStore.getState().setDefaultView('months');
+
+    // Simulate an app restart by reloading the module (MMKV mock retains data).
+    const usePreferencesStore2 = loadStore();
+
+    expect(usePreferencesStore2.getState()).toMatchObject({
+      dob: '1990-06-15',
+      theme: 'dark',
+      defaultView: 'months',
     });
   });
 });
