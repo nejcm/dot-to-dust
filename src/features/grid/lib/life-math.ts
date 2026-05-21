@@ -7,10 +7,23 @@ export const YEARS_TOTAL = LIFE_YEARS; // 80
 
 export type View = 'weeks' | 'months' | 'years';
 
+const CIVIL_DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
+
 // Parse a civil YYYY-MM-DD string as local midnight, avoiding UTC interpretation.
+// Throws on malformed input or invalid calendar dates (e.g. 2023-02-31) instead of
+// silently normalizing — life-math is the single source of truth and must not
+// accept dates that have been quietly shifted to a different day.
 function parseCivilDate(s: string): Date {
-  const [y, m, d] = s.split('-').map(Number);
-  return new Date(y, m - 1, d);
+  const match = CIVIL_DATE_RE.exec(s);
+  if (!match) throw new Error(`Invalid civil date format: ${s}`);
+  const y = Number(match[1]);
+  const m = Number(match[2]);
+  const d = Number(match[3]);
+  const date = new Date(y, m - 1, d);
+  if (date.getFullYear() !== y || date.getMonth() !== m - 1 || date.getDate() !== d) {
+    throw new Error(`Invalid civil date: ${s}`);
+  }
+  return date;
 }
 
 export function weeksLived(dob: string, today: string): number {
@@ -53,15 +66,18 @@ export function remainingFor(view: View, dob: string, today: string): number {
   }
 }
 
-// Returns bonus units accrued beyond the 80-year mark. Zero if not in bonus time.
+// Returns bonus units accrued beyond the 80-year mark in the active view's unit.
+// Zero if not in bonus time. Also clamped to zero when bonus time is entered via
+// weeks but the user has not yet crossed the corresponding months/years threshold
+// (4160 weeks ≈ 79.72 years, so years/months can lag for several months).
 export function bonusUnitsAhead(view: View, dob: string, today: string): number {
   if (!isBonusTime(dob, today)) return 0;
   switch (view) {
     case 'weeks':
-      return weeksLived(dob, today) - WEEKS_TOTAL;
+      return Math.max(0, weeksLived(dob, today) - WEEKS_TOTAL);
     case 'months':
-      return monthsLived(dob, today) - MONTHS_TOTAL;
+      return Math.max(0, monthsLived(dob, today) - MONTHS_TOTAL);
     case 'years':
-      return yearsLived(dob, today) - YEARS_TOTAL;
+      return Math.max(0, yearsLived(dob, today) - YEARS_TOTAL);
   }
 }

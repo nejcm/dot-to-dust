@@ -173,21 +173,13 @@ describe('isBonusTime', () => {
     expect(isBonusTime('1939-01-01', '2020-01-01')).toBe(true);
   });
 
-  it('wEEKS_TOTAL is the threshold: lived === WEEKS_TOTAL → bonus time', () => {
-    // Construct a dob and today exactly 4160 weeks apart (29120 days).
-    // Use dob = '2000-01-01'; 29120 days later falls in Sep 2079.
-    // Verify by checking weeksLived, not by pinning the date manually.
-    const dob = '1944-01-03'; // chosen so that 4160 weeks later is a known date
-    const todayAtBoundary = '2023-12-25'; // placeholder; real test uses assertion below
-    const lived = weeksLived(dob, todayAtBoundary);
-    // Build a today that is exactly `lived` weeks after dob for a boundary assertion:
-    // We verify the invariant: if weeksLived >= WEEKS_TOTAL then isBonusTime = true.
-    if (lived >= WEEKS_TOTAL) {
-      expect(isBonusTime(dob, todayAtBoundary)).toBe(true);
-    }
-    else {
-      expect(isBonusTime(dob, todayAtBoundary)).toBe(false);
-    }
+  it('pins the exact 4159/4160 week edge (boundary entry)', () => {
+    // 29119 days from 2000-01-01 = 2079-09-21 = 4159 complete weeks (not yet bonus).
+    expect(weeksLived('2000-01-01', '2079-09-21')).toBe(4159);
+    expect(isBonusTime('2000-01-01', '2079-09-21')).toBe(false);
+    // 29120 days from 2000-01-01 = 2079-09-23 = exactly WEEKS_TOTAL → bonus time enters.
+    expect(weeksLived('2000-01-01', '2079-09-23')).toBe(WEEKS_TOTAL);
+    expect(isBonusTime('2000-01-01', '2079-09-23')).toBe(true);
   });
 });
 
@@ -244,5 +236,44 @@ describe('bonusUnitsAhead', () => {
     expect(bonus).toBeGreaterThan(0);
     const lived = yearsLived('1939-01-01', '2020-01-01');
     expect(bonus).toBe(lived - YEARS_TOTAL);
+  });
+
+  it('clamps to 0 in years view when only the week-threshold has been crossed', () => {
+    // At 4160 weeks the user is only ~79.72 calendar years old — yearsLived = 79,
+    // so the raw computation would be -1. Headline must show +0, not a negative count.
+    expect(isBonusTime('2000-01-01', '2079-09-23')).toBe(true);
+    expect(yearsLived('2000-01-01', '2079-09-23')).toBeLessThan(YEARS_TOTAL);
+    expect(bonusUnitsAhead('years', '2000-01-01', '2079-09-23')).toBe(0);
+  });
+
+  it('clamps to 0 in months view when only the week-threshold has been crossed', () => {
+    // monthsLived at ~79.72 years is well below MONTHS_TOTAL (960).
+    expect(monthsLived('2000-01-01', '2079-09-23')).toBeLessThan(MONTHS_TOTAL);
+    expect(bonusUnitsAhead('months', '2000-01-01', '2079-09-23')).toBe(0);
+  });
+});
+
+// ─── parseCivilDate input validation ─────────────────────────────────────────
+
+describe('civil-date input validation', () => {
+  it('throws on a calendar-invalid date like Feb 31', () => {
+    expect(() => weeksLived('2023-02-31', '2024-01-01')).toThrow(/Invalid civil date/);
+  });
+
+  it('throws on Feb 29 in a non-leap year', () => {
+    expect(() => yearsLived('2023-02-29', '2024-01-01')).toThrow(/Invalid civil date/);
+  });
+
+  it('throws on a malformed date string', () => {
+    expect(() => weeksLived('not-a-date', '2024-01-01')).toThrow(/Invalid civil date format/);
+  });
+
+  it('throws on month or day out of range', () => {
+    expect(() => weeksLived('2023-13-01', '2024-01-01')).toThrow(/Invalid civil date/);
+    expect(() => weeksLived('2023-01-32', '2024-01-01')).toThrow(/Invalid civil date/);
+  });
+
+  it('accepts a valid leap-day date in a leap year', () => {
+    expect(() => weeksLived('2000-02-29', '2024-02-29')).not.toThrow();
   });
 });
