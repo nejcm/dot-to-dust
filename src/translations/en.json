@@ -1,6 +1,45 @@
 {
-  "common": {
-    "placeholder": "placeholder",
-    "weeksRemaining": "{count, plural, one {# week remaining} other {# weeks remaining}}"
+  "grid": {
+    "headline": {
+      "bonusMonths": "+{count, plural, one {# month} other {# months}}",
+      "bonusSubtitle": "every week is bonus",
+      "bonusWeeks": "+{count, plural, one {# week} other {# weeks}}",
+      "bonusYears": "+{count, plural, one {# year} other {# years}}",
+      "monthsAhead": "{count, plural, one {# month ahead} other {# months ahead}}",
+      "weeksAhead": "{count, plural, one {# week ahead} other {# weeks ahead}}",
+      "yearsAhead": "{count, plural, one {# year ahead} other {# years ahead}}"
+    },
+    "toggle": {
+      "months": "Months",
+      "weeks": "Weeks",
+      "years": "Years"
+    }
+  },
+  "onboarding": {
+    "dob": {
+      "done": "Continue",
+      "label": "When were you born?"
+    },
+    "welcome": {
+      "begin": "Begin",
+      "headline": "A life in dots."
+    }
+  },
+  "settings": {
+    "defaultView": {
+      "label": "Default view"
+    },
+    "dob": {
+      "edit": "Edit",
+      "label": "Date of birth",
+      "notSet": "Not set"
+    },
+    "theme": {
+      "dark": "Dark",
+      "label": "Theme",
+      "light": "Light",
+      "system": "System"
+    },
+    "title": "Settings"
   }
 }

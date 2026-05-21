@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { ThemeProvider } from '@/lib/theme/provider';
 import { useTheme } from '@/lib/theme/use-theme';
 
+import '@/lib/i18n';
 import '@/global.css';
 
 void SplashScreen.preventAutoHideAsync().catch(() => {});
