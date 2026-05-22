@@ -1,52 +1,82 @@
+import { formatHex, parse } from 'culori';
+
 export interface ColorTokens {
   bg: string;
-  text: string;
+  surface: string;
+  surfaceAlt: string;
+  ink: string;
+  inkSoft: string;
+  muted: string;
+  faint: string;
+  hairline: string;
   stages: readonly [string, string, string, string, string];
-  dotFuture: string;
+  future: string;
+  ring: string;
   accent: string;
-  skia: {
-    stages: readonly [string, string, string, string, string];
-    dotFuture: string;
-    accent: string;
+}
+
+export interface SkiaTokens {
+  stages: readonly [string, string, string, string, string];
+  future: string;
+  ring: string;
+  accent: string;
+}
+
+function toHex(oklch: string): string {
+  const color = parse(oklch);
+  if (!color) throw new Error(`culori: cannot parse "${oklch}"`);
+  return formatHex(color) ?? '#000000';
+}
+
+export function toSkia(tokens: ColorTokens): SkiaTokens {
+  return {
+    stages: tokens.stages.map(toHex) as unknown as readonly [string, string, string, string, string],
+    future: toHex(tokens.future),
+    ring: toHex(tokens.ring),
+    accent: toHex(tokens.accent),
   };
 }
 
 export const lightTokens: ColorTokens = {
-  bg: 'oklch(97% 0.01 80)',
-  text: 'oklch(22% 0.02 80)',
+  bg: 'oklch(0.962 0.008 75)',
+  surface: 'oklch(0.985 0.005 75)',
+  surfaceAlt: 'oklch(0.945 0.008 72)',
+  ink: 'oklch(0.225 0.012 50)',
+  inkSoft: 'oklch(0.40 0.010 55)',
+  muted: 'oklch(0.58 0.008 60)',
+  faint: 'oklch(0.78 0.006 70)',
+  hairline: 'oklch(0.88 0.008 70)',
   stages: [
-    'oklch(35% 0.08 55)',
-    'oklch(45% 0.10 52)',
-    'oklch(55% 0.12 48)',
-    'oklch(65% 0.10 55)',
-    'oklch(75% 0.08 60)',
+    'oklch(0.842 0.072 82)',
+    'oklch(0.720 0.075 58)',
+    'oklch(0.598 0.082 38)',
+    'oklch(0.478 0.075 25)',
+    'oklch(0.360 0.058 20)',
   ],
-  dotFuture: 'oklch(90% 0.005 80)',
-  accent: 'oklch(55% 0.18 30)',
-  skia: {
-    stages: ['#592d08', '#804318', '#a9592b', '#be7e51', '#d4a27a'],
-    dotFuture: '#e0deda',
-    accent: '#c53829',
-  },
+  future: 'oklch(0.905 0.006 75)',
+  ring: 'oklch(0.225 0.012 50)',
+  accent: 'oklch(0.48 0.075 28)',
 };
 
 export const darkTokens: ColorTokens = {
-  bg: 'oklch(12% 0.01 80)',
-  text: 'oklch(92% 0.01 80)',
+  bg: 'oklch(0.155 0.008 50)',
+  surface: 'oklch(0.195 0.008 50)',
+  surfaceAlt: 'oklch(0.235 0.008 50)',
+  ink: 'oklch(0.915 0.012 75)',
+  inkSoft: 'oklch(0.78 0.010 70)',
+  muted: 'oklch(0.58 0.010 65)',
+  faint: 'oklch(0.40 0.008 60)',
+  hairline: 'oklch(0.28 0.008 55)',
   stages: [
-    'oklch(45% 0.08 55)',
-    'oklch(55% 0.10 52)',
-    'oklch(65% 0.12 48)',
-    'oklch(73% 0.10 55)',
-    'oklch(82% 0.08 60)',
+    'oklch(0.795 0.075 82)',
+    'oklch(0.700 0.078 58)',
+    'oklch(0.605 0.082 38)',
+    'oklch(0.530 0.075 25)',
+    'oklch(0.460 0.058 20)',
   ],
-  dotFuture: 'oklch(22% 0.008 80)',
-  accent: 'oklch(62% 0.18 30)',
-  skia: {
-    stages: ['#774826', '#9f5f36', '#ca774a', '#d99769', '#ebb890'],
-    dotFuture: '#1d1a16',
-    accent: '#dd503f',
-  },
+  future: 'oklch(0.275 0.006 60)',
+  ring: 'oklch(0.915 0.012 75)',
+  accent: 'oklch(0.78 0.075 70)',
 };
 
 export type StageIndex = 0 | 1 | 2 | 3 | 4;

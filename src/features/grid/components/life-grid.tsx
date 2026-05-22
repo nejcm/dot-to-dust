@@ -5,6 +5,7 @@ import { Canvas, Circle, Group, useClock } from '@shopify/react-native-skia';
 import { useMemo } from 'react';
 import { useDerivedValue } from 'react-native-reanimated';
 import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
+import { toSkia } from '@/lib/theme/tokens';
 import { useTheme } from '@/lib/theme/use-theme';
 import { buildDotStates } from '../lib/dot-states';
 import { computeGridLayout } from '../lib/grid-layout';
@@ -23,6 +24,7 @@ interface LifeGridProps {
 
 export function LifeGrid({ view, dob, today, width, height }: LifeGridProps) {
   const { tokens } = useTheme();
+  const skia = useMemo(() => toSkia(tokens), [tokens]);
   const reducedMotion = useReducedMotion();
 
   const shouldPulse = !reducedMotion && view !== 'years';
@@ -56,12 +58,12 @@ export function LifeGrid({ view, dob, today, width, height }: LifeGridProps) {
                 cx={cx}
                 cy={cy}
                 r={radius}
-                color={tokens.skia.dotFuture}
+                color={skia.future}
               />
             );
           }
 
-          const fill = tokens.skia.stages[dot.stage];
+          const fill = skia.stages[dot.stage];
 
           if (!dot.isToday) {
             return <Circle key={index} cx={cx} cy={cy} r={radius} color={fill} />;
@@ -74,7 +76,7 @@ export function LifeGrid({ view, dob, today, width, height }: LifeGridProps) {
                 cx={cx}
                 cy={cy}
                 radius={radius}
-                color={tokens.skia.accent}
+                color={skia.ring}
                 pulse={shouldPulse}
               />
             </Group>

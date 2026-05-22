@@ -3,7 +3,7 @@ import { useClock } from '@shopify/react-native-skia';
 import { render } from '@testing-library/react-native';
 import { useReducedMotion as useReanimatedReducedMotion } from 'react-native-reanimated';
 
-import { lightTokens } from '@/lib/theme/tokens';
+import { lightTokens, toSkia } from '@/lib/theme/tokens';
 import { LifeGrid } from '../components/life-grid';
 import { computeGridLayout } from '../lib/grid-layout';
 
@@ -95,7 +95,7 @@ describe('life grid', () => {
     const tree = renderLifeGrid({ view: 'years', today: '2001-01-01' }).toJSON() as TestTree;
     const [ring] = strokeCircles(tree);
 
-    expect(ring.props.color).toBe(lightTokens.skia.accent);
+    expect(ring.props.color).toBe(toSkia(lightTokens).ring);
     expect(ring.props.opacity).toBe(0.8);
   });
 });
