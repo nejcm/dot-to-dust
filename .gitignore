@@ -40,3 +40,5 @@ expo-env.d.ts
 
 .claude/worktrees/
 .claude/settings.local.json
+
+.ulis/generated
