@@ -53,6 +53,7 @@ export function DobPicker({ onConfirm, initialDob }: DobPickerProps) {
         {Platform.OS === 'android' && (
           <Pressable
             onPress={() => setShowAndroid(true)}
+            testID="onboarding-dob-field"
             className="mb-8 min-h-14 items-center justify-center border border-[--color-text] p-4"
           >
             <Text
@@ -78,6 +79,7 @@ export function DobPicker({ onConfirm, initialDob }: DobPickerProps) {
       <View className="pb-12">
         <Pressable
           onPress={handleConfirm}
+          testID="onboarding-dob-done"
           className="min-h-12 items-center justify-center border border-[--color-text] px-4 py-3"
         >
           <Text

@@ -20,6 +20,7 @@ export default function WelcomeScreen() {
 
       <Pressable
         onPress={() => router.push('/(onboarding)/dob')}
+        testID="onboarding-begin"
         className="mt-16 min-h-12 justify-center border border-[--color-text] px-10 py-3"
       >
         <Text

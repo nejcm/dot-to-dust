@@ -57,6 +57,7 @@ export default function AppIndex() {
   return (
     <View
       className="flex-1 bg-[--color-bg]"
+      testID="main-screen"
       style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
     >
       <View className="px-4 pt-3 pb-2">
@@ -69,6 +70,7 @@ export default function AppIndex() {
             hitSlop={12}
             accessibilityLabel={t('settings.title')}
             accessibilityRole="button"
+            testID="settings-button"
             className="min-h-11 min-w-11 items-center justify-center"
           >
             <Text

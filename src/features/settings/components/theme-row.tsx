@@ -26,6 +26,7 @@ export function ThemeRow() {
             onPress={() => setTheme(th)}
             accessibilityRole="button"
             accessibilityState={{ selected: theme === th }}
+            testID={`theme-${th}`}
             className="min-h-11 flex-1 items-center justify-center border border-[--color-text] px-2 py-2.5"
             style={{ opacity: theme === th ? 1 : 0.3 }}
           >

@@ -14,6 +14,7 @@ export default function SettingsScreen() {
   return (
     <View
       className="flex-1 bg-[--color-bg]"
+      testID="settings-screen"
       style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
     >
       <View className="flex-row items-center px-6 pt-4 pb-6">
@@ -22,6 +23,7 @@ export default function SettingsScreen() {
           hitSlop={12}
           accessibilityLabel={t('settings.back')}
           accessibilityRole="button"
+          testID="settings-back"
           className="min-h-11 justify-center"
         >
           <Text

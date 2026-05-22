@@ -73,6 +73,7 @@ export function ViewToggle({ view, onViewChange }: ViewToggleProps) {
             onPress={() => onViewChange(v)}
             accessibilityRole="button"
             accessibilityState={{ selected: view === v }}
+            testID={`view-toggle-${v}`}
             style={{ flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: 40, paddingVertical: 8, zIndex: 1 }}
           >
             <Text

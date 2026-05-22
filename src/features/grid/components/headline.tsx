@@ -40,6 +40,7 @@ export function Headline({ view, dob, today }: HeadlineProps) {
       className="text-xs text-[--color-text] opacity-60"
       accessibilityRole="text"
       accessibilityLabel={text}
+      testID="headline"
     >
       {text}
     </Text>

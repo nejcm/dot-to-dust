@@ -1,0 +1,48 @@
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+- assertVisible: A life in dots.
+- tapOn:
+    id: onboarding-begin
+- assertVisible: Date of birth
+- tapOn:
+    id: onboarding-dob-done
+- extendedWaitUntil:
+    visible:
+      id: main-screen
+    timeout: 10000
+- assertVisible:
+    id: headline
+- assertVisible: '.*ahead'
+- tapOn:
+    id: view-toggle-months
+- assertVisible:
+    id: headline
+- assertVisible: '.*months ahead'
+- tapOn:
+    id: view-toggle-years
+- assertVisible:
+    id: headline
+- assertVisible: '.*years ahead'
+- tapOn:
+    id: settings-button
+- extendedWaitUntil:
+    visible:
+      id: settings-screen
+    timeout: 10000
+- tapOn:
+    id: theme-dark
+- assertVisible: Dark
+- tapOn:
+    id: settings-back
+- extendedWaitUntil:
+    visible:
+      id: main-screen
+    timeout: 10000
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: main-screen
+    timeout: 10000
+- assertNotVisible: A life in dots.
