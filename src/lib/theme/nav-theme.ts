@@ -1,3 +1,4 @@
+import type { Theme } from '@react-navigation/native';
 import type { ColorTokens } from './tokens';
 
 import { DarkTheme, DefaultTheme } from '@react-navigation/native';
@@ -8,7 +9,7 @@ import { toHex } from './tokens';
  * active design-system tokens. Pass the result to NavigationThemeProvider so
  * modals, sheets, and platform chrome stay in sync with the app's palette.
  */
-export function toNavTheme(tokens: ColorTokens, isDark: boolean) {
+export function toNavTheme(tokens: ColorTokens, isDark: boolean): Theme {
   const base = isDark ? DarkTheme : DefaultTheme;
   return {
     ...base,

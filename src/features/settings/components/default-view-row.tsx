@@ -24,18 +24,21 @@ export function DefaultViewRow() {
             onPress={() => setDefaultView(v)}
             accessibilityRole="button"
             accessibilityState={{ selected: defaultView === v }}
-            style={{
-              flex: 1,
-              minHeight: 44,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: radius.xs,
-              borderWidth: 1,
-              borderColor: tokens.hairline,
-              paddingHorizontal: spacing[2],
-              paddingVertical: spacing[2],
-              opacity: defaultView === v ? 1 : 0.4,
-            }}
+            style={({ pressed }) => [
+              {
+                flex: 1,
+                minHeight: 44,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: radius.xs,
+                borderWidth: 1,
+                borderColor: tokens.hairline,
+                paddingHorizontal: spacing[2],
+                paddingVertical: spacing[2],
+                opacity: defaultView === v ? 1 : 0.4,
+              },
+              pressed && defaultView === v && { opacity: 0.65 },
+            ]}
           >
             <Text variant="meta" tone={defaultView === v ? 'ink' : 'muted'} numberOfLines={1}>
               {t(`grid.toggle.${v}`)}

@@ -18,7 +18,7 @@ import type { StageIndex } from '../tokens';
  * const color = tokens.stages[stage];
  */
 export function stageForRatio(ratio: number): StageIndex {
-  const age = Math.round(Math.max(0, Math.min(1, ratio)) * 80);
+  const age = Math.floor(Math.max(0, Math.min(1, ratio)) * 80);
   if (age < 12) return 0;
   if (age < 23) return 1;
   if (age < 40) return 2;

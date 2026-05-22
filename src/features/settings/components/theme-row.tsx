@@ -27,18 +27,21 @@ export function ThemeRow() {
             accessibilityRole="button"
             accessibilityState={{ selected: theme === th }}
             testID={`theme-${th}`}
-            style={{
-              flex: 1,
-              minHeight: 44,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: radius.xs,
-              borderWidth: 1,
-              borderColor: tokens.hairline,
-              paddingHorizontal: spacing[2],
-              paddingVertical: spacing[2],
-              opacity: theme === th ? 1 : 0.4,
-            }}
+            style={({ pressed }) => [
+              {
+                flex: 1,
+                minHeight: 44,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: radius.xs,
+                borderWidth: 1,
+                borderColor: tokens.hairline,
+                paddingHorizontal: spacing[2],
+                paddingVertical: spacing[2],
+                opacity: theme === th ? 1 : 0.4,
+              },
+              pressed && theme === th && { opacity: 0.65 },
+            ]}
           >
             <Text variant="meta" tone={theme === th ? 'ink' : 'muted'} numberOfLines={1}>
               {t(`settings.theme.${th}`)}
