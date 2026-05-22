@@ -22,7 +22,7 @@ export function ViewToggle({ view, onViewChange }: ViewToggleProps) {
   const { t } = useAppTranslation();
   const reducedMotion = useReducedMotion();
   const [innerWidth, setInnerWidth] = useState(0);
-  const layoutReady = useRef(false);
+  const layoutReadyRef = useRef(false);
   const thumbX = useSharedValue(0);
 
   const thumbWidth = innerWidth > 0 ? innerWidth / VIEWS.length : 0;
@@ -30,8 +30,8 @@ export function ViewToggle({ view, onViewChange }: ViewToggleProps) {
   useEffect(() => {
     if (innerWidth === 0) return;
     const targetX = VIEWS.indexOf(view) * thumbWidth;
-    if (!layoutReady.current) {
-      layoutReady.current = true;
+    if (!layoutReadyRef.current) {
+      layoutReadyRef.current = true;
       thumbX.value = targetX;
     }
     else {

@@ -59,6 +59,8 @@ jest.mock('react-native-reanimated', () => {
     },
     useSharedValue: jest.fn(() => ({ value: 0 })),
     useAnimatedStyle: jest.fn((fn) => fn()),
+    useReducedMotion: jest.fn(() => false),
+    runOnJS: jest.fn((fn) => fn),
     withTiming: jest.fn((value) => value),
     withSpring: jest.fn((value) => value),
     withDecay: jest.fn((value) => value),
