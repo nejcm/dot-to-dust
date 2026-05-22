@@ -6,7 +6,8 @@ import 'tsx/cjs';
 import Env from './env';
 
 const EXPO_ACCOUNT_OWNER = 'ncncm';
-const EAS_PROJECT_ID = process.env.EAS_PROJECT_ID;
+const EAS_PROJECT_ID
+  = process.env.EAS_PROJECT_ID ?? '72119c8c-0258-4253-999d-428b83723319';
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,

@@ -28,7 +28,7 @@
         "image": "latest"
       },
       "android": {
-        "buildType": "apk",
+        "buildType": "app-bundle",
         "image": "latest"
       },
       "environment": "preview",
@@ -65,7 +65,12 @@
     }
   },
   "submit": {
-    "preview": {},
+    "preview": {
+      "android": {
+        "track": "internal",
+        "releaseStatus": "completed"
+      }
+    },
     "production": {}
   }
 }

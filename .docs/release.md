@@ -20,6 +20,15 @@ pnpm build:production:ios
 pnpm build:production:android
 ```
 
+Preview store submissions:
+
+```bash
+pnpm release:preview:ios
+pnpm release:preview:android
+pnpm submit:preview:ios
+pnpm submit:preview:android
+```
+
 ## Environment Selection
 
 Each EAS profile sets `EXPO_PUBLIC_APP_ENV`.
@@ -40,10 +49,13 @@ pnpm prebuild:production
 4. Confirm onboarding, grid, settings, theme, and relaunch behavior on device.
 5. Confirm "Dot to Dust" trademark/store-name checks before production submission.
 6. Build the correct EAS profile.
+7. Submit preview builds to TestFlight and Google Play Internal Testing before production.
 
 ## Platform Notes
 
 - Prefer Expo config plugins over direct native edits.
 - Keep `android/` and `ios/` generated.
 - `runtimeVersion` follows `appVersion`.
-- OTA updates are configured only when `EAS_PROJECT_ID` is present.
+- OTA updates are configured with the committed EAS project ID; `EAS_PROJECT_ID` can override it locally.
+- The EAS project is `@ncncm/dot-to-dust`; `app.config.ts` includes its project ID.
+- Preview Android builds use AAB output so they can be submitted to Google Play Internal Testing.
