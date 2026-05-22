@@ -8,10 +8,11 @@ interface PrimaryButtonProps {
   onPress: () => void;
   children: React.ReactNode;
   disabled?: boolean;
+  full?: boolean;
   testID?: string;
 }
 
-export function PrimaryButton({ onPress, children, disabled, testID }: PrimaryButtonProps) {
+export function PrimaryButton({ onPress, children, disabled, full, testID }: PrimaryButtonProps) {
   const { tokens } = useTheme();
 
   return (
@@ -21,21 +22,23 @@ export function PrimaryButton({ onPress, children, disabled, testID }: PrimaryBu
       testID={testID}
       accessibilityRole="button"
       style={({ pressed }) => ({
-        backgroundColor: disabled ? tokens.faint : pressed ? tokens.surfaceAlt : tokens.accent,
+        backgroundColor: disabled ? tokens.faint : tokens.ink,
+        opacity: pressed ? 0.75 : 1,
         borderRadius: radius.pill,
-        paddingHorizontal: spacing[6],
-        paddingVertical: spacing[3],
+        paddingHorizontal: spacing[8],
+        paddingVertical: 17,
         minHeight: 48,
         alignItems: 'center',
         justifyContent: 'center',
+        alignSelf: full ? 'stretch' : 'center',
       })}
     >
       <Text
         style={{
           fontFamily: fontFamily.uiMedium,
-          fontSize: 15,
-          fontWeight: '500',
-          letterSpacing: 0.2,
+          fontSize: 14,
+          letterSpacing: 1.4,
+          textTransform: 'uppercase',
           color: disabled ? tokens.muted : tokens.bg,
         }}
         numberOfLines={1}

@@ -1,5 +1,6 @@
 export const fontFamily = {
   display: 'CormorantGaramond_400Regular',
+  displayItalic: 'CormorantGaramond_400Regular_Italic',
   displayLight: 'CormorantGaramond_300Light',
   displayMedium: 'CormorantGaramond_500Medium',
   ui: 'Geist_400Regular',

@@ -11,5 +11,5 @@ export default function DobScreen() {
     router.replace('/(app)');
   };
 
-  return <DobPicker onConfirm={handleConfirm} />;
+  return <DobPicker onConfirm={handleConfirm} onBack={() => router.back()} />;
 }

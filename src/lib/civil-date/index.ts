@@ -48,6 +48,10 @@ export function formatCivilDateForDisplay(value: string): string {
   return format(parseCivilDate(value), 'MMMM d, yyyy');
 }
 
+export function formatCivilDateShort(value: string): string {
+  return format(parseCivilDate(value), 'MMM d, yyyy');
+}
+
 export function todayCivilDate(): string {
   return toCivilDateString(new Date());
 }

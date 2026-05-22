@@ -16,7 +16,7 @@ module.exports = {
   ],
   moduleFileExtensions: ['js', 'ts', 'tsx'],
   transformIgnorePatterns: [
-    `node_modules/(?!(?:.pnpm/)?((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|@shopify/.*|react-native-reanimated|react-native-mmkv|react-native-nitro-modules|react-native-worklets|zustand|tailwind-merge|tailwind-variants|uniwind|string-length|strip-ansi|char-regex|i18next-icu|intl-messageformat|@formatjs/.*|culori))`,
+    `node_modules/(?!(?:.pnpm/)?((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|@shopify/.*|react-native-reanimated|react-native-mmkv|react-native-nitro-modules|react-native-worklets|react-native-svg|zustand|tailwind-merge|tailwind-variants|uniwind|string-length|strip-ansi|char-regex|i18next-icu|intl-messageformat|@formatjs/.*|culori))`,
   ],
   coverageReporters: ['json-summary', ['text', { file: 'coverage.txt' }]],
   coverageDirectory: '<rootDir>/coverage/',

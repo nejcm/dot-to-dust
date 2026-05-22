@@ -1,16 +1,11 @@
 import type { View } from '@/lib/view';
-import { useEffect, useRef, useState } from 'react';
-import { Pressable, View as RNView, Text } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
 
-import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
+import { Pressable, View as RNView, Text } from 'react-native';
+
 import { useAppTranslation } from '@/lib/i18n/use-translation';
+import { Hairline } from '@/lib/theme/components/hairline';
 import { fontFamily } from '@/lib/theme/typography';
-import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
+import { useTheme } from '@/lib/theme/use-theme';
 import { VIEWS } from '@/lib/view';
 
 interface ViewToggleProps {
@@ -18,76 +13,52 @@ interface ViewToggleProps {
   onViewChange: (view: View) => void;
 }
 
-const THUMB_DURATION = 240;
-
 export function ViewToggle({ view, onViewChange }: ViewToggleProps) {
   const { t } = useAppTranslation();
-  const reducedMotion = useReducedMotion();
-  const [innerWidth, setInnerWidth] = useState(0);
-  const layoutReadyRef = useRef(false);
-  const thumbX = useSharedValue(0);
-
-  const thumbWidth = innerWidth > 0 ? innerWidth / VIEWS.length : 0;
-
-  useEffect(() => {
-    if (innerWidth === 0) return;
-    const targetX = VIEWS.indexOf(view) * thumbWidth;
-    if (!layoutReadyRef.current) {
-      layoutReadyRef.current = true;
-      thumbX.value = targetX;
-    }
-    else {
-      thumbX.value = withTiming(targetX, {
-        duration: reducedMotion ? 0 : THUMB_DURATION,
-      });
-    }
-  }, [innerWidth, view, thumbWidth, reducedMotion, thumbX]);
-
-  const thumbStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: thumbX.value }],
-  }));
+  const { tokens } = useTheme();
 
   return (
-    <RNView className="flex-row items-center rounded-xl bg-[--color-surface-alt] p-1">
-      <RNView
-        style={{ flex: 1, flexDirection: 'row', position: 'relative' }}
-        onLayout={(e) => setInnerWidth(e.nativeEvent.layout.width)}
-      >
-        {innerWidth > 0 && (
-          <Animated.View
-            style={[
-              {
-                position: 'absolute',
-                width: thumbWidth,
-                top: 0,
-                bottom: 0,
-                left: 0,
-                borderRadius: 8,
-              },
-              thumbStyle,
-            ]}
-            className="bg-[--color-surface]"
-          />
-        )}
-        {VIEWS.map((v) => (
-          <Pressable
-            key={v}
-            onPress={() => onViewChange(v)}
-            accessibilityRole="button"
-            accessibilityState={{ selected: view === v }}
-            testID={`view-toggle-${v}`}
-            style={(s) => getPressedStyle(s, { flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: 40, paddingVertical: 8, zIndex: 1 })}
-          >
-            <Text
-              numberOfLines={1}
-              style={{ fontFamily: fontFamily.ui }}
-              className={`text-center text-sm ${view === v ? 'text-[--color-ink]' : 'text-[--color-muted]'}`}
+    <RNView>
+      <RNView style={{ flexDirection: 'row' }}>
+        {VIEWS.map((v) => {
+          const active = v === view;
+          return (
+            <Pressable
+              key={v}
+              onPress={() => onViewChange(v)}
+              accessibilityRole="button"
+              accessibilityState={{ selected: active }}
+              testID={`view-toggle-${v}`}
+              style={{ flex: 1, alignItems: 'center', paddingVertical: 12, position: 'relative' }}
             >
-              {t(`grid.toggle.${v}`)}
-            </Text>
-          </Pressable>
-        ))}
+              <Text
+                numberOfLines={1}
+                style={{
+                  fontFamily: active ? fontFamily.uiMedium : fontFamily.ui,
+                  fontSize: 12,
+                  letterSpacing: 2,
+                  textTransform: 'uppercase',
+                  color: active ? tokens.ink : tokens.muted,
+                }}
+              >
+                {t(`grid.toggle.${v}`)}
+              </Text>
+              {active && (
+                <RNView
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    width: 18,
+                    height: 0.5,
+                    backgroundColor: tokens.ink,
+                  }}
+                />
+              )}
+            </Pressable>
+          );
+        })}
       </RNView>
+      <Hairline />
     </RNView>
   );
 }

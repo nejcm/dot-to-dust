@@ -1,6 +1,7 @@
 import {
   CormorantGaramond_300Light,
   CormorantGaramond_400Regular,
+  CormorantGaramond_400Regular_Italic,
   CormorantGaramond_500Medium,
 } from '@expo-google-fonts/cormorant-garamond';
 import { Geist_400Regular, Geist_500Medium } from '@expo-google-fonts/geist';
@@ -37,6 +38,7 @@ export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
     CormorantGaramond_300Light,
     CormorantGaramond_400Regular,
+    CormorantGaramond_400Regular_Italic,
     CormorantGaramond_500Medium,
     Geist_400Regular,
     Geist_500Medium,
