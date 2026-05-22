@@ -1,10 +1,15 @@
 import { useState } from 'react';
-import { Platform, Pressable, Text, View } from 'react-native';
+import { Platform, Pressable, View } from 'react-native';
 
 import { defaultDobCivilDate, formatCivilDateForDisplay, todayCivilDate } from '@/lib/civil-date';
 import { NativeCivilDatePicker } from '@/lib/civil-date/native-civil-date-picker';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
+import { Text } from '@/lib/theme/components/text';
+import { spacing } from '@/lib/theme/spacing';
+import { fontFamily } from '@/lib/theme/typography';
+
+import { SettingRow } from './setting-row';
 
 export function DobRow() {
   const dob = usePreferencesStore((s) => s.dob);
@@ -34,29 +39,14 @@ export function DobRow() {
   };
 
   return (
-    <View className="py-4">
-      <Text
-        style={{ fontFamily: 'Inter_400Regular', letterSpacing: 2 }}
-        className="mb-3 text-xs text-[--color-text] uppercase opacity-40"
-      >
-        {t('settings.dob.label')}
-      </Text>
-
+    <SettingRow label={t('settings.dob.label')}>
       {!editing && (
-        <View className="min-h-11 flex-row items-center justify-between gap-4">
-          <Text
-            numberOfLines={2}
-            style={{ fontFamily: 'Inter_400Regular' }}
-            className="flex-1 text-base text-[--color-text]"
-          >
+        <View style={{ minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing[4] }}>
+          <Text variant="body" tone="ink" numberOfLines={2} style={{ flex: 1 }}>
             {formattedDob}
           </Text>
-          <Pressable onPress={handleEdit} hitSlop={12} className="min-h-11 justify-center">
-            <Text
-              numberOfLines={1}
-              style={{ fontFamily: 'Inter_400Regular', letterSpacing: 2 }}
-              className="text-xs text-[--color-text] uppercase opacity-50"
-            >
+          <Pressable onPress={handleEdit} hitSlop={12} style={{ minHeight: 44, justifyContent: 'center' }}>
+            <Text variant="eyebrow" tone="muted">
               {t('settings.dob.edit')}
             </Text>
           </Pressable>
@@ -81,22 +71,14 @@ export function DobRow() {
                 onChange={setPendingDob}
                 display="spinner"
               />
-              <View className="mt-2 flex-row justify-end gap-6">
-                <Pressable onPress={handleCancel} className="min-h-11 justify-center">
-                  <Text
-                    numberOfLines={1}
-                    style={{ fontFamily: 'Inter_400Regular', letterSpacing: 2 }}
-                    className="text-xs text-[--color-text] uppercase opacity-50"
-                  >
+              <View style={{ marginTop: spacing[2], flexDirection: 'row', justifyContent: 'flex-end', gap: spacing[6] }}>
+                <Pressable onPress={handleCancel} style={{ minHeight: 44, justifyContent: 'center' }}>
+                  <Text variant="eyebrow" tone="muted">
                     {t('settings.dob.cancel')}
                   </Text>
                 </Pressable>
-                <Pressable onPress={handleDone} className="min-h-11 justify-center">
-                  <Text
-                    numberOfLines={1}
-                    style={{ fontFamily: 'Inter_400Regular', letterSpacing: 2 }}
-                    className="text-xs text-[--color-text] uppercase"
-                  >
+                <Pressable onPress={handleDone} style={{ minHeight: 44, justifyContent: 'center' }}>
+                  <Text variant="eyebrow" tone="ink" style={{ fontFamily: fontFamily.uiMedium }}>
                     {t('settings.dob.done')}
                   </Text>
                 </Pressable>
@@ -105,6 +87,6 @@ export function DobRow() {
           )}
         </>
       )}
-    </View>
+    </SettingRow>
   );
 }

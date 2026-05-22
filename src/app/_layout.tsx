@@ -1,5 +1,10 @@
-import { Fraunces_300Light, Fraunces_300Light_Italic } from '@expo-google-fonts/fraunces';
-import { Inter_400Regular, Inter_500Medium } from '@expo-google-fonts/inter';
+import {
+  CormorantGaramond_300Light,
+  CormorantGaramond_400Regular,
+  CormorantGaramond_500Medium,
+} from '@expo-google-fonts/cormorant-garamond';
+import { Geist_400Regular, Geist_500Medium } from '@expo-google-fonts/geist';
+import { GeistMono_400Regular } from '@expo-google-fonts/geist-mono';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -27,10 +32,12 @@ function RootNavigator() {
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
-    Fraunces_300Light,
-    Fraunces_300Light_Italic,
-    Inter_400Regular,
-    Inter_500Medium,
+    CormorantGaramond_300Light,
+    CormorantGaramond_400Regular,
+    CormorantGaramond_500Medium,
+    Geist_400Regular,
+    Geist_500Medium,
+    GeistMono_400Regular,
   });
 
   useEffect(() => {

@@ -1,11 +1,13 @@
 import { router } from 'expo-router';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { DefaultViewRow } from '@/features/settings/components/default-view-row';
 import { DobRow } from '@/features/settings/components/dob-row';
 import { ThemeRow } from '@/features/settings/components/theme-row';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
+import { Text } from '@/lib/theme/components/text';
+import { spacing } from '@/lib/theme/spacing';
 
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
@@ -17,28 +19,18 @@ export default function SettingsScreen() {
       testID="settings-screen"
       style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
     >
-      <View className="flex-row items-center px-6 pt-4 pb-6">
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing[6], paddingTop: spacing[4], paddingBottom: spacing[6] }}>
         <Pressable
           onPress={() => router.back()}
           hitSlop={12}
           accessibilityLabel={t('settings.back')}
           accessibilityRole="button"
           testID="settings-back"
-          className="min-h-11 justify-center"
+          style={{ minHeight: 44, justifyContent: 'center' }}
         >
-          <Text
-            numberOfLines={1}
-            style={{ fontFamily: 'Inter_400Regular', letterSpacing: 2 }}
-            className="text-xs text-[--color-text] uppercase opacity-50"
-          >
-            ←
-          </Text>
+          <Text variant="meta" tone="muted">←</Text>
         </Pressable>
-        <Text
-          numberOfLines={1}
-          style={{ fontFamily: 'Fraunces_300Light_Italic' }}
-          className="ml-4 flex-1 text-2xl text-[--color-text]"
-        >
+        <Text variant="displayM" tone="ink" numberOfLines={1} style={{ marginLeft: spacing[4], flex: 1 }}>
           {t('settings.title')}
         </Text>
       </View>
@@ -49,9 +41,7 @@ export default function SettingsScreen() {
         showsVerticalScrollIndicator={false}
       >
         <DobRow />
-        <View className="h-px bg-[--color-text] opacity-10" />
         <ThemeRow />
-        <View className="h-px bg-[--color-text] opacity-10" />
         <DefaultViewRow />
       </ScrollView>
     </View>

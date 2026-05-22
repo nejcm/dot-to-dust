@@ -2,6 +2,7 @@ import type { View } from '@/lib/view';
 import { Text } from 'react-native';
 
 import { useAppTranslation } from '@/lib/i18n/use-translation';
+import { fontFamily } from '@/lib/theme/typography';
 
 import { isBonusTime } from '../lib/life-math';
 import { headlineCountFor, headlineKeyFor } from '../lib/view-policy';
@@ -25,8 +26,8 @@ export function Headline({ view, dob, today }: HeadlineProps) {
       adjustsFontSizeToFit
       minimumFontScale={0.8}
       numberOfLines={1}
-      style={{ fontFamily: 'Inter_400Regular' }}
-      className="text-xs text-[--color-text] opacity-60"
+      style={{ fontFamily: fontFamily.displayLight }}
+      className="text-xs text-[--color-muted]"
       accessibilityRole="text"
       accessibilityLabel={text}
       testID="headline"

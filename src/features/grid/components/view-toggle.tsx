@@ -9,6 +9,7 @@ import Animated, {
 
 import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
+import { fontFamily } from '@/lib/theme/typography';
 import { VIEWS } from '@/lib/view';
 
 interface ViewToggleProps {
@@ -46,7 +47,7 @@ export function ViewToggle({ view, onViewChange }: ViewToggleProps) {
   }));
 
   return (
-    <RNView className="flex-row items-center rounded-xl bg-[--color-surface] p-1">
+    <RNView className="flex-row items-center rounded-xl bg-[--color-surface-alt] p-1">
       <RNView
         style={{ flex: 1, flexDirection: 'row', position: 'relative' }}
         onLayout={(e) => setInnerWidth(e.nativeEvent.layout.width)}
@@ -64,7 +65,7 @@ export function ViewToggle({ view, onViewChange }: ViewToggleProps) {
               },
               thumbStyle,
             ]}
-            className="bg-[--color-bg]"
+            className="bg-[--color-surface]"
           />
         )}
         {VIEWS.map((v) => (
@@ -78,8 +79,8 @@ export function ViewToggle({ view, onViewChange }: ViewToggleProps) {
           >
             <Text
               numberOfLines={1}
-              style={{ fontFamily: 'Inter_400Regular' }}
-              className={`text-center text-sm text-[--color-text] ${view === v ? '' : 'opacity-40'}`}
+              style={{ fontFamily: fontFamily.ui }}
+              className={`text-center text-sm ${view === v ? 'text-[--color-ink]' : 'text-[--color-muted]'}`}
             >
               {t(`grid.toggle.${v}`)}
             </Text>

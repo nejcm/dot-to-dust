@@ -2,7 +2,7 @@ import type { View as GridView } from '@/lib/view';
 
 import { Redirect } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -18,6 +18,7 @@ import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
 import { todayCivilDate } from '@/lib/civil-date';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
+import { Text } from '@/lib/theme/components/text';
 
 const CROSS_FADE_DURATION = 120;
 
@@ -82,11 +83,7 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
             testID="settings-button"
             className="min-h-11 min-w-11 items-center justify-center"
           >
-            <Text
-              numberOfLines={1}
-              style={{ fontFamily: 'Inter_400Regular' }}
-              className="text-lg text-[--color-text] opacity-40"
-            >
+            <Text variant="body" tone="muted" numberOfLines={1}>
               ⚙
             </Text>
           </Pressable>

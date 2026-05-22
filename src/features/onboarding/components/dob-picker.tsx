@@ -1,9 +1,13 @@
 import { useState } from 'react';
-import { Platform, Pressable, Text, View } from 'react-native';
+import { Platform, Pressable, View } from 'react-native';
 
 import { defaultDobCivilDate, formatCivilDateForDisplay, todayCivilDate } from '@/lib/civil-date';
 import { NativeCivilDatePicker } from '@/lib/civil-date/native-civil-date-picker';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
+import { PrimaryButton } from '@/lib/theme/components/primary-button';
+import { Text } from '@/lib/theme/components/text';
+import { radius, spacing } from '@/lib/theme/spacing';
+import { useTheme } from '@/lib/theme/use-theme';
 
 interface DobPickerProps {
   onConfirm: (dob: string) => void;
@@ -12,6 +16,7 @@ interface DobPickerProps {
 
 export function DobPicker({ onConfirm, initialDob }: DobPickerProps) {
   const { t } = useAppTranslation();
+  const { tokens } = useTheme();
   const [dob, setDob] = useState(() => initialDob ?? defaultDobCivilDate());
   const [showAndroid, setShowAndroid] = useState(false);
   const today = todayCivilDate();
@@ -21,14 +26,17 @@ export function DobPicker({ onConfirm, initialDob }: DobPickerProps) {
   };
 
   return (
-    <View className="flex-1 bg-[--color-bg] px-8">
-      <View className="flex-1 justify-center">
+    <View
+      className="flex-1 bg-[--color-bg] px-8"
+    >
+      <View style={{ flex: 1, justifyContent: 'center' }}>
         <Text
+          variant="displayL"
+          tone="ink"
           adjustsFontSizeToFit
           minimumFontScale={0.78}
           numberOfLines={2}
-          style={{ fontFamily: 'Fraunces_300Light_Italic' }}
-          className="mb-12 text-center text-3xl text-[--color-text]"
+          style={{ textAlign: 'center', marginBottom: spacing[8] }}
         >
           {t('onboarding.dob.label')}
         </Text>
@@ -37,13 +45,18 @@ export function DobPicker({ onConfirm, initialDob }: DobPickerProps) {
           <Pressable
             onPress={() => setShowAndroid(true)}
             testID="onboarding-dob-field"
-            className="mb-8 min-h-14 items-center justify-center border border-[--color-text] p-4"
+            style={{
+              marginBottom: spacing[8],
+              minHeight: 56,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderWidth: 1,
+              borderColor: tokens.hairline,
+              borderRadius: radius.xs,
+              padding: spacing[4],
+            }}
           >
-            <Text
-              numberOfLines={1}
-              style={{ fontFamily: 'Inter_400Regular' }}
-              className="text-center text-lg text-[--color-text]"
-            >
+            <Text variant="body" tone="ink" numberOfLines={1}>
               {formatCivilDateForDisplay(dob)}
             </Text>
           </Pressable>
@@ -59,20 +72,10 @@ export function DobPicker({ onConfirm, initialDob }: DobPickerProps) {
         )}
       </View>
 
-      <View className="pb-12">
-        <Pressable
-          onPress={handleConfirm}
-          testID="onboarding-dob-done"
-          className="min-h-12 items-center justify-center border border-[--color-text] px-4 py-3"
-        >
-          <Text
-            numberOfLines={1}
-            style={{ fontFamily: 'Inter_400Regular', letterSpacing: 4 }}
-            className="text-center text-sm text-[--color-text] uppercase"
-          >
-            {t('onboarding.dob.done')}
-          </Text>
-        </Pressable>
+      <View style={{ paddingBottom: spacing[8] }}>
+        <PrimaryButton onPress={handleConfirm} testID="onboarding-dob-done">
+          {t('onboarding.dob.done')}
+        </PrimaryButton>
       </View>
     </View>
   );

@@ -1,7 +1,12 @@
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
+import { Text } from '@/lib/theme/components/text';
+import { radius, spacing } from '@/lib/theme/spacing';
+import { useTheme } from '@/lib/theme/use-theme';
+
+import { SettingRow } from './setting-row';
 
 type Theme = 'light' | 'dark' | 'system';
 const THEMES: Theme[] = ['light', 'dark', 'system'];
@@ -10,16 +15,11 @@ export function ThemeRow() {
   const theme = usePreferencesStore((s) => s.theme);
   const setTheme = usePreferencesStore((s) => s.setTheme);
   const { t } = useAppTranslation();
+  const { tokens } = useTheme();
 
   return (
-    <View className="py-4">
-      <Text
-        style={{ fontFamily: 'Inter_400Regular', letterSpacing: 2 }}
-        className="mb-3 text-xs text-[--color-text] uppercase opacity-40"
-      >
-        {t('settings.theme.label')}
-      </Text>
-      <View className="flex-row gap-2">
+    <SettingRow label={t('settings.theme.label')}>
+      <View style={{ flexDirection: 'row', gap: spacing[2] }}>
         {THEMES.map((th) => (
           <Pressable
             key={th}
@@ -27,19 +27,25 @@ export function ThemeRow() {
             accessibilityRole="button"
             accessibilityState={{ selected: theme === th }}
             testID={`theme-${th}`}
-            className="min-h-11 flex-1 items-center justify-center border border-[--color-text] px-2 py-2.5"
-            style={{ opacity: theme === th ? 1 : 0.3 }}
+            style={{
+              flex: 1,
+              minHeight: 44,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: radius.xs,
+              borderWidth: 1,
+              borderColor: tokens.hairline,
+              paddingHorizontal: spacing[2],
+              paddingVertical: spacing[2],
+              opacity: theme === th ? 1 : 0.4,
+            }}
           >
-            <Text
-              numberOfLines={1}
-              style={{ fontFamily: 'Inter_400Regular' }}
-              className="text-center text-sm text-[--color-text]"
-            >
+            <Text variant="meta" tone={theme === th ? 'ink' : 'muted'} numberOfLines={1}>
               {t(`settings.theme.${th}`)}
             </Text>
           </Pressable>
         ))}
       </View>
-    </View>
+    </SettingRow>
   );
 }
