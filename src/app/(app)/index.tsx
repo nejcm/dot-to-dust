@@ -35,6 +35,7 @@ export default function AppIndex() {
   }));
 
   function handleViewChange(newView: GridView) {
+    if (newView === activeView) return;
     setActiveView(newView);
     if (reducedMotion) {
       setDisplayedView(newView);

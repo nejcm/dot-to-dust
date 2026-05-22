@@ -61,7 +61,10 @@ jest.mock('react-native-reanimated', () => {
     useAnimatedStyle: jest.fn((fn) => fn()),
     useReducedMotion: jest.fn(() => false),
     runOnJS: jest.fn((fn) => fn),
-    withTiming: jest.fn((value) => value),
+    withTiming: jest.fn((value, _config, callback) => {
+      callback?.(true);
+      return value;
+    }),
     withSpring: jest.fn((value) => value),
     withDecay: jest.fn((value) => value),
     withDelay: jest.fn((_, value) => value),
