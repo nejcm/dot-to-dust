@@ -2,8 +2,8 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { View } from 'react-native';
 import { withTiming } from 'react-native-reanimated';
 
+import AppIndex from '@/app/(app)';
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
-import AppIndex from './index';
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: jest.fn(() => ({ top: 0, right: 0, bottom: 0, left: 0 })),
