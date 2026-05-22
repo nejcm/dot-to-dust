@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 
 import { DobPicker } from '@/features/onboarding/components/dob-picker';
+import { goBackOrFallback } from '@/lib/routing';
 import { setDob } from '@/lib/storage/preferences-store';
 
 export default function DobScreen() {
@@ -9,5 +10,5 @@ export default function DobScreen() {
     router.replace('/(app)');
   };
 
-  return <DobPicker onConfirm={handleConfirm} onBack={() => router.back()} />;
+  return <DobPicker onConfirm={handleConfirm} onBack={() => goBackOrFallback(router, '/(onboarding)')} />;
 }

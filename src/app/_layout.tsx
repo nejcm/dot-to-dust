@@ -16,6 +16,7 @@ import { StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { AppErrorBoundary } from '@/lib/app-error-boundary';
 import { toNavTheme } from '@/lib/theme/nav-theme';
 import { ThemeProvider } from '@/lib/theme/provider';
 import { toHex } from '@/lib/theme/tokens';
@@ -78,7 +79,9 @@ export default function RootLayout() {
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaProvider>
         <ThemeProvider>
-          <RootNavigator />
+          <AppErrorBoundary>
+            <RootNavigator />
+          </AppErrorBoundary>
         </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

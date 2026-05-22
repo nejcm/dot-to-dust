@@ -1,4 +1,9 @@
 {
+  "errors": {
+    "description": "The app hit a problem. Try again or reopen Dot to Dust.",
+    "retry": "Try again",
+    "title": "Something went wrong."
+  },
   "grid": {
     "headline": {
       "bonusMonths": "+{count, plural, one {# month} other {# months}}",

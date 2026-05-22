@@ -7,6 +7,7 @@ import { LifeExpectancyRow } from '@/features/settings/components/life-expectanc
 import { ReplayOnboardingRow } from '@/features/settings/components/replay-onboarding-row';
 import { ThemeRow } from '@/features/settings/components/theme-row';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
+import { goBackOrFallback } from '@/lib/routing';
 import { ScreenScrollView } from '@/lib/theme/components/screen';
 import { Text } from '@/lib/theme/components/text';
 import { Pressable, StyledSvg as Svg, View } from '@/lib/theme/components/ui';
@@ -35,7 +36,7 @@ export default function SettingsScreen() {
         }}
       >
         <Pressable
-          onPress={() => router.back()}
+          onPress={() => goBackOrFallback(router, '/(app)')}
           hitSlop={12}
           accessibilityLabel={t('settings.back')}
           accessibilityRole="button"
