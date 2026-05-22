@@ -44,8 +44,17 @@ export function toCivilDateString(date: Date): string {
   return format(date, 'yyyy-MM-dd');
 }
 
+export function formatCivilDateForDisplay(value: string): string {
+  return format(parseCivilDate(value), 'MMMM d, yyyy');
+}
+
 export function todayCivilDate(): string {
   return toCivilDateString(new Date());
+}
+
+export function defaultDobCivilDate(today = todayCivilDate()): string {
+  const date = parseCivilDate(today);
+  return toCivilDateString(new Date(date.getFullYear() - 30, 0, 1));
 }
 
 export function isPastOrTodayCivilDate(value: string, today = todayCivilDate()): boolean {

@@ -1,4 +1,10 @@
-import { isCivilDate, isPastOrTodayCivilDate, parseCivilDate, toCivilDateString } from '../index';
+import {
+  defaultDobCivilDate,
+  isCivilDate,
+  isPastOrTodayCivilDate,
+  parseCivilDate,
+  toCivilDateString,
+} from '../index';
 
 describe('isCivilDate', () => {
   it('accepts well-formed calendar dates', () => {
@@ -51,6 +57,12 @@ describe('parseCivilDate', () => {
 describe('toCivilDateString', () => {
   it('formats local dates as civil strings', () => {
     expect(toCivilDateString(new Date(2024, 0, 2))).toBe('2024-01-02');
+  });
+});
+
+describe('defaultDobCivilDate', () => {
+  it('returns Jan 1 thirty years before today', () => {
+    expect(defaultDobCivilDate('2026-05-22')).toBe('1996-01-01');
   });
 });
 

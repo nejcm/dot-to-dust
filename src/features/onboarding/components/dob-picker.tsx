@@ -1,14 +1,9 @@
-import type { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { format } from 'date-fns';
 import { useState } from 'react';
 import { Platform, Pressable, Text, View } from 'react-native';
 
-import { parseCivilDate, toCivilDateString } from '@/lib/civil-date';
+import { defaultDobCivilDate, formatCivilDateForDisplay, todayCivilDate } from '@/lib/civil-date';
+import { NativeCivilDatePicker } from '@/lib/civil-date/native-civil-date-picker';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
-
-const DEFAULT_DOB = new Date(new Date().getFullYear() - 30, 0, 1);
 
 interface DobPickerProps {
   onConfirm: (dob: string) => void;
@@ -17,24 +12,12 @@ interface DobPickerProps {
 
 export function DobPicker({ onConfirm, initialDob }: DobPickerProps) {
   const { t } = useAppTranslation();
-  const [date, setDate] = useState(() => (initialDob ? parseCivilDate(initialDob) : DEFAULT_DOB));
+  const [dob, setDob] = useState(() => initialDob ?? defaultDobCivilDate());
   const [showAndroid, setShowAndroid] = useState(false);
-  const today = new Date();
-
-  const handleChange = (event: DateTimePickerEvent, selected?: Date) => {
-    if (Platform.OS === 'android') {
-      setShowAndroid(false);
-      if (event.type === 'set' && selected) {
-        setDate(selected);
-      }
-    }
-    else if (selected) {
-      setDate(selected);
-    }
-  };
+  const today = todayCivilDate();
 
   const handleConfirm = () => {
-    onConfirm(toCivilDateString(date));
+    onConfirm(dob);
   };
 
   return (
@@ -61,17 +44,17 @@ export function DobPicker({ onConfirm, initialDob }: DobPickerProps) {
               style={{ fontFamily: 'Inter_400Regular' }}
               className="text-center text-lg text-[--color-text]"
             >
-              {format(date, 'MMMM d, yyyy')}
+              {formatCivilDateForDisplay(dob)}
             </Text>
           </Pressable>
         )}
 
         {(Platform.OS === 'ios' || showAndroid) && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            maximumDate={today}
-            onChange={handleChange}
+          <NativeCivilDatePicker
+            value={dob}
+            maximumValue={today}
+            onChange={setDob}
+            onAndroidClose={() => setShowAndroid(false)}
           />
         )}
       </View>
