@@ -7,7 +7,7 @@
   "engines": {
     "node": "^22.13.0 || >=24"
   },
-  "main": "expo-router/entry",
+  "main": "index",
   "scripts": {
     "dev": "expo start",
     "start": "expo start",
