@@ -121,7 +121,7 @@ describe('preferences store', () => {
   });
 
   it('persists setter mutations so they survive a reload', () => {
-    const { setDefaultView, setDob, setTheme, usePreferencesStore } = loadStoreModule();
+    const { setDefaultView, setDob, setTheme } = loadStoreModule();
 
     setDob('1990-06-15');
     setTheme('dark');
