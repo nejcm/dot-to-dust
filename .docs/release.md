@@ -20,14 +20,21 @@ pnpm build:production:ios
 pnpm build:production:android
 ```
 
-Preview store submissions:
+Preview store release builds and auto-submits the resulting artifacts:
 
 ```bash
 pnpm release:preview:ios
 pnpm release:preview:android
+```
+
+To submit an existing latest preview build instead, use:
+
+```bash
 pnpm submit:preview:ios
 pnpm submit:preview:android
 ```
+
+Do not run both flows for the same artifact. When multiple preview builds exist, submit by explicit EAS build ID instead of `--latest`.
 
 ## Environment Selection
 
@@ -40,6 +47,22 @@ pnpm prebuild:development
 pnpm prebuild:preview
 pnpm prebuild:production
 ```
+
+Validate resolved preview config before store submission:
+
+```bash
+cross-env EXPO_PUBLIC_APP_ENV=preview pnpm expo config --type public
+```
+
+Confirm the preview bundle/package ids and EAS project ID in the output.
+
+## Store Prerequisites
+
+- App Store Connect app record and iOS credentials must exist before TestFlight submission.
+- Google Play Console app record must exist before Play Internal Testing submission.
+- Google Play service-account credentials must be configured outside git, through EAS credentials/secrets or a local ignored file.
+- Do not commit service-account JSON, API keys, or store credentials.
+- Google Play may require the first app bundle upload to be completed manually in Play Console.
 
 ## Release Checklist
 
