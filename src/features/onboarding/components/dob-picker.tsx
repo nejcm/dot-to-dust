@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { Platform, Pressable, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Svg, { Path } from 'react-native-svg';
+import { Platform } from 'react-native';
+import { Path } from 'react-native-svg';
 
 import { yearsLived } from '@/features/grid/lib/life-math';
 import { defaultDobCivilDate, formatCivilDateShort, todayCivilDate } from '@/lib/civil-date';
 import { NativeCivilDatePicker } from '@/lib/civil-date/native-civil-date-picker';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { PrimaryButton } from '@/lib/theme/components/primary-button';
+import { Screen } from '@/lib/theme/components/screen';
 import { Text } from '@/lib/theme/components/text';
+import { Pressable, StyledSvg as Svg, View } from '@/lib/theme/components/ui';
 import { spacing } from '@/lib/theme/spacing';
+import { toHex } from '@/lib/theme/tokens';
 import { fontFamily } from '@/lib/theme/typography';
 import { useTheme } from '@/lib/theme/use-theme';
 import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
@@ -23,7 +25,7 @@ interface DobPickerProps {
 export function DobPicker({ onConfirm, onBack, initialDob }: DobPickerProps) {
   const { t } = useAppTranslation();
   const { tokens } = useTheme();
-  const insets = useSafeAreaInsets();
+  const iconColor = toHex(tokens.inkSoft);
   const [dob, setDob] = useState(() => initialDob ?? defaultDobCivilDate());
   const [showAndroid, setShowAndroid] = useState(false);
   const today = todayCivilDate();
@@ -35,14 +37,7 @@ export function DobPicker({ onConfirm, onBack, initialDob }: DobPickerProps) {
   });
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: tokens.bg,
-        paddingTop: insets.top + 64,
-        paddingBottom: insets.bottom,
-      }}
-    >
+    <Screen contentClassName="pt-16">
       {/* Top bar: back + step counter */}
       <View
         style={{
@@ -63,7 +58,7 @@ export function DobPicker({ onConfirm, onBack, initialDob }: DobPickerProps) {
           <Svg width={22} height={14} viewBox="0 0 22 14" fill="none">
             <Path
               d="M7 1L1 7l6 6M1 7h20"
-              stroke={tokens.inkSoft}
+              stroke={iconColor}
               strokeWidth={0.9}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -142,6 +137,6 @@ export function DobPicker({ onConfirm, onBack, initialDob }: DobPickerProps) {
           {preview}
         </Text>
       </View>
-    </View>
+    </Screen>
   );
 }

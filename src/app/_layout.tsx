@@ -12,24 +12,43 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { StyleSheet } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { toNavTheme } from '@/lib/theme/nav-theme';
 import { ThemeProvider } from '@/lib/theme/provider';
+import { toHex } from '@/lib/theme/tokens';
 import { useTheme } from '@/lib/theme/use-theme';
 
 import '@/lib/i18n';
 import '@/global.css';
 
+export { ErrorBoundary } from 'expo-router';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const unstable_settings = {
+  initialRouteName: '(app)',
+};
+
 void SplashScreen.preventAutoHideAsync().catch(() => {});
+SplashScreen.setOptions({
+  duration: 500,
+  fade: true,
+});
 
 function RootNavigator() {
   const { colorScheme, tokens, isDark } = useTheme();
   const navTheme = toNavTheme(tokens, isDark);
+  const backgroundColor = toHex(tokens.bg);
 
   return (
     <NavigationThemeProvider value={navTheme}>
-      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-      <Stack screenOptions={{ headerShown: false }} />
+      <StatusBar
+        style={colorScheme === 'dark' ? 'light' : 'dark'}
+        backgroundColor={backgroundColor}
+      />
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor } }} />
     </NavigationThemeProvider>
   );
 }
@@ -56,8 +75,18 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider>
-      <RootNavigator />
-    </ThemeProvider>
+    <GestureHandlerRootView style={styles.container}>
+      <SafeAreaProvider>
+        <ThemeProvider>
+          <RootNavigator />
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

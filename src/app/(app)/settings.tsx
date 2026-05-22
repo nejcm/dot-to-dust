@@ -1,7 +1,5 @@
 import { router } from 'expo-router';
-import { Pressable, ScrollView, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Svg, { Path } from 'react-native-svg';
+import { Path } from 'react-native-svg';
 
 import { DefaultViewRow } from '@/features/settings/components/default-view-row';
 import { DobRow } from '@/features/settings/components/dob-row';
@@ -9,23 +7,23 @@ import { LifeExpectancyRow } from '@/features/settings/components/life-expectanc
 import { ReplayOnboardingRow } from '@/features/settings/components/replay-onboarding-row';
 import { ThemeRow } from '@/features/settings/components/theme-row';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
+import { ScreenScrollView } from '@/lib/theme/components/screen';
 import { Text } from '@/lib/theme/components/text';
+import { Pressable, StyledSvg as Svg, View } from '@/lib/theme/components/ui';
 import { Wordmark } from '@/lib/theme/components/wordmark';
 import { spacing } from '@/lib/theme/spacing';
+import { toHex } from '@/lib/theme/tokens';
 import { fontFamily } from '@/lib/theme/typography';
 import { useTheme } from '@/lib/theme/use-theme';
 import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
 
 export default function SettingsScreen() {
-  const insets = useSafeAreaInsets();
   const { t } = useAppTranslation();
   const { tokens } = useTheme();
+  const iconColor = toHex(tokens.inkSoft);
 
   return (
-    <View
-      style={{ flex: 1, backgroundColor: tokens.bg, paddingTop: insets.top, paddingBottom: insets.bottom }}
-      testID="settings-screen"
-    >
+    <ScreenScrollView testID="settings-screen" contentContainerClassName="grow">
       {/* Top bar: back | wordmark | spacer */}
       <View
         style={{
@@ -47,7 +45,7 @@ export default function SettingsScreen() {
           <Svg width={14} height={10} viewBox="0 0 14 10" fill="none">
             <Path
               d="M5 1L1 5l4 4M1 5h12"
-              stroke={tokens.inkSoft}
+              stroke={iconColor}
               strokeWidth={0.9}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -83,11 +81,7 @@ export default function SettingsScreen() {
         </Text>
       </View>
 
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{ paddingHorizontal: 28, paddingBottom: 32 }}
-        showsVerticalScrollIndicator={false}
-      >
+      <View className="px-7 pb-8">
         {/* Life group */}
         <Text
           variant="micro"
@@ -120,7 +114,7 @@ export default function SettingsScreen() {
         </Text>
         <ReplayOnboardingRow />
         <VersionRow />
-      </ScrollView>
+      </View>
 
       {/* Footer epigraph */}
       <View style={{ paddingHorizontal: 28, paddingBottom: 40, alignItems: 'center' }}>
@@ -136,7 +130,7 @@ export default function SettingsScreen() {
           {t('settings.epigraph')}
         </Text>
       </View>
-    </View>
+    </ScreenScrollView>
   );
 }
 

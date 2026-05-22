@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { DobPicker } from './dob-picker';
 
 jest.mock('react-native-safe-area-context', () => ({
-  useSafeAreaInsets: jest.fn(() => ({ top: 0, right: 0, bottom: 0, left: 0 })),
+  SafeAreaView: require('react-native').View,
 }));
 
 jest.mock('@react-native-community/datetimepicker', () => ({

@@ -1,6 +1,7 @@
 import type { ComponentProps } from 'react';
 import { useClock } from '@shopify/react-native-skia';
 import { render } from '@testing-library/react-native';
+import { Platform } from 'react-native';
 import { useReducedMotion as useReanimatedReducedMotion } from 'react-native-reanimated';
 
 import { lightTokens, toSkia } from '@/lib/theme/tokens';
@@ -15,6 +16,15 @@ interface TestNode {
 
 type TestChild = TestNode | string;
 type TestTree = TestNode | TestNode[] | null;
+
+const originalOS = Platform.OS;
+
+function setPlatformOS(os: typeof Platform.OS) {
+  Object.defineProperty(Platform, 'OS', {
+    configurable: true,
+    value: os,
+  });
+}
 
 function findNodesByType(tree: TestTree, type: string): TestNode[] {
   if (!tree) return [];
@@ -52,6 +62,7 @@ function strokeCircles(tree: TestTree): TestNode[] {
 describe('life grid', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    setPlatformOS(originalOS);
     jest.mocked(useReanimatedReducedMotion).mockReturnValue(false);
   });
 
@@ -88,6 +99,14 @@ describe('life grid', () => {
     jest.clearAllMocks();
     jest.mocked(useReanimatedReducedMotion).mockReturnValue(true);
     renderLifeGrid();
+    expect(useClock).not.toHaveBeenCalled();
+  });
+
+  it('does not mount the Skia clock on web', () => {
+    setPlatformOS('web');
+
+    renderLifeGrid();
+
     expect(useClock).not.toHaveBeenCalled();
   });
 

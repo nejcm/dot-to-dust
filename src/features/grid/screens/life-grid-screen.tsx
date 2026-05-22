@@ -2,15 +2,13 @@ import type { View as GridView } from '@/lib/view';
 
 import { Redirect } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, View } from 'react-native';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Svg, { Circle, Path } from 'react-native-svg';
+import { Circle, Path } from 'react-native-svg';
 
 import { Headline } from '@/features/grid/components/headline';
 import { LifeGrid } from '@/features/grid/components/life-grid';
@@ -20,8 +18,11 @@ import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
 import { todayCivilDate } from '@/lib/civil-date';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
+import { Screen } from '@/lib/theme/components/screen';
+import { Pressable, StyledSvg as Svg, View } from '@/lib/theme/components/ui';
 import { Wordmark } from '@/lib/theme/components/wordmark';
 import { spacing } from '@/lib/theme/spacing';
+import { toHex } from '@/lib/theme/tokens';
 import { useTheme } from '@/lib/theme/use-theme';
 import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
 
@@ -49,10 +50,10 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
   const dob = usePreferencesStore.use.dob();
   const defaultView = usePreferencesStore.use.defaultView();
   const today = todayCivilDate();
-  const insets = useSafeAreaInsets();
   const reducedMotion = useReducedMotion();
   const { t } = useAppTranslation();
   const { tokens } = useTheme();
+  const iconColor = toHex(tokens.inkSoft);
 
   const [activeView, setActiveView] = useState<GridView>(defaultView);
   const [displayedView, setDisplayedView] = useState<GridView>(defaultView);
@@ -85,11 +86,7 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
   }
 
   return (
-    <View
-      className="flex-1 bg-[--color-bg]"
-      testID="main-screen"
-      style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
-    >
+    <Screen testID="main-screen">
       {/* Top bar: wordmark + settings */}
       <View
         style={{
@@ -110,7 +107,7 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
           testID="settings-button"
           style={(s) => getPressedStyle(s, { minHeight: 44, minWidth: 44, alignItems: 'center', justifyContent: 'center' })}
         >
-          <GearIcon color={tokens.inkSoft} />
+          <GearIcon color={iconColor} />
         </Pressable>
       </View>
 
@@ -151,6 +148,6 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
       <View style={{ paddingHorizontal: spacing[8], paddingTop: spacing[4], paddingBottom: spacing[6] }}>
         <StageLegend />
       </View>
-    </View>
+    </Screen>
   );
 }

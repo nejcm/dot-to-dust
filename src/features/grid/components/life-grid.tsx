@@ -3,6 +3,7 @@ import type { View } from '@/lib/view';
 import { Canvas, Circle, Group, useClock } from '@shopify/react-native-skia';
 
 import { useMemo } from 'react';
+import { Platform } from 'react-native';
 import { useDerivedValue } from 'react-native-reanimated';
 import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
 import { toSkia } from '@/lib/theme/tokens';
@@ -27,7 +28,7 @@ export function LifeGrid({ view, dob, today, width, height }: LifeGridProps) {
   const skia = useMemo(() => toSkia(tokens), [tokens]);
   const reducedMotion = useReducedMotion();
 
-  const shouldPulse = !reducedMotion && view !== 'years';
+  const shouldPulse = Platform.OS !== 'web' && !reducedMotion && view !== 'years';
 
   const { cols, dotSize, gap } = useMemo(
     () => computeGridLayout(view, width, height),

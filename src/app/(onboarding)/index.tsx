@@ -1,33 +1,24 @@
 import { router } from 'expo-router';
-import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { PrimaryButton } from '@/lib/theme/components/primary-button';
+import { Screen } from '@/lib/theme/components/screen';
 import { Text } from '@/lib/theme/components/text';
+import { View } from '@/lib/theme/components/ui';
 import { Wordmark } from '@/lib/theme/components/wordmark';
-import { spacing } from '@/lib/theme/spacing';
 import { fontFamily } from '@/lib/theme/typography';
 import { useTheme } from '@/lib/theme/use-theme';
 
 export default function WelcomeScreen() {
   const { t } = useAppTranslation();
   const { tokens } = useTheme();
-  const insets = useSafeAreaInsets();
 
   const stageDots = tokens.stages;
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: tokens.bg,
-        paddingTop: insets.top + 64,
-        paddingBottom: insets.bottom,
-      }}
-    >
+    <Screen contentClassName="pt-16">
       {/* Wordmark */}
-      <View style={{ alignItems: 'center', paddingHorizontal: spacing[8], paddingTop: spacing[8] }}>
+      <View style={{ alignItems: 'center', paddingHorizontal: 32, paddingTop: 36 }}>
         <Wordmark size={10} />
       </View>
 
@@ -61,14 +52,14 @@ export default function WelcomeScreen() {
         <Text
           variant="meta"
           tone="muted"
-          style={{ textAlign: 'center', maxWidth: 240, lineHeight: 21 }}
+          style={{ textAlign: 'center', maxWidth: 240, lineHeight: 21, letterSpacing: 0.3 }}
         >
           {t('onboarding.welcome.body')}
         </Text>
       </View>
 
       {/* Bottom: Begin + step counter */}
-      <View style={{ alignItems: 'center', paddingHorizontal: 36, paddingBottom: 56, gap: 18 }}>
+      <View style={{ alignItems: 'center', paddingHorizontal: 36, paddingTop: 24, paddingBottom: 56, gap: 18 }}>
         <PrimaryButton
           onPress={() => router.push('/(onboarding)/dob')}
           testID="onboarding-begin"
@@ -79,6 +70,6 @@ export default function WelcomeScreen() {
           {t('onboarding.welcome.step')}
         </Text>
       </View>
-    </View>
+    </Screen>
   );
 }

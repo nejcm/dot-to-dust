@@ -12,7 +12,7 @@ jest.mock('expo-router', () => ({
 }));
 
 jest.mock('react-native-safe-area-context', () => ({
-  useSafeAreaInsets: jest.fn(() => ({ top: 0, right: 0, bottom: 0, left: 0 })),
+  SafeAreaView: require('react-native').View,
 }));
 
 jest.mock('@/features/grid/components/life-grid', () => ({
