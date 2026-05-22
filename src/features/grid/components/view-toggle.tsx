@@ -10,6 +10,7 @@ import Animated, {
 import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { fontFamily } from '@/lib/theme/typography';
+import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
 import { VIEWS } from '@/lib/view';
 
 interface ViewToggleProps {
@@ -75,7 +76,7 @@ export function ViewToggle({ view, onViewChange }: ViewToggleProps) {
             accessibilityRole="button"
             accessibilityState={{ selected: view === v }}
             testID={`view-toggle-${v}`}
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: 40, paddingVertical: 8, zIndex: 1 }}
+            style={(s) => getPressedStyle(s, { flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: 40, paddingVertical: 8, zIndex: 1 })}
           >
             <Text
               numberOfLines={1}

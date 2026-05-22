@@ -5,12 +5,14 @@ import {
 } from '@expo-google-fonts/cormorant-garamond';
 import { Geist_400Regular, Geist_500Medium } from '@expo-google-fonts/geist';
 import { GeistMono_400Regular } from '@expo-google-fonts/geist-mono';
+import { ThemeProvider as NavigationThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
+import { toNavTheme } from '@/lib/theme/nav-theme';
 import { ThemeProvider } from '@/lib/theme/provider';
 import { useTheme } from '@/lib/theme/use-theme';
 
@@ -20,13 +22,14 @@ import '@/global.css';
 void SplashScreen.preventAutoHideAsync().catch(() => {});
 
 function RootNavigator() {
-  const { colorScheme } = useTheme();
+  const { colorScheme, tokens, isDark } = useTheme();
+  const navTheme = toNavTheme(tokens, isDark);
 
   return (
-    <>
+    <NavigationThemeProvider value={navTheme}>
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
       <Stack screenOptions={{ headerShown: false }} />
-    </>
+    </NavigationThemeProvider>
   );
 }
 

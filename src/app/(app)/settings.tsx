@@ -8,6 +8,7 @@ import { ThemeRow } from '@/features/settings/components/theme-row';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { Text } from '@/lib/theme/components/text';
 import { spacing } from '@/lib/theme/spacing';
+import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
 
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
@@ -26,7 +27,7 @@ export default function SettingsScreen() {
           accessibilityLabel={t('settings.back')}
           accessibilityRole="button"
           testID="settings-back"
-          style={{ minHeight: 44, justifyContent: 'center' }}
+          style={(s) => getPressedStyle(s, { minHeight: 44, justifyContent: 'center' })}
         >
           <Text variant="meta" tone="muted">←</Text>
         </Pressable>

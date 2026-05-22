@@ -19,6 +19,7 @@ import { todayCivilDate } from '@/lib/civil-date';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
 import { Text } from '@/lib/theme/components/text';
+import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
 
 const CROSS_FADE_DURATION = 120;
 
@@ -82,6 +83,7 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
             accessibilityRole="button"
             testID="settings-button"
             className="min-h-11 min-w-11 items-center justify-center"
+            style={(s) => getPressedStyle(s)}
           >
             <Text variant="body" tone="muted" numberOfLines={1}>
               ⚙

@@ -22,7 +22,7 @@ export interface SkiaTokens {
   accent: string;
 }
 
-function toHex(oklch: string): string {
+export function toHex(oklch: string): string {
   const color = parse(oklch);
   if (!color) throw new Error(`culori: cannot parse "${oklch}"`);
   return formatHex(color) ?? '#000000';
