@@ -5,6 +5,7 @@
 :root {
   --color-bg: oklch(97% 0.01 80);
   --color-text: oklch(22% 0.02 80);
+  --color-surface: oklch(91% 0.012 80);
 
   /* 5-stage life gradient — lightness carries the signal */
   --color-stage-0: oklch(35% 0.08 55);
@@ -22,6 +23,7 @@
   :root {
     --color-bg: oklch(12% 0.01 80);
     --color-text: oklch(92% 0.01 80);
+    --color-surface: oklch(20% 0.012 80);
 
     --color-stage-0: oklch(45% 0.08 55);
     --color-stage-1: oklch(55% 0.10 52);
@@ -38,6 +40,7 @@
 .dark {
   --color-bg: oklch(12% 0.01 80);
   --color-text: oklch(92% 0.01 80);
+  --color-surface: oklch(20% 0.012 80);
 
   --color-stage-0: oklch(45% 0.08 55);
   --color-stage-1: oklch(55% 0.10 52);
@@ -52,6 +55,7 @@
 .light {
   --color-bg: oklch(97% 0.01 80);
   --color-text: oklch(22% 0.02 80);
+  --color-surface: oklch(91% 0.012 80);
 
   --color-stage-0: oklch(35% 0.08 55);
   --color-stage-1: oklch(45% 0.10 52);
