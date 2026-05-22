@@ -43,5 +43,6 @@ expo-env.d.ts
 
 .ulis/generated
 
+examples/
 
 TODO.md

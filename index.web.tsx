@@ -6,6 +6,10 @@ import { LoadSkiaWeb } from '@shopify/react-native-skia/lib/module/web';
 import { App } from 'expo-router/build/qualified-entry';
 import { renderRootComponent } from 'expo-router/build/renderRootComponent';
 
-void LoadSkiaWeb().then(() => {
+const CANVASKIT_WASM_BASE_URL = '/assets/node_modules/canvaskit-wasm/bin/full/';
+
+void LoadSkiaWeb({
+  locateFile: (file: string): string => `${CANVASKIT_WASM_BASE_URL}${file}`,
+}).then(() => {
   renderRootComponent(App);
 });
