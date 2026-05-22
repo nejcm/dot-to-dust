@@ -1,9 +1,17 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
+import { Redirect } from 'expo-router';
 import { View } from 'react-native';
 import { withTiming } from 'react-native-reanimated';
 
 import AppIndex from '@/app/(app)';
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
+
+jest.mock('expo-router', () => ({
+  Redirect: jest.fn(() => null),
+  router: {
+    push: jest.fn(),
+  },
+}));
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: jest.fn(() => ({ top: 0, right: 0, bottom: 0, left: 0 })),
@@ -55,5 +63,18 @@ describe('app index', () => {
 
     expect(withTiming).toHaveBeenCalled();
     expect(screen.getByTestId('life-grid')).toHaveTextContent('months');
+  });
+
+  it('redirects to onboarding when date of birth is missing', () => {
+    usePreferencesStore.setState({
+      dob: null,
+      theme: 'system',
+      defaultView: 'weeks',
+    });
+
+    render(<AppIndex />);
+
+    expect(Redirect).toHaveBeenCalledWith({ href: '/(onboarding)' }, undefined);
+    expect(screen.queryByTestId('main-screen')).toBeNull();
   });
 });

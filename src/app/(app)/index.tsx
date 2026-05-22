@@ -1,5 +1,5 @@
 import type { View as GridView } from '@/features/grid/lib/life-math';
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
@@ -21,7 +21,7 @@ import { usePreferencesStore } from '@/lib/storage/preferences-store';
 const CROSS_FADE_DURATION = 120;
 
 export default function AppIndex() {
-  const dob = usePreferencesStore((s) => s.dob)!;
+  const dob = usePreferencesStore((s) => s.dob);
   const defaultView = usePreferencesStore((s) => s.defaultView);
   const today = todayCivilDate();
   const insets = useSafeAreaInsets();
@@ -37,6 +37,10 @@ export default function AppIndex() {
   const gridStyle = useAnimatedStyle(() => ({
     opacity: gridOpacity.value,
   }));
+
+  if (dob === null) {
+    return <Redirect href="/(onboarding)" />;
+  }
 
   function handleViewChange(newView: GridView) {
     if (newView === activeView) return;
