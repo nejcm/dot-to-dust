@@ -33,6 +33,9 @@ export function Headline({ view, dob, today }: HeadlineProps) {
 
   return (
     <Text
+      adjustsFontSizeToFit
+      minimumFontScale={0.8}
+      numberOfLines={1}
       style={{ fontFamily: 'Inter_400Regular' }}
       className="text-xs text-[--color-text] opacity-60"
       accessibilityRole="text"

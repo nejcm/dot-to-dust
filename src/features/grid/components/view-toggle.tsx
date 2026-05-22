@@ -73,11 +73,12 @@ export function ViewToggle({ view, onViewChange }: ViewToggleProps) {
             onPress={() => onViewChange(v)}
             accessibilityRole="button"
             accessibilityState={{ selected: view === v }}
-            style={{ flex: 1, alignItems: 'center', paddingVertical: 8, zIndex: 1 }}
+            style={{ flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: 40, paddingVertical: 8, zIndex: 1 }}
           >
             <Text
+              numberOfLines={1}
               style={{ fontFamily: 'Inter_400Regular' }}
-              className={`text-sm text-[--color-text] ${view === v ? '' : 'opacity-40'}`}
+              className={`text-center text-sm text-[--color-text] ${view === v ? '' : 'opacity-40'}`}
             >
               {t(`grid.toggle.${v}`)}
             </Text>

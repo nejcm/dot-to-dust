@@ -58,15 +58,17 @@ export function DobRow() {
       </Text>
 
       {!editing && (
-        <View className="flex-row items-center justify-between">
+        <View className="min-h-11 flex-row items-center justify-between gap-4">
           <Text
+            numberOfLines={2}
             style={{ fontFamily: 'Inter_400Regular' }}
-            className="text-base text-[--color-text]"
+            className="flex-1 text-base text-[--color-text]"
           >
             {formattedDob}
           </Text>
-          <Pressable onPress={handleEdit} hitSlop={12}>
+          <Pressable onPress={handleEdit} hitSlop={12} className="min-h-11 justify-center">
             <Text
+              numberOfLines={1}
               style={{ fontFamily: 'Inter_400Regular', letterSpacing: 2 }}
               className="text-xs text-[--color-text] uppercase opacity-50"
             >
@@ -96,16 +98,18 @@ export function DobRow() {
                 display="spinner"
               />
               <View className="mt-2 flex-row justify-end gap-6">
-                <Pressable onPress={handleCancel}>
+                <Pressable onPress={handleCancel} className="min-h-11 justify-center">
                   <Text
+                    numberOfLines={1}
                     style={{ fontFamily: 'Inter_400Regular', letterSpacing: 2 }}
                     className="text-xs text-[--color-text] uppercase opacity-50"
                   >
                     {t('settings.dob.cancel')}
                   </Text>
                 </Pressable>
-                <Pressable onPress={handleDone}>
+                <Pressable onPress={handleDone} className="min-h-11 justify-center">
                   <Text
+                    numberOfLines={1}
                     style={{ fontFamily: 'Inter_400Regular', letterSpacing: 2 }}
                     className="text-xs text-[--color-text] uppercase"
                   >

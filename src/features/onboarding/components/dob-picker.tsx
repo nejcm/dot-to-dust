@@ -41,6 +41,9 @@ export function DobPicker({ onConfirm, initialDob }: DobPickerProps) {
     <View className="flex-1 bg-[--color-bg] px-8">
       <View className="flex-1 justify-center">
         <Text
+          adjustsFontSizeToFit
+          minimumFontScale={0.78}
+          numberOfLines={2}
           style={{ fontFamily: 'Fraunces_300Light_Italic' }}
           className="mb-12 text-center text-3xl text-[--color-text]"
         >
@@ -50,11 +53,12 @@ export function DobPicker({ onConfirm, initialDob }: DobPickerProps) {
         {Platform.OS === 'android' && (
           <Pressable
             onPress={() => setShowAndroid(true)}
-            className="mb-8 items-center border border-[--color-text] py-4"
+            className="mb-8 min-h-14 items-center justify-center border border-[--color-text] p-4"
           >
             <Text
+              numberOfLines={1}
               style={{ fontFamily: 'Inter_400Regular' }}
-              className="text-lg text-[--color-text]"
+              className="text-center text-lg text-[--color-text]"
             >
               {format(date, 'MMMM d, yyyy')}
             </Text>
@@ -74,11 +78,12 @@ export function DobPicker({ onConfirm, initialDob }: DobPickerProps) {
       <View className="pb-12">
         <Pressable
           onPress={handleConfirm}
-          className="items-center border border-[--color-text] py-3"
+          className="min-h-12 items-center justify-center border border-[--color-text] px-4 py-3"
         >
           <Text
+            numberOfLines={1}
             style={{ fontFamily: 'Inter_400Regular', letterSpacing: 4 }}
-            className="text-sm text-[--color-text] uppercase"
+            className="text-center text-sm text-[--color-text] uppercase"
           >
             {t('onboarding.dob.done')}
           </Text>

@@ -16,6 +16,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   scheme: Env.EXPO_PUBLIC_SCHEME,
   slug: 'dot-to-dust',
   version: Env.EXPO_PUBLIC_VERSION.toString(),
+  icon: './assets/icon.png',
   orientation: 'portrait',
   userInterfaceStyle: 'automatic',
   ...(EAS_PROJECT_ID
@@ -38,10 +39,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     typedRoutes: true,
   },
   android: {
+    adaptiveIcon: {
+      backgroundColor: '#faf8f5',
+      foregroundImage: './assets/adaptive-icon.png',
+    },
     package: Env.EXPO_PUBLIC_PACKAGE,
   },
   web: {
     bundler: 'metro',
+    favicon: './assets/favicon.png',
   },
   plugins: [
     '@react-native-community/datetimepicker',
@@ -49,6 +55,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       'expo-splash-screen',
       {
         backgroundColor: '#faf8f5',
+        image: './assets/splash.png',
         imageWidth: 150,
       },
     ],

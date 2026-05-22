@@ -69,8 +69,10 @@ export default function AppIndex() {
             hitSlop={12}
             accessibilityLabel={t('settings.title')}
             accessibilityRole="button"
+            className="min-h-11 min-w-11 items-center justify-center"
           >
             <Text
+              numberOfLines={1}
               style={{ fontFamily: 'Inter_400Regular' }}
               className="text-lg text-[--color-text] opacity-40"
             >

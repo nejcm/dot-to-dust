@@ -22,8 +22,10 @@ export default function SettingsScreen() {
           hitSlop={12}
           accessibilityLabel={t('settings.back')}
           accessibilityRole="button"
+          className="min-h-11 justify-center"
         >
           <Text
+            numberOfLines={1}
             style={{ fontFamily: 'Inter_400Regular', letterSpacing: 2 }}
             className="text-xs text-[--color-text] uppercase opacity-50"
           >
@@ -31,8 +33,9 @@ export default function SettingsScreen() {
           </Text>
         </Pressable>
         <Text
+          numberOfLines={1}
           style={{ fontFamily: 'Fraunces_300Light_Italic' }}
-          className="ml-4 text-2xl text-[--color-text]"
+          className="ml-4 flex-1 text-2xl text-[--color-text]"
         >
           {t('settings.title')}
         </Text>

@@ -26,12 +26,13 @@ export function ThemeRow() {
             onPress={() => setTheme(th)}
             accessibilityRole="button"
             accessibilityState={{ selected: theme === th }}
-            className="flex-1 items-center border border-[--color-text] py-2.5"
+            className="min-h-11 flex-1 items-center justify-center border border-[--color-text] px-2 py-2.5"
             style={{ opacity: theme === th ? 1 : 0.3 }}
           >
             <Text
+              numberOfLines={1}
               style={{ fontFamily: 'Inter_400Regular' }}
-              className="text-sm text-[--color-text]"
+              className="text-center text-sm text-[--color-text]"
             >
               {t(`settings.theme.${th}`)}
             </Text>
