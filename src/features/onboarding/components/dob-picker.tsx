@@ -5,19 +5,19 @@ import { format } from 'date-fns';
 import { useState } from 'react';
 import { Platform, Pressable, Text, View } from 'react-native';
 
-import { toCivilDateString } from '@/lib/civil-date';
+import { parseCivilDate, toCivilDateString } from '@/lib/civil-date';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 
-// Reasonable starting position for the picker — 30 years back
 const DEFAULT_DOB = new Date(new Date().getFullYear() - 30, 0, 1);
 
 interface DobPickerProps {
   onConfirm: (dob: string) => void;
+  initialDob?: string;
 }
 
-export function DobPicker({ onConfirm }: DobPickerProps) {
+export function DobPicker({ onConfirm, initialDob }: DobPickerProps) {
   const { t } = useAppTranslation();
-  const [date, setDate] = useState(DEFAULT_DOB);
+  const [date, setDate] = useState(() => (initialDob ? parseCivilDate(initialDob) : DEFAULT_DOB));
   const [showAndroid, setShowAndroid] = useState(false);
   const today = new Date();
 

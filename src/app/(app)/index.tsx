@@ -1,6 +1,7 @@
 import type { View as GridView } from '@/features/grid/lib/life-math';
+import { router } from 'expo-router';
 import { useState } from 'react';
-import { View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -14,6 +15,7 @@ import { LifeGrid } from '@/features/grid/components/life-grid';
 import { ViewToggle } from '@/features/grid/components/view-toggle';
 import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
 import { todayCivilDate } from '@/lib/civil-date';
+import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
 
 const CROSS_FADE_DURATION = 120;
@@ -24,6 +26,7 @@ export default function AppIndex() {
   const today = todayCivilDate();
   const insets = useSafeAreaInsets();
   const reducedMotion = useReducedMotion();
+  const { t } = useAppTranslation();
 
   const [activeView, setActiveView] = useState<GridView>(defaultView);
   const [displayedView, setDisplayedView] = useState<GridView>(defaultView);
@@ -56,8 +59,25 @@ export default function AppIndex() {
       className="flex-1 bg-[--color-bg]"
       style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
     >
-      <View className="gap-2 px-4 pt-3 pb-2">
-        <ViewToggle view={activeView} onViewChange={handleViewChange} />
+      <View className="px-4 pt-3 pb-2">
+        <View className="flex-row items-center gap-2">
+          <View className="flex-1">
+            <ViewToggle view={activeView} onViewChange={handleViewChange} />
+          </View>
+          <Pressable
+            onPress={() => router.push('/(app)/settings')}
+            hitSlop={12}
+            accessibilityLabel={t('settings.title')}
+            accessibilityRole="button"
+          >
+            <Text
+              style={{ fontFamily: 'Inter_400Regular' }}
+              className="text-lg text-[--color-text] opacity-40"
+            >
+              ⚙
+            </Text>
+          </Pressable>
+        </View>
         <Headline view={activeView} dob={dob} today={today} />
       </View>
 

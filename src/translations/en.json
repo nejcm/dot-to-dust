@@ -26,10 +26,13 @@
     }
   },
   "settings": {
+    "back": "Back",
     "defaultView": {
       "label": "Default view"
     },
     "dob": {
+      "cancel": "Cancel",
+      "done": "Done",
       "edit": "Edit",
       "label": "Date of birth",
       "notSet": "Not set"
