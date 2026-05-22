@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { Headline } from '@/features/grid/components/headline';
 import { LifeGrid } from '@/features/grid/components/life-grid';
 import { ViewToggle } from '@/features/grid/components/view-toggle';
 import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
@@ -55,8 +56,9 @@ export default function AppIndex() {
       className="flex-1 bg-[--color-bg]"
       style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
     >
-      <View className="px-4 pt-3 pb-2">
+      <View className="gap-2 px-4 pt-3 pb-2">
         <ViewToggle view={activeView} onViewChange={handleViewChange} />
+        <Headline view={activeView} dob={dob} today={today} />
       </View>
 
       <View
