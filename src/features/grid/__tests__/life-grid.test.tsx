@@ -1,0 +1,101 @@
+import type { ComponentProps } from 'react';
+import { useClock } from '@shopify/react-native-skia';
+import { render } from '@testing-library/react-native';
+import { useReducedMotion as useReanimatedReducedMotion } from 'react-native-reanimated';
+
+import { lightTokens } from '@/lib/theme/tokens';
+import { LifeGrid } from '../components/life-grid';
+import { computeGridLayout } from '../lib/grid-layout';
+
+interface TestNode {
+  type: string;
+  props: Record<string, unknown>;
+  children: TestChild[] | null;
+}
+
+type TestChild = TestNode | string;
+type TestTree = TestNode | TestNode[] | null;
+
+function findNodesByType(tree: TestTree, type: string): TestNode[] {
+  if (!tree) return [];
+  if (Array.isArray(tree)) {
+    return tree.flatMap((node) => findNodesByType(node, type));
+  }
+
+  const children = tree.children?.flatMap((child) => {
+    if (typeof child === 'string') return [];
+    return findNodesByType(child, type);
+  }) ?? [];
+
+  return tree.type === type ? [tree, ...children] : children;
+}
+
+function renderLifeGrid(props?: Partial<ComponentProps<typeof LifeGrid>>) {
+  return render(
+    <LifeGrid
+      view="weeks"
+      dob="2000-01-01"
+      today="2000-01-08"
+      width={393}
+      height={852}
+      {...props}
+    />,
+  );
+}
+
+function strokeCircles(tree: TestTree): TestNode[] {
+  return findNodesByType(tree, 'skCircle').filter(
+    (node) => node.props.style === 'stroke',
+  );
+}
+
+describe('life grid', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest.mocked(useReanimatedReducedMotion).mockReturnValue(false);
+  });
+
+  it('draws the today ring inside the fill dot bounds so edge dots are not clipped', () => {
+    const tree = renderLifeGrid().toJSON() as TestTree;
+    const [ring] = strokeCircles(tree);
+    const layout = computeGridLayout('weeks', 393, 852);
+    const fillRadius = layout.dotSize / 2;
+
+    expect(ring).toBeDefined();
+    expect(ring.props.cx).toBe(fillRadius);
+    expect(ring.props.cy).toBe(fillRadius);
+    expect((ring.props.r as number) + (ring.props.strokeWidth as number) / 2)
+      .toBeLessThanOrEqual(fillRadius);
+  });
+
+  it('does not draw a today ring in bonus time', () => {
+    const tree = renderLifeGrid({
+      dob: '1940-01-01',
+      today: '2020-01-01',
+    }).toJSON() as TestTree;
+
+    expect(strokeCircles(tree)).toHaveLength(0);
+  });
+
+  it('mounts the Skia clock only for pulsing rings', () => {
+    renderLifeGrid();
+    expect(useClock).toHaveBeenCalledTimes(1);
+
+    jest.clearAllMocks();
+    renderLifeGrid({ view: 'years', today: '2001-01-01' });
+    expect(useClock).not.toHaveBeenCalled();
+
+    jest.clearAllMocks();
+    jest.mocked(useReanimatedReducedMotion).mockReturnValue(true);
+    renderLifeGrid();
+    expect(useClock).not.toHaveBeenCalled();
+  });
+
+  it('uses static opacity when the ring does not pulse', () => {
+    const tree = renderLifeGrid({ view: 'years', today: '2001-01-01' }).toJSON() as TestTree;
+    const [ring] = strokeCircles(tree);
+
+    expect(ring.props.color).toBe(lightTokens.skia.accent);
+    expect(ring.props.opacity).toBe(0.8);
+  });
+});

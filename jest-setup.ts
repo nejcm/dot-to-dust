@@ -58,6 +58,7 @@ jest.mock('react-native-reanimated', () => {
       addWhitelistedUIProps: jest.fn(),
     },
     useSharedValue: jest.fn(() => ({ value: 0 })),
+    useDerivedValue: jest.fn((fn) => ({ value: fn() })),
     useAnimatedStyle: jest.fn((fn) => fn()),
     useReducedMotion: jest.fn(() => false),
     runOnJS: jest.fn((fn) => fn),
@@ -91,7 +92,19 @@ jest.mock('react-native-reanimated', () => {
 });
 
 // Mock @shopify/react-native-skia
-jest.mock('@shopify/react-native-skia', () => require('@shopify/react-native-skia/src/mock'));
+jest.mock('@shopify/react-native-skia', () => {
+  const React = require('react');
+  const View = require('react-native').View;
+  const SkiaNode = (type: string) => (props: { children?: unknown }) =>
+    React.createElement(type, props, props.children);
+
+  return {
+    Canvas: View,
+    Circle: SkiaNode('skCircle'),
+    Group: SkiaNode('skGroup'),
+    useClock: jest.fn(() => ({ value: 0 })),
+  };
+});
 
 // Mock expo-localization
 jest.mock('expo-localization', () => ({
