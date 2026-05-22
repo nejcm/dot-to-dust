@@ -129,6 +129,10 @@ jest.mock('react-native-mmkv', () => ({
   __mockMmkvSetString: jest.fn((key: string, value: string) => {
     mockMmkvData.set(key, value);
   }),
+  __mockMmkvGetString: jest.fn((key: string) => {
+    const value = mockMmkvData.get(key);
+    return typeof value === 'string' ? value : undefined;
+  }),
   createMMKV: jest.fn(() => mockMmkvInstance),
   MMKV: jest.fn(() => mockMmkvInstance),
   useMMKVString: jest.fn((_key: string) => [undefined, jest.fn()]),

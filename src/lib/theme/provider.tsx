@@ -24,7 +24,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const systemRaw = useColorScheme();
   const systemColorScheme: 'light' | 'dark'
     = systemRaw === 'dark' ? 'dark' : 'light';
-  const themePref = usePreferencesStore((s) => s.theme);
+  const themePref = usePreferencesStore.use.theme();
 
   useEffect(() => {
     Uniwind.setTheme(themePref);

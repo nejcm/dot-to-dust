@@ -4,7 +4,7 @@ import { Platform, Pressable, View } from 'react-native';
 import { defaultDobCivilDate, formatCivilDateForDisplay, todayCivilDate } from '@/lib/civil-date';
 import { NativeCivilDatePicker } from '@/lib/civil-date/native-civil-date-picker';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
-import { usePreferencesStore } from '@/lib/storage/preferences-store';
+import { setDob, usePreferencesStore } from '@/lib/storage/preferences-store';
 import { Text } from '@/lib/theme/components/text';
 import { spacing } from '@/lib/theme/spacing';
 import { fontFamily } from '@/lib/theme/typography';
@@ -14,8 +14,7 @@ import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
 import { SettingRow } from './setting-row';
 
 export function DobRow() {
-  const dob = usePreferencesStore((s) => s.dob);
-  const setDob = usePreferencesStore((s) => s.setDob);
+  const dob = usePreferencesStore.use.dob();
   const { t } = useAppTranslation();
 
   const [editing, setEditing] = useState(false);

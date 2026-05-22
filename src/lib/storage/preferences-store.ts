@@ -1,11 +1,12 @@
-import type { PersistStorage, StorageValue } from 'zustand/middleware';
+import type { StateStorage } from 'zustand/middleware';
 import { z } from 'zod/v4';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { isPastOrTodayCivilDate } from '@/lib/civil-date';
+import { createSelectors } from '@/lib/utils';
 import { DEFAULT_VIEW, VIEWS } from '@/lib/view';
-import { mmkv } from './mmkv';
+import { mmkvStorage } from './mmkv';
 
 export const STORAGE_KEY = 'preferences';
 
@@ -17,56 +18,45 @@ const prefsSchema = z.object({
   defaultView: z.enum(VIEWS).default(DEFAULT_VIEW),
 });
 
-type Prefs = z.infer<typeof prefsSchema>;
+export type PreferencesState = z.infer<typeof prefsSchema>;
 
-// Stores the raw Prefs JSON instead of zustand's default `{ state, version }`
-// envelope. The on-disk format must stay a plain Prefs object so the schema
-// can be evolved without writing a migration just to unwrap the envelope.
-const mmkvPersistStorage: PersistStorage<Prefs> = {
+const preferencesStorage: StateStorage = {
+  ...mmkvStorage,
   getItem: (name) => {
-    const raw = mmkv.getString(name);
-    if (!raw) return null;
+    const value = mmkvStorage.getItem(name);
+    if (value instanceof Promise) return value;
+    if (!value) return value;
+
     try {
-      const parsed = JSON.parse(raw) as Partial<Prefs>;
-      return { state: parsed } as StorageValue<Prefs>;
+      const parsed = JSON.parse(value) as unknown;
+      if (parsed && typeof parsed === 'object' && 'state' in parsed) return value;
+
+      return JSON.stringify({ state: parsed, version: 0 });
     }
-    catch (error) {
-      if (__DEV__) {
-        console.warn('Failed to load preferences from MMKV.', error);
-      }
-      return null;
+    catch {
+      return value;
     }
-  },
-  setItem: (name, value) => {
-    mmkv.set(name, JSON.stringify(value.state));
-  },
-  removeItem: (name) => {
-    mmkv.remove(name);
   },
 };
 
-interface PreferencesStore extends Prefs {
-  setDob: (dob: string | null) => void;
-  setTheme: (theme: Prefs['theme']) => void;
-  setDefaultView: (view: Prefs['defaultView']) => void;
-}
-
-export const usePreferencesStore = create<PreferencesStore>()(
+const _usePreferencesStore = create<PreferencesState>()(
   persist(
-    (set) => ({
+    () => ({
       ...prefsSchema.parse({}),
-      setDob: (dob) => set({ dob: dobSchema.catch(null).parse(dob) }),
-      setTheme: (theme) => set({ theme }),
-      setDefaultView: (defaultView) => set({ defaultView }),
     }),
     {
       name: STORAGE_KEY,
-      storage: mmkvPersistStorage,
+      storage: createJSONStorage(() => preferencesStorage),
       partialize: (state) => ({
         dob: state.dob,
         theme: state.theme,
         defaultView: state.defaultView,
       }),
+      onRehydrateStorage: () => (_state, error) => {
+        if (error && __DEV__) {
+          console.warn('Failed to load preferences from MMKV.', error);
+        }
+      },
       // Whole-record rejection: if any field is invalid (e.g. a corrupt DOB),
       // fall back to all defaults rather than merging in the valid fields.
       // This is intentional — partial preference state (e.g. dark theme but a
@@ -82,3 +72,30 @@ export const usePreferencesStore = create<PreferencesStore>()(
     },
   ),
 );
+
+export const usePreferencesStore = createSelectors(_usePreferencesStore);
+
+export function getPreferencesState(): PreferencesState {
+  return _usePreferencesStore.getState();
+}
+
+export function updatePreferencesState(
+  state: Partial<PreferencesState> | ((prev: PreferencesState) => Partial<PreferencesState>),
+): void {
+  _usePreferencesStore.setState((prev) => ({
+    ...prev,
+    ...(typeof state === 'function' ? state(prev) : state),
+  }));
+}
+
+export function setDob(dob: string | null): void {
+  updatePreferencesState({ dob: dobSchema.catch(null).parse(dob) });
+}
+
+export function setTheme(theme: PreferencesState['theme']): void {
+  updatePreferencesState({ theme });
+}
+
+export function setDefaultView(defaultView: PreferencesState['defaultView']): void {
+  updatePreferencesState({ defaultView });
+}

@@ -46,8 +46,8 @@ function GearIcon({ color }: { color: string }) {
 }
 
 export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
-  const dob = usePreferencesStore((s) => s.dob);
-  const defaultView = usePreferencesStore((s) => s.defaultView);
+  const dob = usePreferencesStore.use.dob();
+  const defaultView = usePreferencesStore.use.defaultView();
   const today = todayCivilDate();
   const insets = useSafeAreaInsets();
   const reducedMotion = useReducedMotion();

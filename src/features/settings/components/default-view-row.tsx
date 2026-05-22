@@ -1,7 +1,7 @@
 import { Pressable, View } from 'react-native';
 
 import { useAppTranslation } from '@/lib/i18n/use-translation';
-import { usePreferencesStore } from '@/lib/storage/preferences-store';
+import { setDefaultView, usePreferencesStore } from '@/lib/storage/preferences-store';
 import { Text } from '@/lib/theme/components/text';
 import { radius, spacing } from '@/lib/theme/spacing';
 import { useTheme } from '@/lib/theme/use-theme';
@@ -10,8 +10,7 @@ import { VIEWS } from '@/lib/view';
 import { SettingRow } from './setting-row';
 
 export function DefaultViewRow() {
-  const defaultView = usePreferencesStore((s) => s.defaultView);
-  const setDefaultView = usePreferencesStore((s) => s.setDefaultView);
+  const defaultView = usePreferencesStore.use.defaultView();
   const { t } = useAppTranslation();
   const { tokens } = useTheme();
 

@@ -1,7 +1,7 @@
 import { Pressable, View } from 'react-native';
 
 import { useAppTranslation } from '@/lib/i18n/use-translation';
-import { usePreferencesStore } from '@/lib/storage/preferences-store';
+import { setTheme, usePreferencesStore } from '@/lib/storage/preferences-store';
 import { Text } from '@/lib/theme/components/text';
 import { radius, spacing } from '@/lib/theme/spacing';
 import { useTheme } from '@/lib/theme/use-theme';
@@ -12,8 +12,7 @@ type Theme = 'light' | 'dark' | 'system';
 const THEMES: Theme[] = ['light', 'dark', 'system'];
 
 export function ThemeRow() {
-  const theme = usePreferencesStore((s) => s.theme);
-  const setTheme = usePreferencesStore((s) => s.setTheme);
+  const theme = usePreferencesStore.use.theme();
   const { t } = useAppTranslation();
   const { tokens } = useTheme();
 
