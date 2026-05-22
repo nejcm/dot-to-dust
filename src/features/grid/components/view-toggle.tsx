@@ -1,4 +1,4 @@
-import type { View } from '../lib/life-math';
+import type { View } from '@/lib/view';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, View as RNView, Text } from 'react-native';
 import Animated, {
@@ -9,13 +9,13 @@ import Animated, {
 
 import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
+import { VIEWS } from '@/lib/view';
 
 interface ViewToggleProps {
   view: View;
   onViewChange: (view: View) => void;
 }
 
-const VIEWS: View[] = ['weeks', 'months', 'years'];
 const THUMB_DURATION = 240;
 
 export function ViewToggle({ view, onViewChange }: ViewToggleProps) {

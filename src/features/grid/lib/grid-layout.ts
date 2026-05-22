@@ -1,16 +1,12 @@
-import type { View } from './life-math';
+import type { View } from '@/lib/view';
+
+import { gridDimensionsFor } from './view-policy';
 
 export type GridLayout = {
   cols: number;
   rows: number;
   dotSize: number;
   gap: number;
-};
-
-const GRID_DIMS: Record<View, { cols: number; rows: number }> = {
-  weeks: { cols: 52, rows: 80 },
-  months: { cols: 12, rows: 80 },
-  years: { cols: 10, rows: 8 },
 };
 
 // Ratio of gap to dotSize. Produces visually balanced spacing.
@@ -26,7 +22,7 @@ export function computeGridLayout(
   canvasWidth: number,
   canvasHeight: number,
 ): GridLayout {
-  const { cols, rows } = GRID_DIMS[view];
+  const { cols, rows } = gridDimensionsFor(view);
 
   // Total width = cols*d + (cols-1)*g = d*(cols + GAP_RATIO*(cols-1))
   const dotSizeW = canvasWidth / (cols + GAP_RATIO * (cols - 1));

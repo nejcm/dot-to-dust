@@ -1,13 +1,15 @@
+import type { View } from '@/lib/view';
+
 import { differenceInMonths, differenceInWeeks, differenceInYears } from 'date-fns';
 
 import { parseCivilDate } from '@/lib/civil-date';
+
+export type { View } from '@/lib/view';
 
 export const LIFE_YEARS = 80;
 export const WEEKS_TOTAL = LIFE_YEARS * 52; // 4160
 export const MONTHS_TOTAL = LIFE_YEARS * 12; // 960
 export const YEARS_TOTAL = LIFE_YEARS; // 80
-
-export type View = 'weeks' | 'months' | 'years';
 
 export function weeksLived(dob: string, today: string): number {
   return Math.max(0, differenceInWeeks(parseCivilDate(today), parseCivilDate(dob)));

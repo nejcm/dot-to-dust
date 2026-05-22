@@ -1,4 +1,4 @@
-import type { View as GridView } from '@/features/grid/lib/life-math';
+import type { View as GridView } from '@/lib/view';
 import { Redirect, router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';

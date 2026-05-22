@@ -1,5 +1,5 @@
 import type { GridLayout } from '../lib/grid-layout';
-import type { View } from '../lib/life-math';
+import { VIEWS } from '@/lib/view';
 import { computeGridLayout } from '../lib/grid-layout';
 
 const DEVICE_SCREENS = [
@@ -8,8 +8,6 @@ const DEVICE_SCREENS = [
   { name: 'Pixel 6', width: 411, height: 914 },
   { name: 'Pixel 8 Pro', width: 448, height: 998 },
 ] as const;
-
-const VIEWS: View[] = ['weeks', 'months', 'years'];
 
 function fitsCanvas(layout: GridLayout, width: number, height: number): boolean {
   const usedW = layout.cols * layout.dotSize + (layout.cols - 1) * layout.gap;

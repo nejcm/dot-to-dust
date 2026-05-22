@@ -1,11 +1,8 @@
-import type { View as GridView } from '@/features/grid/lib/life-math';
-
 import { Pressable, Text, View } from 'react-native';
 
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
-
-const VIEWS: GridView[] = ['weeks', 'months', 'years'];
+import { VIEWS } from '@/lib/view';
 
 export function DefaultViewRow() {
   const defaultView = usePreferencesStore((s) => s.defaultView);

@@ -1,5 +1,5 @@
 import type { SharedValue } from 'react-native-reanimated';
-import type { View } from '../lib/life-math';
+import type { View } from '@/lib/view';
 import { Canvas, Circle, Group, useClock } from '@shopify/react-native-skia';
 
 import { useMemo } from 'react';

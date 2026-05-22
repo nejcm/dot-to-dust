@@ -4,6 +4,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import { isPastOrTodayCivilDate } from '@/lib/civil-date';
+import { DEFAULT_VIEW, VIEWS } from '@/lib/view';
 import { mmkv } from './mmkv';
 
 export const STORAGE_KEY = 'preferences';
@@ -13,7 +14,7 @@ const dobSchema = z.string().refine(isPastOrTodayCivilDate).nullable().default(n
 const prefsSchema = z.object({
   dob: dobSchema,
   theme: z.enum(['light', 'dark', 'system']).default('system'),
-  defaultView: z.enum(['weeks', 'months', 'years']).default('weeks'),
+  defaultView: z.enum(VIEWS).default(DEFAULT_VIEW),
 });
 
 type Prefs = z.infer<typeof prefsSchema>;
