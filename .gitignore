@@ -42,3 +42,6 @@ expo-env.d.ts
 .claude/settings.local.json
 
 .ulis/generated
+
+
+TODO.md
