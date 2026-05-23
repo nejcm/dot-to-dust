@@ -47,7 +47,7 @@ export function DobRow() {
             hitSlop={12}
             accessibilityLabel={t('settings.dob.edit')}
             accessibilityRole="button"
-            className="min-h-11 flex-row items-center justify-end gap-[10px]"
+            className="min-h-11 flex-row items-center justify-end gap-2.5"
             style={getPressedStyle}
           >
             <Text variant="meta" tone="muted" numberOfLines={1}>

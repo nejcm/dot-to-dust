@@ -19,7 +19,7 @@ export function Headline({ view, dob, today }: HeadlineProps) {
   return (
     <RNView testID="headline" accessibilityRole="none">
       <Text
-        className="mb-[10px] text-[10.5px] font-medium tracking-[2.2px] text-muted uppercase"
+        className="mb-2.5 text-[10.5px] font-medium tracking-[2.2px] text-muted uppercase"
       >
         {t(headline.eyebrowKey)}
       </Text>

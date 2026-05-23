@@ -2,6 +2,13 @@
   "tab_size": 2,
   "format_on_save": "on",
   "languages": {
+    "CSS": {
+      "language_servers": [
+        "tailwindcss-intellisense-css",
+        "!vscode-css-language-server",
+        "..."
+      ]
+    },
     "JavaScript": {
       "formatter": [],
       "code_actions_on_format": {
@@ -45,6 +52,24 @@
           { "rule": "*quotes", "severity": "off", "fixable": true },
           { "rule": "*semi", "severity": "off", "fixable": true }
         ]
+      }
+    },
+    "tailwindcss-language-server": {
+      "settings": {
+        "tailwindCSS": {
+          "classAttributes": [
+            "class",
+            "className",
+            "contentContainerClassName",
+            "colorClassName",
+            "tintColorClassName",
+            "placeholderTextColorClassName"
+          ],
+          "classFunctions": ["cn"],
+          "experimental": {
+            "configFile": "src/global.css"
+          }
+        }
       }
     }
   }

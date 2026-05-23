@@ -24,7 +24,7 @@ export function DefaultViewRow() {
               onPress={() => setDefaultViewPreference(v)}
               accessibilityRole="button"
               accessibilityState={{ selected: defaultView === v }}
-              className="min-h-11 flex-1 items-center justify-center px-2 pt-3 pb-[14px]"
+              className="min-h-11 flex-1 items-center justify-center px-2 pt-3 pb-3.5"
               style={({ pressed }) => pressed && { opacity: 0.65 }}
             >
               <Text
@@ -37,7 +37,7 @@ export function DefaultViewRow() {
               </Text>
               <View
                 className={cn(
-                  'absolute bottom-0 h-[hairlineWidth()] w-[18px]',
+                  'absolute bottom-0 h-[hairlineWidth()] w-4.5',
                   defaultView === v ? 'bg-ink' : 'bg-transparent',
                 )}
               />

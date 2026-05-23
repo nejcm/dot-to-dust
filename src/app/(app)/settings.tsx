@@ -31,7 +31,7 @@ export default function SettingsScreen() {
           accessibilityLabel={t('settings.back')}
           accessibilityRole="button"
           testID="settings-back"
-          className="min-h-11 flex-row items-center justify-center gap-[6px]"
+          className="min-h-11 flex-row items-center justify-center gap-1.5"
           style={getPressedStyle}
         >
           <ArrowLeftIcon color={iconColor} />
@@ -40,7 +40,7 @@ export default function SettingsScreen() {
           </Text>
         </Pressable>
         <Wordmark size={9} />
-        <View className="w-[50px]" />
+        <View className="w-12.5" />
       </View>
 
       {/* Title block */}
@@ -48,7 +48,7 @@ export default function SettingsScreen() {
         <Text
           variant="eyebrow"
           tone="muted"
-          className="mb-[10px] tracking-[2.2px] uppercase"
+          className="mb-2.5 tracking-[2.2px] uppercase"
         >
           {t('settings.eyebrow')}
         </Text>
@@ -64,7 +64,7 @@ export default function SettingsScreen() {
         <Text
           variant="micro"
           tone="faint"
-          className="mt-[10px] mb-1 tracking-[2px] uppercase"
+          className="mt-2.5 mb-1 tracking-[2px] uppercase"
         >
           {t('settings.group.life')}
         </Text>

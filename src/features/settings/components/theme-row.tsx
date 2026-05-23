@@ -27,7 +27,7 @@ export function ThemeRow() {
               accessibilityRole="button"
               accessibilityState={{ selected: theme === th }}
               testID={`theme-${th}`}
-              className="min-h-11 flex-1 items-center justify-center px-2 pt-3 pb-[14px]"
+              className="min-h-11 flex-1 items-center justify-center px-2 pt-3 pb-3.5"
               style={({ pressed }) => pressed && { opacity: 0.65 }}
             >
               <Text
@@ -40,7 +40,7 @@ export function ThemeRow() {
               </Text>
               <View
                 className={cn(
-                  'absolute bottom-0 h-[hairlineWidth()] w-[18px]',
+                  'absolute bottom-0 h-[hairlineWidth()] w-4.5',
                   theme === th ? 'bg-ink' : 'bg-transparent',
                 )}
               />

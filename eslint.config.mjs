@@ -9,6 +9,100 @@ import testingLibrary from 'eslint-plugin-testing-library';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+const tailwindSpacingUtilityPattern = /^(?<prefix>-?)(?<utility>(?:min-|max-)?(?:w|h)|[mp][trblxy]?|gap(?:-[xy])?|inset(?:-[xy])?|top|right|bottom|left)-\[(?<pixels>\d+(?:\.\d+)?)px\]$/;
+const classNameSplitPattern = /\s+/u;
+const tailwindClassAttributePattern = /^(?:className|contentContainerClassName|colorClassName|tintColorClassName|placeholderTextColorClassName)$/u;
+
+function getCanonicalSpacingClass(className) {
+  const match = tailwindSpacingUtilityPattern.exec(className);
+
+  if (!match?.groups) {
+    return undefined;
+  }
+
+  const pixels = Number(match.groups.pixels);
+
+  if (!Number.isFinite(pixels) || pixels % 2 !== 0) {
+    return undefined;
+  }
+
+  const scaleValue = pixels / 4;
+  const scale = Number.isInteger(scaleValue) ? String(scaleValue) : scaleValue.toFixed(1);
+
+  return `${match.groups.prefix}${match.groups.utility}-${scale}`;
+}
+
+function reportCanonicalClasses(context, node, value, rangeOffset = 0) {
+  let searchFrom = 0;
+
+  for (const className of value.split(classNameSplitPattern)) {
+    if (!className) {
+      continue;
+    }
+
+    const canonicalClass = getCanonicalSpacingClass(className);
+    const classIndex = value.indexOf(className, searchFrom);
+    searchFrom = classIndex + className.length;
+
+    if (!canonicalClass) {
+      continue;
+    }
+
+    context.report({
+      node,
+      message: `The class \`${className}\` can be written as \`${canonicalClass}\`.`,
+      fix(fixer) {
+        return fixer.replaceTextRange(
+          [node.range[0] + rangeOffset + classIndex, node.range[0] + rangeOffset + classIndex + className.length],
+          canonicalClass,
+        );
+      },
+    });
+  }
+}
+
+const localTailwindRules = {
+  rules: {
+    'suggest-canonical-spacing-classes': {
+      meta: {
+        type: 'suggestion',
+        fixable: 'code',
+      },
+      create(context) {
+        return {
+          JSXAttribute(node) {
+            const attributeName = node.name?.name;
+
+            if (
+              typeof attributeName !== 'string'
+              || !tailwindClassAttributePattern.test(attributeName)
+              || node.value?.type !== 'Literal'
+              || typeof node.value.value !== 'string'
+            ) {
+              return;
+            }
+
+            reportCanonicalClasses(context, node.value, node.value.value, 1);
+          },
+          Literal(node) {
+            if (
+              typeof node.value !== 'string'
+              || node.parent?.type === 'JSXAttribute'
+            ) {
+              return;
+            }
+
+            reportCanonicalClasses(context, node, node.value, 1);
+          },
+          TemplateElement(node) {
+            reportCanonicalClasses(context, node, node.value.raw);
+          },
+        };
+      },
+    },
+  },
+};
+
 export default antfu(
   {
     react: true,
@@ -118,6 +212,10 @@ export default antfu(
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     ...betterTailwindcss.configs.recommended,
+    plugins: {
+      ...betterTailwindcss.configs.recommended.plugins,
+      local: localTailwindRules,
+    },
     settings: {
       'better-tailwindcss': {
         entryPoint: path.resolve(__dirname, './src/global.css'),
@@ -125,6 +223,8 @@ export default antfu(
     },
     rules: {
       ...betterTailwindcss.configs.recommended.rules,
+      'better-tailwindcss/enforce-canonical-classes': 'warn',
+      'local/suggest-canonical-spacing-classes': 'warn',
       'better-tailwindcss/no-unnecessary-whitespace': 'warn',
       'better-tailwindcss/no-unknown-classes': 'warn',
       'better-tailwindcss/enforce-consistent-line-wrapping': 'off',
