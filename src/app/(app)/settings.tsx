@@ -7,10 +7,11 @@ import { ReplayOnboardingRow } from '@/features/settings/components/replay-onboa
 import { ThemeRow } from '@/features/settings/components/theme-row';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { goBackOrFallback } from '@/lib/routing';
+import { GhostButton } from '@/lib/theme';
 import { ArrowLeftIcon } from '@/lib/theme/components/icons';
 import { ScreenScrollView } from '@/lib/theme/components/screen';
 import { Text } from '@/lib/theme/components/text';
-import { Pressable, View } from '@/lib/theme/components/ui';
+import { View } from '@/lib/theme/components/ui';
 import { Wordmark } from '@/lib/theme/components/wordmark';
 import { toHex } from '@/lib/theme/tokens';
 import { useTheme } from '@/lib/theme/use-theme';
@@ -23,28 +24,25 @@ export default function SettingsScreen() {
 
   return (
     <ScreenScrollView testID="settings-screen" contentContainerClassName="grow">
-      {/* Top bar: back | wordmark | spacer */}
-      <View className="flex-row items-center justify-between px-7 pt-4">
-        <Pressable
+      <View className="flex-row items-center justify-between px-6 pt-2">
+        <GhostButton
           onPress={() => goBackOrFallback(router, '/(app)')}
           hitSlop={12}
           accessibilityLabel={t('settings.back')}
-          accessibilityRole="button"
           testID="settings-back"
-          className="min-h-11 flex-row items-center justify-center gap-1.5"
+          className="gap-3 px-px"
           style={getPressedStyle}
         >
           <ArrowLeftIcon color={iconColor} />
           <Text variant="meta" tone="inkSoft">
             {t('settings.back')}
           </Text>
-        </Pressable>
-        <Wordmark size={9} />
+        </GhostButton>
+        <Wordmark />
         <View className="w-12.5" />
       </View>
 
-      {/* Title block */}
-      <View className="px-7 pt-10 pb-7">
+      <View className="px-6 pt-8 pb-7">
         <Text
           variant="eyebrow"
           tone="muted"
@@ -53,14 +51,13 @@ export default function SettingsScreen() {
           {t('settings.eyebrow')}
         </Text>
         <Text
-          className="font-display-italic text-[36px] leading-[36px] tracking-[-0.4px] text-ink"
+          className="font-display-italic text-[36px]/9 tracking-[-0.4px] text-ink"
         >
           {t('settings.title')}
         </Text>
       </View>
 
-      <View className="px-7 pb-8">
-        {/* Life group */}
+      <View className="px-6 pb-8">
         <Text
           variant="micro"
           tone="faint"
@@ -71,7 +68,6 @@ export default function SettingsScreen() {
         <DobRow />
         <LifeExpectancyRow />
 
-        {/* Appearance group */}
         <Text
           variant="micro"
           tone="faint"
@@ -82,7 +78,6 @@ export default function SettingsScreen() {
         <ThemeRow />
         <DefaultViewRow />
 
-        {/* About group */}
         <Text
           variant="micro"
           tone="faint"
@@ -94,8 +89,7 @@ export default function SettingsScreen() {
         <VersionRow />
       </View>
 
-      {/* Footer epigraph */}
-      <View className="mt-auto items-center px-7 pb-10">
+      <View className="mt-auto items-center px-6 pb-10">
         <Text
           className="text-center font-display-italic text-meta/5 text-faint"
         >

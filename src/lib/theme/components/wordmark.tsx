@@ -22,7 +22,7 @@ const WORDMARK_TO_SIZE_CLASSES: Record<WordmarkSize, string> = {
 
 export function Wordmark({ size = 12, className }: WordmarkProps) {
   return (
-    <View className="flex-row gap-0.5">
+    <View className="flex-row items-end gap-0.5">
       <Text
         className={['font-medium tracking-widest text-muted', WORDMARK_SIZE_CLASSES[size], className].filter(Boolean).join(' ')}
       >
