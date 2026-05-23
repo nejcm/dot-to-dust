@@ -64,3 +64,12 @@ export function defaultDobCivilDate(today = todayCivilDate()): string {
 export function isPastOrTodayCivilDate(value: string, today = todayCivilDate()): boolean {
   return isCivilDate(value) && value <= today;
 }
+
+export function tryParseDate(value: string): Date | undefined {
+  try {
+    return parseCivilDate(value);
+  }
+  catch {
+    return undefined;
+  }
+}

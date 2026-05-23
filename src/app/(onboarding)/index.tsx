@@ -6,58 +6,36 @@ import { Screen } from '@/lib/theme/components/screen';
 import { Text } from '@/lib/theme/components/text';
 import { View } from '@/lib/theme/components/ui';
 import { Wordmark } from '@/lib/theme/components/wordmark';
-import { fontFamily } from '@/lib/theme/typography';
-import { useTheme } from '@/lib/theme/use-theme';
+
+const STAGE_DOT_CLASSES = [
+  'bg-stage-0',
+  'bg-stage-1',
+  'bg-stage-2',
+  'bg-stage-3',
+  'bg-stage-4',
+] as const;
 
 export default function WelcomeScreen() {
   const { t } = useAppTranslation();
-  const { tokens } = useTheme();
-
-  const stageDots = tokens.stages;
 
   return (
     <Screen contentClassName="pt-10">
-      <View
-        style={{ alignItems: 'center', paddingHorizontal: 32, paddingTop: 36 }}
-      >
-        <Wordmark size={10} />
+      <View className="items-center px-8 pt-9">
+        <Wordmark />
       </View>
 
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          paddingHorizontal: 36,
-          gap: 40,
-        }}
-      >
+      <View className="flex-1 items-center justify-center gap-10 px-9">
         {/* Stage constellation */}
-        <View style={{ flexDirection: 'row', gap: 12 }}>
-          {stageDots.map((color, i) => (
+        <View className="flex-row gap-3">
+          {STAGE_DOT_CLASSES.map((className) => (
             <View
-              key={i}
-              style={{
-                width: 7,
-                height: 7,
-                borderRadius: 7,
-                backgroundColor: color,
-              }}
+              key={className}
+              className={`size-2 rounded-full ${className}`}
             />
           ))}
         </View>
 
-        {/* Tagline */}
-        <Text
-          style={{
-            fontFamily: fontFamily.displayItalic,
-            fontSize: 30,
-            lineHeight: 37,
-            letterSpacing: -0.3,
-            textAlign: 'center',
-            color: tokens.ink,
-          }}
-        >
+        <Text className="text-center font-display-italic text-[31px]/9 tracking-[-0.3px] text-ink">
           {t('onboarding.welcome.tagline')}
         </Text>
 
@@ -65,27 +43,14 @@ export default function WelcomeScreen() {
         <Text
           variant="meta"
           tone="muted"
-          style={{
-            textAlign: 'center',
-            maxWidth: 240,
-            lineHeight: 21,
-            letterSpacing: 0.3,
-          }}
+          className="max-w-60 text-center leading-5 tracking-[0.3px]"
         >
           {t('onboarding.welcome.body')}
         </Text>
       </View>
 
       {/* Bottom: Begin + step counter */}
-      <View
-        style={{
-          alignItems: 'center',
-          paddingHorizontal: 36,
-          paddingTop: 24,
-          paddingBottom: 56,
-          gap: 18,
-        }}
-      >
+      <View className="items-center gap-4 px-9 pt-6 pb-14">
         <PrimaryButton
           onPress={() => router.push('/(onboarding)/dob')}
           testID="onboarding-begin"
@@ -95,7 +60,7 @@ export default function WelcomeScreen() {
         <Text
           variant="micro"
           tone="faint"
-          style={{ letterSpacing: 1.6, textTransform: 'uppercase' }}
+          className="tracking-[1.6px] uppercase"
         >
           {t('onboarding.welcome.step')}
         </Text>

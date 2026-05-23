@@ -3,8 +3,6 @@ import type { View } from '@/lib/view';
 import { View as RNView, Text } from 'react-native';
 
 import { useAppTranslation } from '@/lib/i18n/use-translation';
-import { fontFamily } from '@/lib/theme/typography';
-import { useTheme } from '@/lib/theme/use-theme';
 
 import { bonusUnitsAhead, isBonusTime, LIFE_YEARS, remainingFor } from '../lib/life-math';
 import { livedUnitsFor, totalUnitsFor } from '../lib/view-policy';
@@ -35,7 +33,6 @@ interface HeadlineProps {
 
 export function Headline({ view, dob, today }: HeadlineProps) {
   const { t } = useAppTranslation();
-  const { tokens } = useTheme();
   const bonus = isBonusTime(dob, today);
 
   const lived = livedUnitsFor(view, dob, today);
@@ -47,39 +44,21 @@ export function Headline({ view, dob, today }: HeadlineProps) {
   return (
     <RNView testID="headline" accessibilityRole="none">
       <Text
-        style={{
-          fontFamily: fontFamily.uiMedium,
-          fontSize: 10.5,
-          letterSpacing: 2.2,
-          textTransform: 'uppercase',
-          color: tokens.muted,
-          marginBottom: 10,
-        }}
+        className="mb-[10px] text-[10.5px] font-medium tracking-[2.2px] text-muted uppercase"
       >
         {t(eyebrowKey)}
       </Text>
 
-      <RNView style={{ flexDirection: 'row', alignItems: 'baseline', gap: 12 }}>
+      <RNView className="flex-row items-baseline gap-3">
         <Text
-          style={{
-            fontFamily: fontFamily.displayItalic,
-            fontSize: 44,
-            letterSpacing: -1,
-            color: tokens.ink,
-            lineHeight: 44,
-          }}
+          className="font-display-italic text-display-xl leading-[44px] tracking-[-1px] text-ink"
           testID="headline-lived"
         >
           {(bonus ? remaining : lived).toLocaleString()}
         </Text>
         {!bonus && (
           <Text
-            style={{
-              fontFamily: fontFamily.ui,
-              fontSize: 12,
-              letterSpacing: 0.3,
-              color: tokens.muted,
-            }}
+            className="font-ui text-[12px] tracking-[0.3px] text-muted"
           >
             {t('grid.headline.of', { total: total.toLocaleString() })}
           </Text>
@@ -88,13 +67,7 @@ export function Headline({ view, dob, today }: HeadlineProps) {
 
       {!bonus && (
         <Text
-          style={{
-            fontFamily: fontFamily.ui,
-            fontSize: 12,
-            letterSpacing: 0.2,
-            color: tokens.muted,
-            marginTop: 8,
-          }}
+          className="mt-2 font-ui text-[12px] tracking-[0.2px] text-muted"
           testID="headline-subline"
         >
           {t(SUBLINE_KEY[view], {

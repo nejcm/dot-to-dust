@@ -1,37 +1,43 @@
-import { Text } from 'react-native';
+import { View } from 'react-native';
+import { Text } from './text';
 
-import { fontFamily } from '../typography';
-import { useTheme } from '../use-theme';
+type WordmarkSize = 9 | 10 | 12;
 
 interface WordmarkProps {
-  size?: number;
+  size?: WordmarkSize;
+  className?: string;
 }
 
-export function Wordmark({ size = 11 }: WordmarkProps) {
-  const { tokens } = useTheme();
+const WORDMARK_SIZE_CLASSES: Record<WordmarkSize, string> = {
+  9: 'text-[9px]',
+  10: 'text-[10px]',
+  12: 'text-[12px]',
+};
 
+const WORDMARK_TO_SIZE_CLASSES: Record<WordmarkSize, string> = {
+  9: 'text-[11px]',
+  10: 'text-[12px]',
+  12: 'text-[14px]',
+};
+
+export function Wordmark({ size = 12, className }: WordmarkProps) {
   return (
-    <Text
-      style={{
-        fontFamily: fontFamily.uiMedium,
-        fontSize: size,
-        letterSpacing: 2.2,
-        color: tokens.muted,
-      }}
-    >
-      DOT
-      {' '}
+    <View className="flex-row gap-0.5">
       <Text
-        style={{
-          fontFamily: fontFamily.displayItalic,
-          fontSize: size + 2,
-          letterSpacing: 0,
-        }}
+        className={['font-medium tracking-widest text-muted', WORDMARK_SIZE_CLASSES[size], className].filter(Boolean).join(' ')}
+      >
+        DOT
+      </Text>
+      <Text
+        className={['mr-px font-display-italic text-muted', WORDMARK_TO_SIZE_CLASSES[size]].join(' ')}
       >
         to
       </Text>
-      {' '}
-      DUST
-    </Text>
+      <Text
+        className={['font-medium tracking-widest text-muted', WORDMARK_SIZE_CLASSES[size], className].filter(Boolean).join(' ')}
+      >
+        DUST
+      </Text>
+    </View>
   );
 }

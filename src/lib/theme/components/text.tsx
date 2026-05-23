@@ -1,23 +1,33 @@
-import type { TextStyle } from 'react-native';
+import type { TextProps as RNTextProps } from 'react-native';
 import type { FontVariant } from '../typography';
-
+import * as React from 'react';
 import { Text as RNText } from 'react-native';
-import { typeScale } from '../typography';
-import { useTheme } from '../use-theme';
+import { cn } from 'tailwind-variants';
 
 export type TextTone = 'ink' | 'inkSoft' | 'muted' | 'faint' | 'accent';
 
-interface TextProps {
+const VARIANT_CLASS_NAMES: Record<FontVariant, string> = {
+  displayXl: 'font-display text-[44px] font-light leading-[52px] tracking-[-0.5px]',
+  displayL: 'font-display text-[32px] font-light leading-10 tracking-[-0.3px]',
+  displayM: 'font-display-regular text-[22px] font-normal leading-7 tracking-[-0.2px]',
+  body: 'font-ui text-[17px] font-normal leading-6 tracking-0',
+  meta: 'font-ui text-[13px] font-normal leading-[18px] tracking-[0.1px]',
+  eyebrow: 'font-ui text-[11px] font-medium leading-4 tracking-[1.5px]',
+  micro: 'font-ui text-[10px] font-normal leading-[14px] tracking-[0.2px]',
+};
+
+const TONE_CLASS_NAMES: Record<TextTone, string> = {
+  ink: 'text-ink',
+  inkSoft: 'text-ink-soft',
+  muted: 'text-muted',
+  faint: 'text-faint',
+  accent: 'text-accent',
+};
+
+interface TextProps extends RNTextProps {
   variant?: FontVariant;
   tone?: TextTone;
-  children: React.ReactNode;
-  style?: TextStyle;
-  numberOfLines?: number;
-  adjustsFontSizeToFit?: boolean;
-  minimumFontScale?: number;
-  testID?: string;
-  accessibilityRole?: React.ComponentProps<typeof RNText>['accessibilityRole'];
-  accessibilityLabel?: string;
+  className?: string;
 }
 
 export function Text({
@@ -25,35 +35,19 @@ export function Text({
   tone = 'ink',
   children,
   style,
-  numberOfLines,
-  adjustsFontSizeToFit,
-  minimumFontScale,
-  testID,
-  accessibilityRole,
-  accessibilityLabel,
+  className,
+  ...props
 }: TextProps) {
-  const { tokens } = useTheme();
-  const scale = typeScale[variant];
+  const textClassName = React.useMemo(
+    () => cn(VARIANT_CLASS_NAMES[variant], TONE_CLASS_NAMES[tone], className),
+    [className, tone, variant],
+  );
 
   return (
     <RNText
-      style={[
-        {
-          fontFamily: scale.fontFamily,
-          fontSize: scale.fontSize,
-          fontWeight: scale.fontWeight as TextStyle['fontWeight'],
-          letterSpacing: scale.letterSpacing,
-          lineHeight: scale.lineHeight,
-          color: tokens[tone],
-        },
-        style,
-      ]}
-      numberOfLines={numberOfLines}
-      adjustsFontSizeToFit={adjustsFontSizeToFit}
-      minimumFontScale={minimumFontScale}
-      testID={testID}
-      accessibilityRole={accessibilityRole}
-      accessibilityLabel={accessibilityLabel}
+      className={textClassName}
+      style={style}
+      {...props}
     >
       {children}
     </RNText>

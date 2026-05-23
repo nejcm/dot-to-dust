@@ -4,8 +4,6 @@ import { Pressable, View as RNView, Text } from 'react-native';
 
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { Hairline } from '@/lib/theme/components/hairline';
-import { fontFamily } from '@/lib/theme/typography';
-import { useTheme } from '@/lib/theme/use-theme';
 import { VIEWS } from '@/lib/view';
 
 interface ViewToggleProps {
@@ -15,11 +13,10 @@ interface ViewToggleProps {
 
 export function ViewToggle({ view, onViewChange }: ViewToggleProps) {
   const { t } = useAppTranslation();
-  const { tokens } = useTheme();
 
   return (
     <RNView>
-      <RNView style={{ flexDirection: 'row' }}>
+      <RNView className="flex-row">
         {VIEWS.map((v) => {
           const active = v === view;
           return (
@@ -29,29 +26,20 @@ export function ViewToggle({ view, onViewChange }: ViewToggleProps) {
               accessibilityRole="button"
               accessibilityState={{ selected: active }}
               testID={`view-toggle-${v}`}
-              style={{ flex: 1, alignItems: 'center', paddingVertical: 12, position: 'relative' }}
+              className="relative flex-1 items-center py-3"
             >
               <Text
                 numberOfLines={1}
-                style={{
-                  fontFamily: active ? fontFamily.uiMedium : fontFamily.ui,
-                  fontSize: 12,
-                  letterSpacing: 2,
-                  textTransform: 'uppercase',
-                  color: active ? tokens.ink : tokens.muted,
-                }}
+                className={[
+                  'text-[12px] tracking-[2px] uppercase',
+                  active ? 'font-medium text-ink' : 'font-ui text-muted',
+                ].join(' ')}
               >
                 {t(`grid.toggle.${v}`)}
               </Text>
               {active && (
                 <RNView
-                  style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    width: 18,
-                    height: 0.5,
-                    backgroundColor: tokens.ink,
-                  }}
+                  className="absolute bottom-0 h-[0.5px] w-[18px] bg-ink"
                 />
               )}
             </Pressable>

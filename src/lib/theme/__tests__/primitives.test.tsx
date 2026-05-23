@@ -4,8 +4,6 @@ import { GhostButton } from '../components/ghost-button';
 import { Hairline } from '../components/hairline';
 import { PrimaryButton } from '../components/primary-button';
 import { Text } from '../components/text';
-import { lightTokens } from '../tokens';
-import { typeScale } from '../typography';
 
 describe('text primitive', () => {
   it('renders children', () => {
@@ -16,41 +14,44 @@ describe('text primitive', () => {
   it('applies body variant by default', () => {
     render(<Text testID="t">Body text</Text>);
     const el = screen.getByTestId('t');
-    expect(el.props.style).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ fontSize: typeScale.body.fontSize }),
-      ]),
-    );
+    expect(el.props.className).toEqual(expect.stringContaining('text-[17px]'));
   });
 
   it('applies displayXl variant', () => {
     render(<Text variant="displayXl" testID="t">Big</Text>);
     const el = screen.getByTestId('t');
-    expect(el.props.style).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ fontSize: typeScale.displayXl.fontSize }),
-      ]),
-    );
+    expect(el.props.className).toEqual(expect.stringContaining('text-[44px]'));
   });
 
   it('applies ink tone color from tokens', () => {
     render(<Text testID="t">Text</Text>);
     const el = screen.getByTestId('t');
-    expect(el.props.style).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ color: lightTokens.ink }),
-      ]),
-    );
+    expect(el.props.className).toEqual(expect.stringContaining('text-ink'));
   });
 
   it('applies muted tone color from tokens', () => {
     render(<Text tone="muted" testID="t">Text</Text>);
     const el = screen.getByTestId('t');
-    expect(el.props.style).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ color: lightTokens.muted }),
-      ]),
-    );
+    expect(el.props.className).toEqual(expect.stringContaining('text-muted'));
+  });
+
+  it('leaves font-medium for the global font utility', () => {
+    render(<Text className="font-ui font-medium" testID="t">Text</Text>);
+    const el = screen.getByTestId('t');
+    expect(el.props.className).toEqual(expect.stringContaining('font-medium'));
+  });
+
+  it('leaves display font-medium for the global compound utility', () => {
+    render(<Text className="font-display font-medium" testID="t">Text</Text>);
+    const el = screen.getByTestId('t');
+    expect(el.props.className).toEqual(expect.stringContaining('font-display'));
+    expect(el.props.className).toEqual(expect.stringContaining('font-medium'));
+  });
+
+  it('leaves font-bold for the global font utility', () => {
+    render(<Text className="font-ui font-bold" testID="t">Text</Text>);
+    const el = screen.getByTestId('t');
+    expect(el.props.className).toEqual(expect.stringContaining('font-bold'));
   });
 });
 
@@ -79,12 +80,9 @@ describe('ghostButton primitive', () => {
 });
 
 describe('hairline primitive', () => {
-  it('renders a view with hairline background color', () => {
+  it('renders a view with hairline classes', () => {
     render(<Hairline testID="line" />);
     const el = screen.getByTestId('line');
-    const flatStyle = Array.isArray(el.props.style)
-      ? Object.assign({}, ...el.props.style)
-      : el.props.style;
-    expect(flatStyle.backgroundColor).toBe(lightTokens.hairline);
+    expect(el.props.className).toEqual(expect.stringContaining('bg-hairline'));
   });
 });

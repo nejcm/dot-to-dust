@@ -1,6 +1,4 @@
-import { StyleSheet, View } from 'react-native';
-
-import { useTheme } from '../use-theme';
+import { View } from 'react-native';
 
 interface HairlineProps {
   vertical?: boolean;
@@ -8,26 +6,10 @@ interface HairlineProps {
 }
 
 export function Hairline({ vertical = false, testID }: HairlineProps) {
-  const { tokens } = useTheme();
-
   return (
     <View
       testID={testID}
-      style={[
-        vertical ? styles.vertical : styles.horizontal,
-        { backgroundColor: tokens.hairline },
-      ]}
+      className={vertical ? 'h-full w-[hairlineWidth()] bg-hairline' : 'h-[hairlineWidth()] w-full bg-hairline'}
     />
   );
 }
-
-const styles = StyleSheet.create({
-  horizontal: {
-    width: '100%',
-    height: StyleSheet.hairlineWidth,
-  },
-  vertical: {
-    height: '100%',
-    width: StyleSheet.hairlineWidth,
-  },
-});

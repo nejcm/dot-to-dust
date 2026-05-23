@@ -6,8 +6,6 @@ import { NativeCivilDatePicker } from '@/lib/civil-date/native-civil-date-picker
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { setDob, usePreferencesStore } from '@/lib/storage/preferences-store';
 import { Text } from '@/lib/theme/components/text';
-import { spacing } from '@/lib/theme/spacing';
-import { fontFamily } from '@/lib/theme/typography';
 
 import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
 
@@ -42,11 +40,11 @@ export function DobRow() {
   return (
     <SettingRow label={t('settings.dob.label')}>
       {!editing && (
-        <View style={{ minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing[4] }}>
-          <Text variant="body" tone="ink" numberOfLines={2} style={{ flex: 1 }}>
+        <View className="min-h-11 flex-row items-center justify-between gap-4">
+          <Text variant="body" tone="ink" numberOfLines={2} className="flex-1">
             {formattedDob}
           </Text>
-          <Pressable onPress={handleEdit} hitSlop={12} style={(s) => getPressedStyle(s, { minHeight: 44, justifyContent: 'center' })}>
+          <Pressable onPress={handleEdit} hitSlop={12} className="min-h-11 justify-center" style={getPressedStyle}>
             <Text variant="eyebrow" tone="muted">
               {t('settings.dob.edit')}
             </Text>
@@ -72,14 +70,14 @@ export function DobRow() {
                 onChange={setPendingDob}
                 display="spinner"
               />
-              <View style={{ marginTop: spacing[2], flexDirection: 'row', justifyContent: 'flex-end', gap: spacing[6] }}>
-                <Pressable onPress={handleCancel} style={(s) => getPressedStyle(s, { minHeight: 44, justifyContent: 'center' })}>
+              <View className="mt-2 flex-row justify-end gap-6">
+                <Pressable onPress={handleCancel} className="min-h-11 justify-center" style={getPressedStyle}>
                   <Text variant="eyebrow" tone="muted">
                     {t('settings.dob.cancel')}
                   </Text>
                 </Pressable>
-                <Pressable onPress={handleDone} style={(s) => getPressedStyle(s, { minHeight: 44, justifyContent: 'center' })}>
-                  <Text variant="eyebrow" tone="ink" style={{ fontFamily: fontFamily.uiMedium }}>
+                <Pressable onPress={handleDone} className="min-h-11 justify-center" style={getPressedStyle}>
+                  <Text variant="eyebrow" tone="ink" className="font-medium">
                     {t('settings.dob.done')}
                   </Text>
                 </Pressable>

@@ -1,7 +1,5 @@
 import { Pressable, Text } from 'react-native';
 
-import { radius, spacing } from '../spacing';
-import { fontFamily } from '../typography';
 import { useTheme } from '../use-theme';
 
 interface GhostButtonProps {
@@ -20,26 +18,16 @@ export function GhostButton({ onPress, children, disabled, testID }: GhostButton
       disabled={disabled}
       testID={testID}
       accessibilityRole="button"
+      className="min-h-12 items-center justify-center rounded-pill border border-hairline px-6 py-3"
       style={({ pressed }) => ({
         backgroundColor: pressed ? tokens.surfaceAlt : 'transparent',
-        borderRadius: radius.pill,
-        borderWidth: 1,
-        borderColor: disabled ? tokens.hairline : tokens.hairline,
-        paddingHorizontal: spacing[6],
-        paddingVertical: spacing[3],
-        minHeight: 48,
-        alignItems: 'center',
-        justifyContent: 'center',
       })}
     >
       <Text
-        style={{
-          fontFamily: fontFamily.uiMedium,
-          fontSize: 15,
-          fontWeight: '500',
-          letterSpacing: 0.2,
-          color: disabled ? tokens.faint : tokens.inkSoft,
-        }}
+        className={[
+          'text-[15px] font-medium tracking-[0.2px]',
+          disabled ? 'text-faint' : 'text-ink-soft',
+        ].join(' ')}
         numberOfLines={1}
       >
         {children}

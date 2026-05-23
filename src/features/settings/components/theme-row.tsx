@@ -1,10 +1,9 @@
 import { Pressable, View } from 'react-native';
+import { cn } from 'tailwind-variants';
 
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { setTheme, usePreferencesStore } from '@/lib/storage/preferences-store';
 import { Text } from '@/lib/theme/components/text';
-import { radius, spacing } from '@/lib/theme/spacing';
-import { useTheme } from '@/lib/theme/use-theme';
 
 import { SettingRow } from './setting-row';
 
@@ -14,11 +13,10 @@ const THEMES: Theme[] = ['light', 'dark', 'system'];
 export function ThemeRow() {
   const theme = usePreferencesStore.use.theme();
   const { t } = useAppTranslation();
-  const { tokens } = useTheme();
 
   return (
     <SettingRow label={t('settings.theme.label')}>
-      <View style={{ flexDirection: 'row', gap: spacing[2] }}>
+      <View className="flex-row gap-2">
         {THEMES.map((th) => (
           <Pressable
             key={th}
@@ -26,21 +24,11 @@ export function ThemeRow() {
             accessibilityRole="button"
             accessibilityState={{ selected: theme === th }}
             testID={`theme-${th}`}
-            style={({ pressed }) => [
-              {
-                flex: 1,
-                minHeight: 44,
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: radius.xs,
-                borderWidth: 1,
-                borderColor: tokens.hairline,
-                paddingHorizontal: spacing[2],
-                paddingVertical: spacing[2],
-                opacity: theme === th ? 1 : 0.4,
-              },
-              pressed && theme === th && { opacity: 0.65 },
-            ]}
+            className={cn(
+              'min-h-11 flex-1 items-center justify-center rounded-xs border border-hairline p-2',
+              theme === th ? 'opacity-100' : 'opacity-40',
+            )}
+            style={({ pressed }) => pressed && theme === th && { opacity: 0.65 }}
           >
             <Text variant="meta" tone={theme === th ? 'ink' : 'muted'} numberOfLines={1}>
               {t(`settings.theme.${th}`)}

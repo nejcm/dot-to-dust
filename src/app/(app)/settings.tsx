@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+
 import { DefaultViewRow } from '@/features/settings/components/default-view-row';
 import { DobRow } from '@/features/settings/components/dob-row';
 import { LifeExpectancyRow } from '@/features/settings/components/life-expectancy-row';
@@ -11,9 +12,7 @@ import { ScreenScrollView } from '@/lib/theme/components/screen';
 import { Text } from '@/lib/theme/components/text';
 import { Pressable, View } from '@/lib/theme/components/ui';
 import { Wordmark } from '@/lib/theme/components/wordmark';
-import { spacing } from '@/lib/theme/spacing';
 import { toHex } from '@/lib/theme/tokens';
-import { fontFamily } from '@/lib/theme/typography';
 import { useTheme } from '@/lib/theme/use-theme';
 import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
 
@@ -25,22 +24,15 @@ export default function SettingsScreen() {
   return (
     <ScreenScrollView testID="settings-screen" contentContainerClassName="grow">
       {/* Top bar: back | wordmark | spacer */}
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          paddingHorizontal: 28,
-          paddingTop: spacing[4],
-        }}
-      >
+      <View className="flex-row items-center justify-between px-7 pt-4">
         <Pressable
           onPress={() => goBackOrFallback(router, '/(app)')}
           hitSlop={12}
           accessibilityLabel={t('settings.back')}
           accessibilityRole="button"
           testID="settings-back"
-          style={(s) => getPressedStyle(s, { flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 44, justifyContent: 'center' })}
+          className="min-h-11 flex-row items-center justify-center gap-[6px]"
+          style={getPressedStyle}
         >
           <ArrowLeftIcon color={iconColor} />
           <Text variant="meta" tone="inkSoft">
@@ -48,26 +40,20 @@ export default function SettingsScreen() {
           </Text>
         </Pressable>
         <Wordmark size={9} />
-        <View style={{ width: 50 }} />
+        <View className="w-[50px]" />
       </View>
 
       {/* Title block */}
-      <View style={{ paddingHorizontal: 28, paddingTop: 40, paddingBottom: 28 }}>
+      <View className="px-7 pt-10 pb-7">
         <Text
           variant="eyebrow"
           tone="muted"
-          style={{ marginBottom: 10, letterSpacing: 2.2, textTransform: 'uppercase' }}
+          className="mb-[10px] tracking-[2.2px] uppercase"
         >
           {t('settings.eyebrow')}
         </Text>
         <Text
-          style={{
-            fontFamily: fontFamily.displayItalic,
-            fontSize: 36,
-            letterSpacing: -0.4,
-            color: tokens.ink,
-            lineHeight: 36,
-          }}
+          className="font-display-italic text-[36px] leading-[36px] tracking-[-0.4px] text-ink"
         >
           {t('settings.title')}
         </Text>
@@ -78,7 +64,7 @@ export default function SettingsScreen() {
         <Text
           variant="micro"
           tone="faint"
-          style={{ letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4, marginTop: 10 }}
+          className="mt-[10px] mb-1 tracking-[2px] uppercase"
         >
           {t('settings.group.life')}
         </Text>
@@ -89,7 +75,7 @@ export default function SettingsScreen() {
         <Text
           variant="micro"
           tone="faint"
-          style={{ letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4, marginTop: 32 }}
+          className="mt-8 mb-1 tracking-[2px] uppercase"
         >
           {t('settings.group.appearance')}
         </Text>
@@ -100,7 +86,7 @@ export default function SettingsScreen() {
         <Text
           variant="micro"
           tone="faint"
-          style={{ letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4, marginTop: 32 }}
+          className="mt-8 mb-1 tracking-[2px] uppercase"
         >
           {t('settings.group.about')}
         </Text>
@@ -109,15 +95,9 @@ export default function SettingsScreen() {
       </View>
 
       {/* Footer epigraph */}
-      <View style={{ paddingHorizontal: 28, paddingBottom: 40, alignItems: 'center' }}>
+      <View className="items-center px-7 pb-10">
         <Text
-          style={{
-            fontFamily: fontFamily.displayItalic,
-            fontSize: 13,
-            lineHeight: 20,
-            color: tokens.faint,
-            textAlign: 'center',
-          }}
+          className="text-center font-display-italic text-meta/5 text-faint"
         >
           {t('settings.epigraph')}
         </Text>
@@ -130,14 +110,7 @@ function VersionRow() {
   const { t } = useAppTranslation();
 
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingVertical: spacing[4],
-      }}
-    >
+    <View className="flex-row items-center justify-between py-4">
       <Text variant="meta" tone="ink">
         {t('settings.version.label')}
       </Text>

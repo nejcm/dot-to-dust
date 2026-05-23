@@ -1,9 +1,5 @@
 import { Pressable, Text } from 'react-native';
 
-import { radius, spacing } from '../spacing';
-import { fontFamily } from '../typography';
-import { useTheme } from '../use-theme';
-
 interface PrimaryButtonProps {
   onPress: () => void;
   children: React.ReactNode;
@@ -13,34 +9,24 @@ interface PrimaryButtonProps {
 }
 
 export function PrimaryButton({ onPress, children, disabled, full, testID }: PrimaryButtonProps) {
-  const { tokens } = useTheme();
-
   return (
     <Pressable
       onPress={onPress}
       disabled={disabled}
       testID={testID}
       accessibilityRole="button"
-      style={({ pressed }) => ({
-        backgroundColor: disabled ? tokens.faint : tokens.ink,
-        opacity: pressed ? 0.75 : 1,
-        borderRadius: radius.pill,
-        paddingHorizontal: spacing[8],
-        paddingVertical: 17,
-        minHeight: 48,
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignSelf: full ? 'stretch' : 'center',
-      })}
+      className={[
+        'min-h-12 items-center justify-center rounded-pill px-8 py-[17px]',
+        disabled ? 'bg-faint' : 'bg-ink',
+        full ? 'self-stretch' : 'self-center',
+      ].join(' ')}
+      style={({ pressed }) => pressed && { opacity: 0.75 }}
     >
       <Text
-        style={{
-          fontFamily: fontFamily.uiMedium,
-          fontSize: 14,
-          letterSpacing: 1.4,
-          textTransform: 'uppercase',
-          color: disabled ? tokens.muted : tokens.bg,
-        }}
+        className={[
+          'text-[14px] font-medium tracking-[1.4px] uppercase',
+          disabled ? 'text-muted' : 'text-bg',
+        ].join(' ')}
         numberOfLines={1}
       >
         {children}

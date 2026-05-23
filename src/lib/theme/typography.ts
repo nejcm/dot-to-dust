@@ -5,6 +5,7 @@ export const fontFamily = {
   displayMedium: 'CormorantGaramond_500Medium',
   ui: 'Geist_400Regular',
   uiMedium: 'Geist_500Medium',
+  uiBold: 'Geist_700Bold',
   mono: 'GeistMono_400Regular',
 } as const;
 

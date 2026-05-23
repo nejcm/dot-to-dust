@@ -31,16 +31,63 @@ function colorVars(tokens: ColorTokens, indent = '  '): string {
 
 function staticVars(indent = '  '): string {
   const entries: [string, string][] = [
-    ['--font-display', `'${fontFamily.displayLight}', 'Cormorant Garamond', Georgia, serif`],
-    ['--font-display-medium', `'${fontFamily.displayMedium}', 'Cormorant Garamond', Georgia, serif`],
-    ['--font-ui', `'${fontFamily.ui}', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`],
-    ['--font-ui-medium', `'${fontFamily.uiMedium}', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`],
-    ['--font-mono', `'${fontFamily.mono}', 'Geist Mono', ui-monospace, monospace`],
+    ['--font-display', `'${fontFamily.displayLight}'`],
+    ['--font-display-regular', `'${fontFamily.display}'`],
+    ['--font-display-italic', `'${fontFamily.displayItalic}'`],
+    ['--font-display-medium', `'${fontFamily.displayMedium}'`],
+    ['--font-ui', `'${fontFamily.ui}'`],
+    ['--font-ui-medium', `'${fontFamily.uiMedium}'`],
+    ['--font-ui-bold', `'${fontFamily.uiBold}'`],
+    ['--font-mono', `'${fontFamily.mono}'`],
     ...Object.entries(typeScale).map(([k, v]) => [`--text-${toKebab(k)}`, `${v.fontSize}px`] as [string, string]),
     ...Object.entries(spacing).map(([k, v]) => [`--spacing-${k}`, `${v}px`] as [string, string]),
     ...Object.entries(radius).map(([k, v]) => [`--radius-${k}`, k === 'pill' ? '999px' : `${v}px`] as [string, string]),
   ];
   return entries.map(([k, v]) => `${indent}${k}: ${v};`).join('\n');
+}
+
+function utilityClasses(): string {
+  return `  .font-sans {
+    font-family: var(--font-ui);
+  }
+
+  .font-ui {
+    font-family: var(--font-ui);
+  }
+
+  .font-regular {
+    font-family: var(--font-ui);
+  }
+
+  .font-medium {
+    font-family: var(--font-ui-medium);
+  }
+
+  .font-bold {
+    font-family: var(--font-ui-bold);
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-display-regular {
+    font-family: var(--font-display-regular);
+  }
+
+  .font-display-italic {
+    font-family: var(--font-display-italic);
+  }
+
+  .font-display-medium,
+  .font-display.font-medium,
+  .font-display-regular.font-medium {
+    font-family: var(--font-display-medium);
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+  }`;
 }
 
 const UPPER_CASE = /([A-Z])/g;
@@ -49,33 +96,33 @@ function toKebab(camel: string): string {
 }
 
 const css = `/* AUTO-GENERATED — do not edit. Run \`pnpm theme:gen\` to regenerate. */
-@import 'tailwindcss/theme.css';
+@import 'tailwindcss';
 @import 'uniwind';
 
 /* ─── Static (fonts, scale, spacing) ─────────────────────── */
-:root {
+@theme {
 ${staticVars()}
-}
 
-/* ─── Light mode (default) ──────────────────────────────── */
-:root {
+  /* Light mode fallback values. Runtime themes override these below. */
 ${colorVars(lightTokens)}
 }
 
-/* ─── Dark mode ──────────────────────────────────────────── */
-@media (prefers-color-scheme: dark) {
+/* ─── Runtime themes ─────────────────────────────────────── */
+@layer theme {
   :root {
-${colorVars(darkTokens, '    ')}
+    @variant light {
+${colorVars(lightTokens, '      ')}
+    }
+
+    @variant dark {
+${colorVars(darkTokens, '      ')}
+    }
   }
 }
 
-/* ─── Forced themes ──────────────────────────────────────── */
-.dark {
-${colorVars(darkTokens)}
-}
-
-.light {
-${colorVars(lightTokens)}
+/* ─── Font family utilities ─────────────────────────────── */
+@layer utilities {
+${utilityClasses()}
 }
 `;
 

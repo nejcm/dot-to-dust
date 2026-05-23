@@ -1,36 +1,34 @@
 import { View } from 'react-native';
 
 import { Text } from '@/lib/theme/components/text';
-import { useTheme } from '@/lib/theme/use-theme';
 
 const STAGES = [
-  { name: 'Formation', range: '0–11' },
-  { name: 'Emergence', range: '12–22' },
-  { name: 'Construction', range: '23–39' },
-  { name: 'Tenure', range: '40–59' },
-  { name: 'Twilight', range: '60–80' },
+  { name: 'Formation', range: '0–11', dotClassName: 'bg-stage-0' },
+  { name: 'Emergence', range: '12–22', dotClassName: 'bg-stage-1' },
+  { name: 'Construction', range: '23–39', dotClassName: 'bg-stage-2' },
+  { name: 'Tenure', range: '40–59', dotClassName: 'bg-stage-3' },
+  { name: 'Twilight', range: '60–80', dotClassName: 'bg-stage-4' },
 ] as const;
 
 export function StageLegend() {
-  const { tokens } = useTheme();
-
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-      {STAGES.map((stage, i) => (
-        <View key={stage.name} style={{ alignItems: 'center', gap: 4 }}>
+    <View className="flex-row items-center justify-between gap-1.5">
+      {STAGES.map((stage) => (
+        <View
+          key={stage.name}
+          accessibilityLabel={`${stage.name}, ages ${stage.range}`}
+          className="flex-1 flex-row items-center gap-1.5"
+        >
           <View
-            style={{
-              width: 7,
-              height: 7,
-              borderRadius: 7,
-              backgroundColor: tokens.stages[i],
-            }}
+            className={`size-1.5 shrink-0 rounded-[6px] ${stage.dotClassName}`}
           />
-          <Text variant="micro" tone="muted" numberOfLines={1}>
+          <Text
+            variant="micro"
+            tone="muted"
+            numberOfLines={1}
+            className="text-[9px] tracking-[1.4px] uppercase"
+          >
             {stage.name}
-          </Text>
-          <Text variant="micro" tone="faint" numberOfLines={1}>
-            {stage.range}
           </Text>
         </View>
       ))}

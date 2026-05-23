@@ -4,7 +4,7 @@ import {
   CormorantGaramond_400Regular_Italic,
   CormorantGaramond_500Medium,
 } from '@expo-google-fonts/cormorant-garamond';
-import { Geist_400Regular, Geist_500Medium } from '@expo-google-fonts/geist';
+import { Geist_400Regular, Geist_500Medium, Geist_700Bold } from '@expo-google-fonts/geist';
 import { GeistMono_400Regular } from '@expo-google-fonts/geist-mono';
 import { ThemeProvider as NavigationThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -12,9 +12,9 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { withUniwind } from 'uniwind';
 
 import { AppErrorBoundary } from '@/lib/app-error-boundary';
 import { toNavTheme } from '@/lib/theme/nav-theme';
@@ -38,6 +38,8 @@ SplashScreen.setOptions({
   fade: true,
 });
 
+const StyledGestureHandlerRootView = withUniwind(GestureHandlerRootView);
+
 function RootNavigator() {
   const { colorScheme, tokens, isDark } = useTheme();
   const navTheme = toNavTheme(tokens, isDark);
@@ -47,7 +49,6 @@ function RootNavigator() {
     <NavigationThemeProvider value={navTheme}>
       <StatusBar
         style={colorScheme === 'dark' ? 'light' : 'dark'}
-        backgroundColor={backgroundColor}
       />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor } }} />
     </NavigationThemeProvider>
@@ -62,6 +63,7 @@ export default function RootLayout() {
     CormorantGaramond_500Medium,
     Geist_400Regular,
     Geist_500Medium,
+    Geist_700Bold,
     GeistMono_400Regular,
   });
 
@@ -76,7 +78,7 @@ export default function RootLayout() {
   }
 
   return (
-    <GestureHandlerRootView style={styles.container}>
+    <StyledGestureHandlerRootView className="flex-1">
       <SafeAreaProvider>
         <ThemeProvider>
           <AppErrorBoundary>
@@ -84,12 +86,6 @@ export default function RootLayout() {
           </AppErrorBoundary>
         </ThemeProvider>
       </SafeAreaProvider>
-    </GestureHandlerRootView>
+    </StyledGestureHandlerRootView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

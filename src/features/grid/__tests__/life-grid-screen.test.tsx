@@ -25,7 +25,7 @@ jest.mock('@/features/grid/components/life-grid', () => ({
 function renderLifeGridScreen(onOpenSettings = jest.fn()) {
   const view = render(<LifeGridScreen onOpenSettings={onOpenSettings} />);
   const layoutTarget = view.UNSAFE_getAllByType(View).find(
-    (node) => node.props.className === 'flex-1' && typeof node.props.onLayout === 'function',
+    (node) => node.props.className?.includes('flex-1') && typeof node.props.onLayout === 'function',
   );
 
   fireEvent(layoutTarget!, 'layout', {
@@ -52,6 +52,14 @@ describe('life grid screen', () => {
 
     expect(withTiming).not.toHaveBeenCalled();
     expect(screen.getByTestId('life-grid')).toHaveTextContent('weeks');
+  });
+
+  it('renders the inline header count and total', () => {
+    renderLifeGridScreen();
+
+    expect(screen.getByTestId('inline-header')).toBeTruthy();
+    expect(screen.getByTestId('headline-lived')).toBeTruthy();
+    expect(screen.getByText(/of 4[,.]160/)).toBeTruthy();
   });
 
   it('updates the displayed grid after the view transition completes', () => {

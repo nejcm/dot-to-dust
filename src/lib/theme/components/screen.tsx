@@ -27,7 +27,7 @@ export function Screen({
   ...props
 }: ScreenProps) {
   return (
-    <SafeAreaView edges={edges} className={cn('flex-1 bg-[--color-bg]', className)}>
+    <SafeAreaView edges={edges} className={cn('flex-1 bg-bg', className)}>
       <View className={cn('flex-1', contentClassName)} {...props}>
         {children}
       </View>
@@ -44,7 +44,7 @@ export function ScreenScrollView({
   ...props
 }: ScreenScrollViewProps) {
   return (
-    <SafeAreaView edges={edges} className={cn('flex-1 bg-[--color-bg]', className)}>
+    <SafeAreaView edges={edges} className={cn('flex-1 bg-bg', className)}>
       <ScrollView
         className="flex-1"
         contentContainerClassName={contentContainerClassName}

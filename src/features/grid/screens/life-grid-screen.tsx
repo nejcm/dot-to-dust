@@ -2,6 +2,7 @@ import type { View as GridView } from '@/lib/view';
 
 import { Redirect } from 'expo-router';
 import { useState } from 'react';
+import { Text } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -9,27 +10,112 @@ import Animated, {
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 
-import { Headline } from '@/features/grid/components/headline';
 import { LifeGrid } from '@/features/grid/components/life-grid';
 import { StageLegend } from '@/features/grid/components/stage-legend';
-import { ViewToggle } from '@/features/grid/components/view-toggle';
+import { livedUnitsFor, totalUnitsFor } from '@/features/grid/lib/view-policy';
 import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
 import { todayCivilDate } from '@/lib/civil-date';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
+import { Hairline } from '@/lib/theme/components/hairline';
 import { GearIcon } from '@/lib/theme/components/icons';
 import { Screen } from '@/lib/theme/components/screen';
 import { Pressable, View } from '@/lib/theme/components/ui';
-import { Wordmark } from '@/lib/theme/components/wordmark';
-import { spacing } from '@/lib/theme/spacing';
 import { toHex } from '@/lib/theme/tokens';
 import { useTheme } from '@/lib/theme/use-theme';
 import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
+import { VIEWS } from '@/lib/view';
 
 const CROSS_FADE_DURATION = 120;
+const GRID_TOP_PADDING = 24;
 
 interface LifeGridScreenProps {
   onOpenSettings: () => void;
+}
+
+interface InlineHeaderProps {
+  dob: string;
+  iconColor: string;
+  onOpenSettings: () => void;
+  onViewChange: (view: GridView) => void;
+  settingsLabel: string;
+  today: string;
+  view: GridView;
+}
+
+function InlineHeader({
+  dob,
+  iconColor,
+  onOpenSettings,
+  onViewChange,
+  settingsLabel,
+  today,
+  view,
+}: InlineHeaderProps) {
+  const { t } = useAppTranslation();
+  const lived = livedUnitsFor(view, dob, today);
+  const total = totalUnitsFor(view);
+
+  return (
+    <View testID="inline-header">
+      <View className="flex-row items-center justify-between gap-3 px-4 py-2">
+        <View className="flex-row items-baseline gap-2">
+          <Text
+            className="font-display-italic text-display-m/5 tracking-[-0.3px] text-ink"
+            testID="headline-lived"
+          >
+            {lived.toLocaleString()}
+          </Text>
+          <Text className="font-ui text-eyebrow tracking-[1.6px] text-muted uppercase">
+            {t('grid.headline.of', { total: total.toLocaleString() })}
+          </Text>
+        </View>
+
+        <View className="flex-row items-center gap-2.5">
+          {VIEWS.map((v) => {
+            const active = v === view;
+            return (
+              <Pressable
+                key={v}
+                onPress={() => onViewChange(v)}
+                hitSlop={10}
+                accessibilityRole="button"
+                accessibilityState={{ selected: active }}
+                testID={`view-toggle-${v}`}
+                className="relative items-center py-1"
+              >
+                <Text
+                  numberOfLines={1}
+                  className={[
+                    'text-[10.5px] tracking-[1.8px] uppercase',
+                    active ? 'font-medium text-ink' : 'font-ui text-faint',
+                  ].join(' ')}
+                >
+                  {t(`grid.toggle.${v}`)}
+                </Text>
+                {active && (
+                  <View className="absolute -bottom-px h-[0.5px] w-2.5 self-center bg-ink" />
+                )}
+              </Pressable>
+            );
+          })}
+        </View>
+
+        <Pressable
+          onPress={onOpenSettings}
+          hitSlop={12}
+          accessibilityLabel={settingsLabel}
+          accessibilityRole="button"
+          testID="settings-button"
+          className="min-h-9 min-w-8 items-center justify-center"
+          style={getPressedStyle}
+        >
+          <GearIcon color={iconColor} />
+        </Pressable>
+      </View>
+      <Hairline />
+    </View>
+  );
 }
 
 export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
@@ -73,51 +159,25 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
 
   return (
     <Screen testID="main-screen">
-      {/* Top bar: wordmark + settings */}
+      <InlineHeader
+        dob={dob}
+        iconColor={iconColor}
+        onOpenSettings={onOpenSettings}
+        onViewChange={handleViewChange}
+        settingsLabel={t('settings.title')}
+        today={today}
+        view={activeView}
+      />
+
       <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          paddingHorizontal: spacing[8],
-          paddingTop: spacing[4],
-          paddingBottom: 0,
-        }}
-      >
-        <Wordmark size={10} />
-        <Pressable
-          onPress={onOpenSettings}
-          hitSlop={12}
-          accessibilityLabel={t('settings.title')}
-          accessibilityRole="button"
-          testID="settings-button"
-          style={(s) => getPressedStyle(s, { minHeight: 44, minWidth: 44, alignItems: 'center', justifyContent: 'center' })}
-        >
-          <GearIcon color={iconColor} />
-        </Pressable>
-      </View>
-
-      {/* Headline */}
-      <View style={{ paddingHorizontal: spacing[8], paddingTop: spacing[8], paddingBottom: spacing[6] }}>
-        <Headline view={activeView} dob={dob} today={today} />
-      </View>
-
-      {/* Segmented view toggle */}
-      <View style={{ paddingHorizontal: spacing[8] }}>
-        <ViewToggle view={activeView} onViewChange={handleViewChange} />
-      </View>
-
-      {/* Dot grid */}
-      <View
-        className="flex-1"
-        style={{ paddingTop: spacing[6] }}
+        className="flex-1 px-4 pt-6"
         onLayout={(e) =>
           setGridLayout({
             width: e.nativeEvent.layout.width,
-            height: e.nativeEvent.layout.height - spacing[6],
+            height: e.nativeEvent.layout.height - GRID_TOP_PADDING,
           })}
       >
-        <Animated.View style={[{ flex: 1 }, gridStyle]}>
+        <Animated.View className="flex-1" style={gridStyle}>
           {gridLayout && (
             <LifeGrid
               view={displayedView}
@@ -130,8 +190,7 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
         </Animated.View>
       </View>
 
-      {/* Stage legend */}
-      <View style={{ paddingHorizontal: spacing[8], paddingTop: spacing[4], paddingBottom: spacing[6] }}>
+      <View className="px-5 pt-5 pb-11">
         <StageLegend />
       </View>
     </Screen>
