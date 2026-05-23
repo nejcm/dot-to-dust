@@ -25,15 +25,15 @@ const envSchema = z.object({
 const EXPO_PUBLIC_APP_ENV = resolveAppEnv();
 
 const BUNDLE_IDS = {
-  development: 'com.ncncm.dottodust.development',
-  preview: 'com.ncncm.dottodust.preview',
-  production: 'com.ncncm.dottodust',
+  development: 'com.nejcm.dottodust.development',
+  preview: 'com.nejcm.dottodust.preview',
+  production: 'com.nejcm.dottodust',
 } as const;
 
 const PACKAGES = {
-  development: 'com.ncncm.dottodust.development',
-  preview: 'com.ncncm.dottodust.preview',
-  production: 'com.ncncm.dottodust',
+  development: 'com.nejcm.dottodust.development',
+  preview: 'com.nejcm.dottodust.preview',
+  production: 'com.nejcm.dottodust',
 } as const;
 
 const SCHEMES = {

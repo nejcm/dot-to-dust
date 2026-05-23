@@ -65,38 +65,88 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       {
         ios: {
           fonts: [
-            'node_modules/@expo-google-fonts/fraunces/300Light/Fraunces_300Light.ttf',
-            'node_modules/@expo-google-fonts/fraunces/300Light_Italic/Fraunces_300Light_Italic.ttf',
-            'node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf',
-            'node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.ttf',
+            'node_modules/@expo-google-fonts/cormorant-garamond/300Light/CormorantGaramond_300Light.ttf',
+            'node_modules/@expo-google-fonts/cormorant-garamond/400Regular/CormorantGaramond_400Regular.ttf',
+            'node_modules/@expo-google-fonts/cormorant-garamond/400Regular_Italic/CormorantGaramond_400Regular_Italic.ttf',
+            'node_modules/@expo-google-fonts/cormorant-garamond/500Medium/CormorantGaramond_500Medium.ttf',
+            'node_modules/@expo-google-fonts/geist/400Regular/Geist_400Regular.ttf',
+            'node_modules/@expo-google-fonts/geist/500Medium/Geist_500Medium.ttf',
+            'node_modules/@expo-google-fonts/geist/700Bold/Geist_700Bold.ttf',
+            'node_modules/@expo-google-fonts/geist-mono/400Regular/GeistMono_400Regular.ttf',
           ],
         },
         android: {
           fonts: [
             {
-              fontFamily: 'Fraunces',
+              fontFamily: 'CormorantGaramond_300Light',
               fontDefinitions: [
                 {
-                  path: 'node_modules/@expo-google-fonts/fraunces/300Light/Fraunces_300Light.ttf',
+                  path: 'node_modules/@expo-google-fonts/cormorant-garamond/300Light/CormorantGaramond_300Light.ttf',
                   weight: 300,
                 },
+              ],
+            },
+            {
+              fontFamily: 'CormorantGaramond_400Regular',
+              fontDefinitions: [
                 {
-                  path: 'node_modules/@expo-google-fonts/fraunces/300Light_Italic/Fraunces_300Light_Italic.ttf',
-                  weight: 300,
+                  path: 'node_modules/@expo-google-fonts/cormorant-garamond/400Regular/CormorantGaramond_400Regular.ttf',
+                  weight: 400,
+                },
+              ],
+            },
+            {
+              fontFamily: 'CormorantGaramond_400Regular_Italic',
+              fontDefinitions: [
+                {
+                  path: 'node_modules/@expo-google-fonts/cormorant-garamond/400Regular_Italic/CormorantGaramond_400Regular_Italic.ttf',
+                  weight: 400,
                   style: 'italic',
                 },
               ],
             },
             {
-              fontFamily: 'Inter',
+              fontFamily: 'CormorantGaramond_500Medium',
               fontDefinitions: [
                 {
-                  path: 'node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf',
+                  path: 'node_modules/@expo-google-fonts/cormorant-garamond/500Medium/CormorantGaramond_500Medium.ttf',
+                  weight: 500,
+                },
+              ],
+            },
+            {
+              fontFamily: 'Geist_400Regular',
+              fontDefinitions: [
+                {
+                  path: 'node_modules/@expo-google-fonts/geist/400Regular/Geist_400Regular.ttf',
                   weight: 400,
                 },
+              ],
+            },
+            {
+              fontFamily: 'Geist_500Medium',
+              fontDefinitions: [
                 {
-                  path: 'node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.ttf',
+                  path: 'node_modules/@expo-google-fonts/geist/500Medium/Geist_500Medium.ttf',
                   weight: 500,
+                },
+              ],
+            },
+            {
+              fontFamily: 'Geist_700Bold',
+              fontDefinitions: [
+                {
+                  path: 'node_modules/@expo-google-fonts/geist/700Bold/Geist_700Bold.ttf',
+                  weight: 700,
+                },
+              ],
+            },
+            {
+              fontFamily: 'GeistMono_400Regular',
+              fontDefinitions: [
+                {
+                  path: 'node_modules/@expo-google-fonts/geist-mono/400Regular/GeistMono_400Regular.ttf',
+                  weight: 400,
                 },
               ],
             },

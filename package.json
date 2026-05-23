@@ -49,7 +49,7 @@
     "test:ci": "pnpm run test --coverage",
     "test:watch": "pnpm run test --watch",
     "install-maestro": "curl -Ls 'https://get.maestro.mobile.dev' | bash",
-    "e2e-test": "maestro test .maestro/ -e APP_ID=com.ncncm.dottodust.development",
+    "e2e-test": "maestro test .maestro/ -e APP_ID=com.nejcm.dottodust.development",
     "knip:check": "pnpm exec knip"
   },
   "dependencies": {

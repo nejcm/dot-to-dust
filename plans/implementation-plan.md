@@ -2,7 +2,7 @@
 
 ## Context
 
-A mobile app that visualizes the user's life as a grid of colored dots — past stages colored by chapter (childhood → senior), future as muted potential, today highlighted. Inspired by Tim Urban's "Life in Weeks" and styled after a GitHub contributions chart. Goal: make finite time *felt*, not abstract, in one glance.
+A mobile app that visualizes the user's life as a grid of colored dots — past stages colored by chapter (childhood → senior), future as muted potential, today highlighted. Inspired by Tim Urban's "Life in Weeks" and styled after a GitHub contributions chart. Goal: make finite time _felt_, not abstract, in one glance.
 
 Must feel like a refined object you keep on your home screen — editorial / quiet luxury, not another generic template. Zero scope creep.
 
@@ -10,44 +10,47 @@ This plan adopts the conventions and tooling already proven in the sibling **Spe
 
 ## Locked decisions (post-grilling)
 
-| Branch | Decision |
-|---|---|
-| Platform | iOS + Android via **Expo (React Native)** |
-| Name | **Dot to Dust** (trademark check before production EAS submission) |
-| Lifespan | Fixed **80 years**; post-80 = "bonus time" state in v1 |
-| User input | **Date of birth** (single date picker). `maximumDate = today`; any past date accepted including >80y |
-| Views | Toggle **Weeks / Months / Years** — all fit one screen, no scroll |
-| Color encoding | **5-stage life gradient** on past+future dots only differs by spent/unspent; future is one muted color (no stage tinting) |
-| Life stages | **0–11 · 12–22 · 23–39 · 40–59 · 60–80** (floor by completed-year) |
-| Palette signal | **Lightness-driven** — stages encoded by OKLCH L first; hue/chroma for warmth, not signal. No CVD toggle. |
-| Headline | "X weeks/months/years **ahead**" — matches active view. Bonus time: `+X` count-up. ICU plurals for count-bearing English strings. |
-| Visual weight | **Grid-as-hero** — grid fills primary canvas; headline is slim Inter caption; segmented control + caption top-docked. |
-| Today's dot | Last-lived stage color + ring. **Pulse on Weeks/Months**; **static ring on Years**. No ring at all in bonus time. |
-| Screens | **3**: Welcome+Onboarding · Main · Settings |
-| Settings | Edit DOB · Theme (light/dark/system) · Default view |
-| Defaults | `theme = system`, `defaultView = weeks`, `dob = null` |
-| Storage | **MMKV**, OS backup-eligible (no cloud sync service operated by us). Sync hydration on module load. |
-| Render | **React Native Skia** (canvas, GPU); pulse driven by Skia's own clock, not Reanimated |
-| View toggle | **Segmented control** at top |
-| Style | **Editorial / quiet luxury** — serif display, warm neutrals |
-| Monetization | **Free**, no ads, no IAP |
-| A11y | `useReducedMotion()` gates both pulse and view-switch cross-fade. Route transitions defer to OS defaults. Dynamic type for non-grid text. |
-| Notifications | None in v1 |
-| Timezone | DOB and "today" are civil dates (`YYYY-MM-DD`). No UTC conversion. Foreground-only recompute via `AppState`. |
+| Branch         | Decision                                                                                                                                  |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Platform       | iOS + Android via **Expo (React Native)**                                                                                                 |
+| Name           | **Dot to Dust** (trademark check before production EAS submission)                                                                        |
+| Lifespan       | Fixed **80 years**; post-80 = "bonus time" state in v1                                                                                    |
+| User input     | **Date of birth** (single date picker). `maximumDate = today`; any past date accepted including >80y                                      |
+| Views          | Toggle **Weeks / Months / Years** — all fit one screen, no scroll                                                                         |
+| Color encoding | **5-stage life gradient** on past+future dots only differs by spent/unspent; future is one muted color (no stage tinting)                 |
+| Life stages    | **0–11 · 12–22 · 23–39 · 40–59 · 60–80** (floor by completed-year)                                                                        |
+| Palette signal | **Lightness-driven** — stages encoded by OKLCH L first; hue/chroma for warmth, not signal. No CVD toggle.                                 |
+| Headline       | "X weeks/months/years **ahead**" — matches active view. Bonus time: `+X` count-up. ICU plurals for count-bearing English strings.         |
+| Visual weight  | **Grid-as-hero** — grid fills primary canvas; headline is slim Inter caption; segmented control + caption top-docked.                     |
+| Today's dot    | Last-lived stage color + ring. **Pulse on Weeks/Months**; **static ring on Years**. No ring at all in bonus time.                         |
+| Screens        | **3**: Welcome+Onboarding · Main · Settings                                                                                               |
+| Settings       | Edit DOB · Theme (light/dark/system) · Default view                                                                                       |
+| Defaults       | `theme = system`, `defaultView = weeks`, `dob = null`                                                                                     |
+| Storage        | **MMKV**, OS backup-eligible (no cloud sync service operated by us). Sync hydration on module load.                                       |
+| Render         | **React Native Skia** (canvas, GPU); pulse driven by Skia's own clock, not Reanimated                                                     |
+| View toggle    | **Segmented control** at top                                                                                                              |
+| Style          | **Editorial / quiet luxury** — serif display, warm neutrals                                                                               |
+| Monetization   | **Free**, no ads, no IAP                                                                                                                  |
+| A11y           | `useReducedMotion()` gates both pulse and view-switch cross-fade. Route transitions defer to OS defaults. Dynamic type for non-grid text. |
+| Notifications  | None in v1                                                                                                                                |
+| Timezone       | DOB and "today" are civil dates (`YYYY-MM-DD`). No UTC conversion. Foreground-only recompute via `AppState`.                              |
 
 ## Tech stack (aligned with Spendwise)
 
 ### Runtime / framework
+
 - **Expo SDK 55+** (managed workflow)
 - **React Native 0.83+**, **React 19**
 - **TypeScript 5.9** strict
 - **expo-router** (file-based routing under `src/app`)
 
 ### State / storage
+
 - **zustand** + **react-native-mmkv** — preferences (DOB, theme, defaultView). Synchronous hydration on module load.
 - No SQLite needed — there is no relational data.
 
 ### UI / styling
+
 - **uniwind** (Tailwind v4 for RN) with `className` — same as Spendwise
 - **tailwind-variants** + **tailwind-merge** for variant styling
 - **@shopify/react-native-skia** — grid canvas. Pulse uses `useClock` / `useComputedValue` (no Reanimated bridge).
@@ -59,16 +62,19 @@ This plan adopts the conventions and tooling already proven in the sibling **Spe
 - **@expo-google-fonts/inter** — UI / caption
 
 ### i18n
+
 - **i18next** + **react-i18next** + **expo-localization**
 - Languages v1: **en** only. Keep i18next/react-i18next/expo-localization in place so more locales can be added later.
 - ICU plural rules across all count-bearing strings.
 
 ### Utilities
+
 - **date-fns** — civil-date math only. **`@date-fns/utc` deliberately not used.**
 - **es-toolkit** — lodash-tier helpers
 - **zod** — DOB validation at the boundary; parse failure on persisted store treated as `dob === null`.
 
 ### Tooling (mirrors Spendwise)
+
 - **pnpm 10** (`preinstall: only-allow pnpm`)
 - **@antfu/eslint-config** with React + TS, kebab-case filenames
 - **eslint-plugin-better-tailwindcss**, **eslint-plugin-react-compiler**, **eslint-plugin-react-hooks**, **eslint-plugin-unicorn**, **eslint-plugin-testing-library**, **eslint-plugin-i18n-json**
@@ -182,11 +188,11 @@ dot-to-dust/
 ```ts
 // All pure, exhaustively unit-tested. Civil-date inputs ('YYYY-MM-DD').
 export const LIFE_YEARS = 80;
-export const WEEKS_TOTAL  = LIFE_YEARS * 52;   // 4160
-export const MONTHS_TOTAL = LIFE_YEARS * 12;   //  960
-export const YEARS_TOTAL  = LIFE_YEARS;        //   80
+export const WEEKS_TOTAL = LIFE_YEARS * 52; // 4160
+export const MONTHS_TOTAL = LIFE_YEARS * 12; //  960
+export const YEARS_TOTAL = LIFE_YEARS; //   80
 
-export type View = 'weeks' | 'months' | 'years';
+export type View = "weeks" | "months" | "years";
 
 export function weeksLived(dob: string, today: string): number;
 export function monthsLived(dob: string, today: string): number;
@@ -197,8 +203,8 @@ export function yearsLived(dob: string, today: string): number;
 export function stageForWeek(weekIndex: number): 0 | 1 | 2 | 3 | 4;
 
 export function isBonusTime(dob: string, today: string): boolean;
-export function remainingFor(view: View, dob: string, today: string): number;     // negative or zero in bonus time
-export function bonusUnitsAhead(view: View, dob: string, today: string): number;  // 0 if not in bonus time
+export function remainingFor(view: View, dob: string, today: string): number; // negative or zero in bonus time
+export function bonusUnitsAhead(view: View, dob: string, today: string): number; // 0 if not in bonus time
 ```
 
 Every view renders from the same primitive: a flat array of dot states `{ stage: 0|1|2|3|4, isToday: boolean } | { kind: 'future' }`. The grid component knows nothing else. In bonus time the array is fully populated stage-by-stage with no `isToday` slot.
@@ -219,6 +225,7 @@ Single Skia `<Canvas>`. Iterates dot array, draws filled circles. Today's dot ge
 OKLCH-based, **lightness-driven**. The 5 stages are defined first as an L array (e.g., `[35, 45, 55, 65, 75]` in light mode, mirrored in dark); hue/chroma are layered on for warmth/character but do not carry the signal. A monotonicity invariant test in `stage-colors.test.ts` enforces this. Values are exposed as CSS variables in `global.css` so Uniwind can consume them and Skia reads via `useCSSVariable`.
 
 Light mode:
+
 - bg: `oklch(97% 0.01 80)`
 - text: `oklch(22% 0.02 80)`
 - 5 stages: warm earthy tones, lightness carries the gradient
@@ -231,9 +238,9 @@ Dark mode: hue-preserved inversion, same lightness monotonicity.
 
 ```ts
 type Prefs = {
-  dob: string | null;            // 'YYYY-MM-DD' civil date
-  theme: 'light' | 'dark' | 'system';
-  defaultView: 'weeks' | 'months' | 'years';
+  dob: string | null; // 'YYYY-MM-DD' civil date
+  theme: "light" | "dark" | "system";
+  defaultView: "weeks" | "months" | "years";
 };
 ```
 
@@ -242,6 +249,7 @@ Zustand store backed by MMKV. Hydrates **synchronously** at module load (so the 
 ### `src/lib/a11y/use-reduced-motion.ts`
 
 Single hook returning a boolean, read by:
+
 - the Skia pulse path (skip mounting the computed value when true)
 - the view-switch cross-fade (instant key-swap when true; keep mount/unmount cycle)
 
@@ -255,7 +263,7 @@ Route transitions are not touched here — the OS attenuates them when the flag 
 - `eslint.config.mjs` = antfu base + same plugins as Spendwise (better-tailwindcss, i18n-json, react-compiler, testing-library) + `unicorn/filename-case: kebabCase`
 - `tsconfig.json` strict + `@/*` path alias to `src/*`
 - `babel.config.js` includes `babel-plugin-module-resolver` for `@/`
-- `app.config.ts` reads from `env.ts` (zod-validated); separate identifier per env (`com.ncncm.dottodust.dev`, `.preview`, production)
+- `app.config.ts` reads from `env.ts` (zod-validated); separate identifier per env (`com.nejcm.dottodust.dev`, `.preview`, production)
 - `eas.json`: three profiles, `STRICT_ENV_VALIDATION=1` on prebuild scripts
 
 ## Build phases
@@ -283,12 +291,14 @@ Route transitions are not touched here — the OS attenuates them when the flag 
 `pnpm verify` (ESLint + tsc + translation lint + Jest) must be green.
 
 Unit tests (Jest):
+
 - `life-math.test.ts` — DOB on leap day; DOB today (newborn renders all-future, no divide hazard); DOB 79.99y ago; DOB exactly 80y ago (bonus-time entry at week 4160); DOB 81y+ ago (bonus-time on launch); stage boundaries at new cut points (11→12, 22→23, 39→40, 59→60); civil-date math across local DST transitions; civil-date math when device timezone changes after install.
 - `grid-layout.test.ts` — sample widths; no overflow; `dotSize > 4` floor; gap > 0.
 - `stage-colors.test.ts` — lightness monotonicity invariant across the 5 stages in both light and dark mode.
 - `preferences-store.test.ts` — hydration is synchronous on module load; zod parse failure on stored `dob` resolves to `null` without throwing.
 
 Maestro happy path (`.maestro/happy-path.yaml`):
+
 1. Launch fresh install → **welcome screen** shows
 2. Tap "Begin" → picker shows
 3. Pick a DOB → advance to main
@@ -299,6 +309,7 @@ Maestro happy path (`.maestro/happy-path.yaml`):
 8. Force-quit + relaunch → lands on main (not welcome) with saved DOB, no flash
 
 Manual checklist:
+
 - [ ] Grid fully fits with no scroll on iPhone SE, 15 Pro, Pixel 6, Pixel 8 Pro
 - [ ] Today's dot pulses on Weeks/Months and is a static ring on Years
 - [ ] Pulse stops and view-switch is instant when OS reduced-motion is on
