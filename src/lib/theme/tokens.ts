@@ -46,7 +46,7 @@ export const lightTokens: ColorTokens = {
   ink: 'oklch(0.225 0.012 50)',
   inkSoft: 'oklch(0.40 0.010 55)',
   muted: 'oklch(0.58 0.008 60)',
-  faint: 'oklch(0.78 0.006 70)',
+  faint: 'oklch(0.66 0.006 70)',
   hairline: 'oklch(0.88 0.008 70)',
   stages: [
     'oklch(0.842 0.072 82)',
