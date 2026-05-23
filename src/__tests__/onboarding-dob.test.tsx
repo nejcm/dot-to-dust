@@ -7,7 +7,12 @@ import { usePreferencesStore } from '@/lib/storage/preferences-store';
 jest.mock('expo-router', () => ({
   router: {
     replace: jest.fn(),
+    back: jest.fn(),
   },
+}));
+
+jest.mock('react-native-safe-area-context', () => ({
+  SafeAreaView: require('react-native').View,
 }));
 
 jest.mock('@react-native-community/datetimepicker', () => ({

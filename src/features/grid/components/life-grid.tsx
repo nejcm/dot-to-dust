@@ -2,9 +2,11 @@ import type { SharedValue } from 'react-native-reanimated';
 import type { View } from '@/lib/view';
 import { Canvas, Circle, Group, useClock } from '@shopify/react-native-skia';
 
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
+import { Platform } from 'react-native';
 import { useDerivedValue } from 'react-native-reanimated';
 import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
+import { toSkia } from '@/lib/theme/tokens';
 import { useTheme } from '@/lib/theme/use-theme';
 import { buildDotStates } from '../lib/dot-states';
 import { computeGridLayout } from '../lib/grid-layout';
@@ -21,11 +23,12 @@ interface LifeGridProps {
   height: number;
 }
 
-export function LifeGrid({ view, dob, today, width, height }: LifeGridProps) {
+export const LifeGrid = memo(({ view, dob, today, width, height }: LifeGridProps) => {
   const { tokens } = useTheme();
+  const skia = useMemo(() => toSkia(tokens), [tokens]);
   const reducedMotion = useReducedMotion();
 
-  const shouldPulse = !reducedMotion && view !== 'years';
+  const shouldPulse = Platform.OS !== 'web' && !reducedMotion && view !== 'years';
 
   const { cols, dotSize, gap } = useMemo(
     () => computeGridLayout(view, width, height),
@@ -40,8 +43,10 @@ export function LifeGrid({ view, dob, today, width, height }: LifeGridProps) {
   const radius = dotSize / 2;
   const stride = dotSize + gap;
 
+  const canvasStyle = useMemo(() => ({ width, height }), [width, height]);
+
   return (
-    <Canvas style={{ width, height }}>
+    <Canvas style={canvasStyle}>
       <Group>
         {dots.map((dot, index) => {
           const col = index % cols;
@@ -56,12 +61,12 @@ export function LifeGrid({ view, dob, today, width, height }: LifeGridProps) {
                 cx={cx}
                 cy={cy}
                 r={radius}
-                color={tokens.skia.dotFuture}
+                color={skia.future}
               />
             );
           }
 
-          const fill = tokens.skia.stages[dot.stage];
+          const fill = skia.stages[dot.stage];
 
           if (!dot.isToday) {
             return <Circle key={index} cx={cx} cy={cy} r={radius} color={fill} />;
@@ -74,7 +79,7 @@ export function LifeGrid({ view, dob, today, width, height }: LifeGridProps) {
                 cx={cx}
                 cy={cy}
                 radius={radius}
-                color={tokens.skia.accent}
+                color={skia.ring}
                 pulse={shouldPulse}
               />
             </Group>
@@ -83,7 +88,9 @@ export function LifeGrid({ view, dob, today, width, height }: LifeGridProps) {
       </Group>
     </Canvas>
   );
-}
+});
+
+LifeGrid.displayName = 'LifeGrid';
 
 interface TodayRingProps {
   cx: number;

@@ -1,5 +1,5 @@
 import type { ColorTokens } from './tokens';
-import { createContext, useEffect } from 'react';
+import { createContext, useEffect, useMemo } from 'react';
 
 import { useColorScheme } from 'react-native';
 import { Uniwind } from 'uniwind';
@@ -24,7 +24,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const systemRaw = useColorScheme();
   const systemColorScheme: 'light' | 'dark'
     = systemRaw === 'dark' ? 'dark' : 'light';
-  const themePref = usePreferencesStore((s) => s.theme);
+  const themePref = usePreferencesStore.use.theme();
 
   useEffect(() => {
     Uniwind.setTheme(themePref);
@@ -34,9 +34,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     = themePref === 'system' ? systemColorScheme : themePref;
   const isDark = colorScheme === 'dark';
   const tokens = isDark ? darkTokens : lightTokens;
+  const value = useMemo(
+    () => ({ colorScheme, tokens, isDark }),
+    [colorScheme, isDark, tokens],
+  );
 
   return (
-    <ThemeContext value={{ colorScheme, tokens, isDark }}>
+    <ThemeContext value={value}>
       {children}
     </ThemeContext>
   );

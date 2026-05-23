@@ -1,11 +1,30 @@
 {
+  "errors": {
+    "description": "The app hit a problem. Try again or reopen Dot to Dust.",
+    "retry": "Try again",
+    "title": "Something went wrong."
+  },
   "grid": {
     "headline": {
       "bonusMonths": "+{count, plural, one {# month} other {# months}}",
       "bonusSubtitle": "every week is bonus",
       "bonusWeeks": "+{count, plural, one {# week} other {# weeks}}",
       "bonusYears": "+{count, plural, one {# year} other {# years}}",
+      "eyebrow": {
+        "bonusMonths": "Months and counting",
+        "bonusWeeks": "Weeks and counting",
+        "bonusYears": "Years and counting",
+        "months": "Months lived",
+        "weeks": "Weeks lived",
+        "years": "Years lived"
+      },
       "monthsAhead": "{count, plural, one {# month ahead} other {# months ahead}}",
+      "of": "of {total}",
+      "subline": {
+        "months": "{count, plural, one {# month ahead} other {# months ahead}} · assuming {years} years",
+        "weeks": "{count, plural, one {# week ahead} other {# weeks ahead}} · assuming {years} years",
+        "years": "{count, plural, one {# year ahead} other {# years ahead}} · assuming {years} years"
+      },
       "weeksAhead": "{count, plural, one {# week ahead} other {# weeks ahead}}",
       "yearsAhead": "{count, plural, one {# year ahead} other {# years ahead}}"
     },
@@ -17,12 +36,20 @@
   },
   "onboarding": {
     "dob": {
+      "body": "The grid is built from this single date. You can change it any time.",
       "done": "Continue",
-      "label": "When were you born?"
+      "eyebrow": "The starting point",
+      "label": "When were you born?",
+      "preview": "{date} · {age} years",
+      "step": "2 of 2",
+      "title": "When did you arrive?"
     },
     "welcome": {
       "begin": "Begin",
-      "headline": "A life in dots."
+      "body": "A quiet reminder. Nothing to track,\nnothing to win — only to notice.",
+      "headline": "A life in dots.",
+      "step": "1 of 2",
+      "tagline": "Each dot,\na week of your life."
     }
   },
   "settings": {
@@ -37,12 +64,31 @@
       "label": "Date of birth",
       "notSet": "Not set"
     },
+    "epigraph": "One ought, every day at least,\nto look upon a few dots.",
+    "eyebrow": "The instrument",
+    "group": {
+      "about": "About",
+      "appearance": "Appearance",
+      "life": "Life"
+    },
+    "lifeExpectancy": {
+      "label": "Life expectancy",
+      "value": "80 years"
+    },
+    "replayOnboarding": {
+      "action": "Show onboarding again",
+      "label": "Developer tools"
+    },
     "theme": {
       "dark": "Dark",
       "label": "Theme",
       "light": "Light",
       "system": "System"
     },
-    "title": "Settings"
+    "title": "Settings",
+    "version": {
+      "label": "Version",
+      "value": "1.0"
+    }
   }
 }

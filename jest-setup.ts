@@ -43,6 +43,7 @@ Uniwind.updateCSSVariables('dark', {
 jest.mock('react-native-worklets', () => ({
   __esModule: true,
   default: {},
+  scheduleOnRN: jest.fn((fn, ...args) => fn(...args)),
 }));
 
 // Mock react-native-reanimated
@@ -128,6 +129,10 @@ jest.mock('react-native-mmkv', () => ({
   __mockMmkvClear: jest.fn(() => mockMmkvData.clear()),
   __mockMmkvSetString: jest.fn((key: string, value: string) => {
     mockMmkvData.set(key, value);
+  }),
+  __mockMmkvGetString: jest.fn((key: string) => {
+    const value = mockMmkvData.get(key);
+    return typeof value === 'string' ? value : undefined;
   }),
   createMMKV: jest.fn(() => mockMmkvInstance),
   MMKV: jest.fn(() => mockMmkvInstance),

@@ -1,9 +1,10 @@
 import type { ComponentProps } from 'react';
 import { useClock } from '@shopify/react-native-skia';
 import { render } from '@testing-library/react-native';
+import { Platform } from 'react-native';
 import { useReducedMotion as useReanimatedReducedMotion } from 'react-native-reanimated';
 
-import { lightTokens } from '@/lib/theme/tokens';
+import { lightTokens, toSkia } from '@/lib/theme/tokens';
 import { LifeGrid } from '../components/life-grid';
 import { computeGridLayout } from '../lib/grid-layout';
 
@@ -15,6 +16,15 @@ interface TestNode {
 
 type TestChild = TestNode | string;
 type TestTree = TestNode | TestNode[] | null;
+
+const originalOS = Platform.OS;
+
+function setPlatformOS(os: typeof Platform.OS) {
+  Object.defineProperty(Platform, 'OS', {
+    configurable: true,
+    value: os,
+  });
+}
 
 function findNodesByType(tree: TestTree, type: string): TestNode[] {
   if (!tree) return [];
@@ -52,6 +62,7 @@ function strokeCircles(tree: TestTree): TestNode[] {
 describe('life grid', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    setPlatformOS(originalOS);
     jest.mocked(useReanimatedReducedMotion).mockReturnValue(false);
   });
 
@@ -91,11 +102,19 @@ describe('life grid', () => {
     expect(useClock).not.toHaveBeenCalled();
   });
 
+  it('does not mount the Skia clock on web', () => {
+    setPlatformOS('web');
+
+    renderLifeGrid();
+
+    expect(useClock).not.toHaveBeenCalled();
+  });
+
   it('uses static opacity when the ring does not pulse', () => {
     const tree = renderLifeGrid({ view: 'years', today: '2001-01-01' }).toJSON() as TestTree;
     const [ring] = strokeCircles(tree);
 
-    expect(ring.props.color).toBe(lightTokens.skia.accent);
+    expect(ring.props.color).toBe(toSkia(lightTokens).ring);
     expect(ring.props.opacity).toBe(0.8);
   });
 });

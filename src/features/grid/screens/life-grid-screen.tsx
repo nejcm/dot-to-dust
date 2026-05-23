@@ -1,119 +1,135 @@
+import type { LayoutChangeEvent } from 'react-native';
+
 import type { View as GridView } from '@/lib/view';
-
 import { Redirect } from 'expo-router';
-import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
-import Animated, {
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { memo, useCallback, useState } from 'react';
+import { Text } from 'react-native';
 
-import { Headline } from '@/features/grid/components/headline';
 import { LifeGrid } from '@/features/grid/components/life-grid';
-import { ViewToggle } from '@/features/grid/components/view-toggle';
-import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
+import { StageLegend } from '@/features/grid/components/stage-legend';
+import { livedUnitsFor, totalUnitsFor } from '@/features/grid/lib/view-policy';
 import { todayCivilDate } from '@/lib/civil-date';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
-
-const CROSS_FADE_DURATION = 120;
+import { Hairline } from '@/lib/theme/components/hairline';
+import { GearIcon } from '@/lib/theme/components/icons';
+import { Screen } from '@/lib/theme/components/screen';
+import { Pressable, View } from '@/lib/theme/components/ui';
+import { toHex } from '@/lib/theme/tokens';
+import { useTheme } from '@/lib/theme/use-theme';
+import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
 
 interface LifeGridScreenProps {
   onOpenSettings: () => void;
 }
 
-export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
-  const dob = usePreferencesStore((s) => s.dob);
-  const defaultView = usePreferencesStore((s) => s.defaultView);
-  const today = todayCivilDate();
-  const insets = useSafeAreaInsets();
-  const reducedMotion = useReducedMotion();
+interface InlineHeaderProps {
+  dob: string;
+  iconColor: string;
+  onOpenSettings: () => void;
+  settingsLabel: string;
+  today: string;
+  view: GridView;
+}
+
+const InlineHeader = memo(({
+  dob,
+  iconColor,
+  onOpenSettings,
+  settingsLabel,
+  today,
+  view,
+}: InlineHeaderProps) => {
   const { t } = useAppTranslation();
+  const lived = livedUnitsFor(view, dob, today);
+  const total = totalUnitsFor(view);
 
-  const [activeView, setActiveView] = useState<GridView>(defaultView);
-  const [displayedView, setDisplayedView] = useState<GridView>(defaultView);
+  return (
+    <View testID="inline-header">
+      <View className="relative flex-row items-center justify-center px-4 py-3">
+        <View className="flex-row items-baseline gap-2">
+          <Text
+            className="font-display-italic text-display-m/5 tracking-[-0.3px] text-ink"
+            testID="headline-lived"
+          >
+            {lived.toLocaleString()}
+          </Text>
+          <Text className="font-ui text-eyebrow tracking-[1.6px] text-muted uppercase">
+            {t('grid.headline.of', { total: total.toLocaleString() })}
+          </Text>
+        </View>
+
+        <Pressable
+          onPress={onOpenSettings}
+          hitSlop={12}
+          accessibilityLabel={settingsLabel}
+          accessibilityRole="button"
+          testID="settings-button"
+          className="absolute right-4 min-h-9 min-w-8 items-center justify-center"
+          style={getPressedStyle}
+        >
+          <GearIcon color={iconColor} />
+        </Pressable>
+      </View>
+      <Hairline />
+    </View>
+  );
+});
+
+InlineHeader.displayName = 'InlineHeader';
+
+export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
+  const dob = usePreferencesStore.use.dob();
+  const defaultView = usePreferencesStore.use.defaultView();
+  const today = todayCivilDate();
+  const { t } = useAppTranslation();
+  const { tokens } = useTheme();
+  const iconColor = toHex(tokens.muted);
+
   const [gridLayout, setGridLayout] = useState<{ width: number; height: number } | null>(null);
-
-  const gridOpacity = useSharedValue(1);
-
-  const gridStyle = useAnimatedStyle(() => ({
-    opacity: gridOpacity.value,
-  }));
+  const handleGridLayout = useCallback((e: LayoutChangeEvent) => {
+    const { width, height } = e.nativeEvent.layout;
+    setGridLayout((prev) => {
+      if (prev?.width === width && prev.height === height) return prev;
+      return { width, height };
+    });
+  }, []);
 
   if (dob === null) {
     return <Redirect href="/(onboarding)" />;
   }
 
-  function handleViewChange(newView: GridView) {
-    if (newView === activeView) return;
-    setActiveView(newView);
-    if (reducedMotion) {
-      setDisplayedView(newView);
-      return;
-    }
-    // eslint-disable-next-line react-hooks/immutability -- Reanimated shared value; mutation is intentional
-    gridOpacity.value = withTiming(0, { duration: CROSS_FADE_DURATION }, (finished) => {
-      if (finished) {
-        runOnJS(setDisplayedView)(newView);
-        gridOpacity.value = withTiming(1, { duration: CROSS_FADE_DURATION });
-      }
-    });
-  }
-
   return (
-    <View
-      className="flex-1 bg-[--color-bg]"
-      testID="main-screen"
-      style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
-    >
-      <View className="px-4 pt-3 pb-2">
-        <View className="flex-row items-center gap-2">
-          <View className="flex-1">
-            <ViewToggle view={activeView} onViewChange={handleViewChange} />
-          </View>
-          <Pressable
-            onPress={onOpenSettings}
-            hitSlop={12}
-            accessibilityLabel={t('settings.title')}
-            accessibilityRole="button"
-            testID="settings-button"
-            className="min-h-11 min-w-11 items-center justify-center"
-          >
-            <Text
-              numberOfLines={1}
-              style={{ fontFamily: 'Inter_400Regular' }}
-              className="text-lg text-[--color-text] opacity-40"
-            >
-              ⚙
-            </Text>
-          </Pressable>
-        </View>
-        <Headline view={activeView} dob={dob} today={today} />
-      </View>
+    <Screen testID="main-screen" contentClassName="relative">
+      <InlineHeader
+        dob={dob}
+        iconColor={iconColor}
+        onOpenSettings={onOpenSettings}
+        settingsLabel={t('settings.title')}
+        today={today}
+        view={defaultView}
+      />
 
-      <View
-        className="flex-1"
-        onLayout={(e) =>
-          setGridLayout({
-            width: e.nativeEvent.layout.width,
-            height: e.nativeEvent.layout.height,
-          })}
-      >
-        <Animated.View style={[{ flex: 1 }, gridStyle]}>
+      <View className="flex-1 px-4 pt-6 pb-14">
+        <View
+          className="flex-1"
+          onLayout={handleGridLayout}
+        >
           {gridLayout && (
             <LifeGrid
-              view={displayedView}
+              view={defaultView}
               dob={dob}
               today={today}
               width={gridLayout.width}
               height={gridLayout.height}
             />
           )}
-        </Animated.View>
+        </View>
       </View>
-    </View>
+
+      <View testID="stage-legend-overlay" className="absolute inset-x-4 bottom-5 z-10">
+        <StageLegend />
+      </View>
+    </Screen>
   );
 }

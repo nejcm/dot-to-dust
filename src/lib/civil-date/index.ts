@@ -48,6 +48,10 @@ export function formatCivilDateForDisplay(value: string): string {
   return format(parseCivilDate(value), 'MMMM d, yyyy');
 }
 
+export function formatCivilDateShort(value: string): string {
+  return format(parseCivilDate(value), 'MMM d, yyyy');
+}
+
 export function todayCivilDate(): string {
   return toCivilDateString(new Date());
 }
@@ -59,4 +63,13 @@ export function defaultDobCivilDate(today = todayCivilDate()): string {
 
 export function isPastOrTodayCivilDate(value: string, today = todayCivilDate()): boolean {
   return isCivilDate(value) && value <= today;
+}
+
+export function tryParseDate(value: string): Date | undefined {
+  try {
+    return parseCivilDate(value);
+  }
+  catch {
+    return undefined;
+  }
 }

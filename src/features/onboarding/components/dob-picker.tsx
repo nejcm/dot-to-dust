@@ -1,50 +1,86 @@
 import { useState } from 'react';
-import { Platform, Pressable, Text, View } from 'react-native';
+import { Platform, TextInput } from 'react-native';
 
-import { defaultDobCivilDate, formatCivilDateForDisplay, todayCivilDate } from '@/lib/civil-date';
+import { yearsLived } from '@/features/grid/lib/life-math';
+import { defaultDobCivilDate, formatCivilDateShort, toCivilDateString, todayCivilDate, tryParseDate } from '@/lib/civil-date';
 import { NativeCivilDatePicker } from '@/lib/civil-date/native-civil-date-picker';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
+import { ArrowLeftIcon } from '@/lib/theme/components/icons';
+import { PrimaryButton } from '@/lib/theme/components/primary-button';
+import { Screen } from '@/lib/theme/components/screen';
+import { Text } from '@/lib/theme/components/text';
+import { Pressable, View } from '@/lib/theme/components/ui';
+import { toHex } from '@/lib/theme/tokens';
+import { useTheme } from '@/lib/theme/use-theme';
+import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
 
 interface DobPickerProps {
   onConfirm: (dob: string) => void;
+  onBack?: () => void;
   initialDob?: string;
 }
 
-export function DobPicker({ onConfirm, initialDob }: DobPickerProps) {
+export function DobPicker({ onConfirm, onBack, initialDob }: DobPickerProps) {
   const { t } = useAppTranslation();
+  const { tokens } = useTheme();
+  const iconColor = toHex(tokens.inkSoft);
   const [dob, setDob] = useState(() => initialDob ?? defaultDobCivilDate());
   const [showAndroid, setShowAndroid] = useState(false);
   const today = todayCivilDate();
 
-  const handleConfirm = () => {
-    onConfirm(dob);
-  };
+  const age = yearsLived(dob, today);
+  const preview = t('onboarding.dob.preview', {
+    date: formatCivilDateShort(dob),
+    age,
+  });
 
   return (
-    <View className="flex-1 bg-[--color-bg] px-8">
-      <View className="flex-1 justify-center">
-        <Text
-          adjustsFontSizeToFit
-          minimumFontScale={0.78}
-          numberOfLines={2}
-          style={{ fontFamily: 'Fraunces_300Light_Italic' }}
-          className="mb-12 text-center text-3xl text-[--color-text]"
+    <Screen contentClassName="pt-16">
+      {/* Top bar: back + step counter */}
+      <View className="flex-row items-center justify-between px-7 pt-7">
+        <Pressable
+          onPress={onBack}
+          hitSlop={12}
+          accessibilityLabel={t('settings.back')}
+          accessibilityRole="button"
+          className="-ml-1 p-1"
+          style={getPressedStyle}
         >
-          {t('onboarding.dob.label')}
+          <ArrowLeftIcon color={iconColor} width={22} height={14} />
+        </Pressable>
+        <Text variant="micro" tone="faint" className="tracking-[1.6px] uppercase">
+          {t('onboarding.dob.step')}
         </Text>
+      </View>
 
+      {/* Headline block */}
+      <View className="px-9 pt-10">
+        <Text
+          variant="eyebrow"
+          tone="muted"
+          className="mb-4 tracking-[2.2px] uppercase"
+        >
+          {t('onboarding.dob.eyebrow')}
+        </Text>
+        <Text
+          className="font-display-italic text-[28px]/9 tracking-[-0.3px] text-ink"
+        >
+          {t('onboarding.dob.title')}
+        </Text>
+        <Text variant="meta" tone="muted" className="mt-3 leading-5">
+          {t('onboarding.dob.body')}
+        </Text>
+      </View>
+
+      <View className="flex-1 items-center justify-center px-7">
         {Platform.OS === 'android' && (
           <Pressable
             onPress={() => setShowAndroid(true)}
             testID="onboarding-dob-field"
-            className="mb-8 min-h-14 items-center justify-center border border-[--color-text] p-4"
+            className="min-h-14 w-full items-center justify-center border-[0.5px] border-hairline p-4"
           >
-            <Text
-              numberOfLines={1}
-              style={{ fontFamily: 'Inter_400Regular' }}
-              className="text-center text-lg text-[--color-text]"
-            >
-              {formatCivilDateForDisplay(dob)}
+            <Text variant="body" tone="ink" numberOfLines={1}>
+              {formatCivilDateShort(dob)}
             </Text>
           </Pressable>
         )}
@@ -54,26 +90,33 @@ export function DobPicker({ onConfirm, initialDob }: DobPickerProps) {
             value={dob}
             maximumValue={today}
             onChange={setDob}
+            display={Platform.OS === 'ios' ? 'spinner' : undefined}
             onAndroidClose={() => setShowAndroid(false)}
+          />
+        )}
+
+        {(Platform.OS === 'web') && (
+          <TextInput
+            testID="onboarding-web-dob-input"
+            className="text-center text-2xl"
+            defaultValue={dob}
+            onChange={(e) => {
+              const newVal = tryParseDate(e.nativeEvent.text);
+              if (!newVal) return;
+              setDob(toCivilDateString(newVal));
+            }}
           />
         )}
       </View>
 
-      <View className="pb-12">
-        <Pressable
-          onPress={handleConfirm}
-          testID="onboarding-dob-done"
-          className="min-h-12 items-center justify-center border border-[--color-text] px-4 py-3"
-        >
-          <Text
-            numberOfLines={1}
-            style={{ fontFamily: 'Inter_400Regular', letterSpacing: 4 }}
-            className="text-center text-sm text-[--color-text] uppercase"
-          >
-            {t('onboarding.dob.done')}
-          </Text>
-        </Pressable>
+      <View className="items-center gap-4 px-9 pb-14">
+        <PrimaryButton onPress={() => onConfirm(dob)} testID="onboarding-dob-done" full>
+          {t('onboarding.dob.done')}
+        </PrimaryButton>
+        <Text variant="meta" tone="muted" className="tracking-[0.3px]">
+          {preview}
+        </Text>
       </View>
-    </View>
+    </Screen>
   );
 }

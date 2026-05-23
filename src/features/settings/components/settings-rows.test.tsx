@@ -1,9 +1,17 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
+import { router } from 'expo-router';
 
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
 import { DefaultViewRow } from './default-view-row';
 import { DobRow } from './dob-row';
+import { ReplayOnboardingRow } from './replay-onboarding-row';
 import { ThemeRow } from './theme-row';
+
+jest.mock('expo-router', () => ({
+  router: {
+    push: jest.fn(),
+  },
+}));
 
 jest.mock('@react-native-community/datetimepicker', () => ({
   __esModule: true,
@@ -23,6 +31,7 @@ jest.mock('@react-native-community/datetimepicker', () => ({
 
 describe('settings rows', () => {
   beforeEach(() => {
+    jest.clearAllMocks();
     usePreferencesStore.setState({
       dob: '1990-01-01',
       theme: 'system',
@@ -49,10 +58,39 @@ describe('settings rows', () => {
   it('saves a changed date of birth', () => {
     render(<DobRow />);
 
-    fireEvent.press(screen.getByText('Edit'));
+    fireEvent.press(screen.getByLabelText('Edit'));
     fireEvent.press(screen.getByTestId('dob-picker'));
     fireEvent.press(screen.getByText('Done'));
 
     expect(usePreferencesStore.getState().dob).toBe('2001-05-03');
+  });
+
+  it('opens onboarding again from the local dev action', () => {
+    const preferences = {
+      dob: usePreferencesStore.getState().dob,
+      theme: usePreferencesStore.getState().theme,
+      defaultView: usePreferencesStore.getState().defaultView,
+    };
+
+    render(<ReplayOnboardingRow />);
+
+    fireEvent.press(screen.getByTestId('settings-replay-onboarding'));
+
+    expect(router.push).toHaveBeenCalledWith('/(onboarding)');
+    expect(usePreferencesStore.getState()).toMatchObject(preferences);
+  });
+
+  it('hides onboarding replay outside local dev', () => {
+    const originalDev = __DEV__;
+    Object.defineProperty(globalThis, '__DEV__', { configurable: true, value: false });
+
+    try {
+      render(<ReplayOnboardingRow />);
+
+      expect(screen.queryByTestId('settings-replay-onboarding')).toBeNull();
+    }
+    finally {
+      Object.defineProperty(globalThis, '__DEV__', { configurable: true, value: originalDev });
+    }
   });
 });

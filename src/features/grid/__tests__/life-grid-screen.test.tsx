@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Redirect } from 'expo-router';
 import { View } from 'react-native';
-import { withTiming } from 'react-native-reanimated';
 
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
 
+import { LifeGrid } from '../components/life-grid';
 import { LifeGridScreen } from '../screens/life-grid-screen';
 
 jest.mock('expo-router', () => ({
@@ -12,7 +12,7 @@ jest.mock('expo-router', () => ({
 }));
 
 jest.mock('react-native-safe-area-context', () => ({
-  useSafeAreaInsets: jest.fn(() => ({ top: 0, right: 0, bottom: 0, left: 0 })),
+  SafeAreaView: require('react-native').View,
 }));
 
 jest.mock('@/features/grid/components/life-grid', () => ({
@@ -32,7 +32,7 @@ function renderLifeGridScreen(onOpenSettings = jest.fn()) {
     nativeEvent: { layout: { width: 320, height: 480 } },
   });
 
-  return view;
+  return { ...view, layoutTarget };
 }
 
 describe('life grid screen', () => {
@@ -45,22 +45,58 @@ describe('life grid screen', () => {
     });
   });
 
-  it('does not animate when pressing the active view', () => {
+  it('does not render view controls on the grid screen', () => {
     renderLifeGridScreen();
 
-    fireEvent.press(screen.getByText('Weeks'));
-
-    expect(withTiming).not.toHaveBeenCalled();
+    expect(screen.queryByText('Weeks')).toBeNull();
+    expect(screen.queryByText('Months')).toBeNull();
+    expect(screen.queryByText('Years')).toBeNull();
     expect(screen.getByTestId('life-grid')).toHaveTextContent('weeks');
   });
 
-  it('updates the displayed grid after the view transition completes', () => {
+  it('renders the inline header count and total', () => {
     renderLifeGridScreen();
 
-    fireEvent.press(screen.getByText('Months'));
+    expect(screen.getByTestId('inline-header')).toBeTruthy();
+    expect(screen.getByTestId('headline-lived')).toBeTruthy();
+    expect(screen.getByText(/of 4[,.]160/)).toBeTruthy();
+  });
 
-    expect(withTiming).toHaveBeenCalled();
+  it('renders the stored default view', () => {
+    usePreferencesStore.setState({
+      dob: '1990-01-01',
+      theme: 'system',
+      defaultView: 'months',
+    });
+
+    renderLifeGridScreen();
+
     expect(screen.getByTestId('life-grid')).toHaveTextContent('months');
+  });
+
+  it('passes the inner grid container dimensions to the canvas', () => {
+    renderLifeGridScreen();
+
+    expect(jest.mocked(LifeGrid)).toHaveBeenCalledWith(
+      expect.objectContaining({ width: 320, height: 480 }),
+      undefined,
+    );
+  });
+
+  it('does not re-render the grid for legend toggles or duplicate layout events', () => {
+    const { layoutTarget } = renderLifeGridScreen();
+
+    expect(jest.mocked(LifeGrid)).toHaveBeenCalledTimes(1);
+
+    fireEvent.press(screen.getByTestId('stage-legend-toggle'));
+
+    expect(jest.mocked(LifeGrid)).toHaveBeenCalledTimes(1);
+
+    fireEvent(layoutTarget!, 'layout', {
+      nativeEvent: { layout: { width: 320, height: 480 } },
+    });
+
+    expect(jest.mocked(LifeGrid)).toHaveBeenCalledTimes(1);
   });
 
   it('opens settings through the route callback', () => {

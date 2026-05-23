@@ -1,36 +1,70 @@
 import { router } from 'expo-router';
-import { Pressable, Text, View } from 'react-native';
 
 import { useAppTranslation } from '@/lib/i18n/use-translation';
+import { PrimaryButton } from '@/lib/theme/components/primary-button';
+import { Screen } from '@/lib/theme/components/screen';
+import { Text } from '@/lib/theme/components/text';
+import { View } from '@/lib/theme/components/ui';
+import { Wordmark } from '@/lib/theme/components/wordmark';
+
+const STAGE_DOT_CLASSES = [
+  'bg-stage-0',
+  'bg-stage-1',
+  'bg-stage-2',
+  'bg-stage-3',
+  'bg-stage-4',
+] as const;
 
 export default function WelcomeScreen() {
   const { t } = useAppTranslation();
 
   return (
-    <View className="flex-1 items-center justify-center bg-[--color-bg] px-8 py-12">
-      <Text
-        adjustsFontSizeToFit
-        minimumFontScale={0.72}
-        numberOfLines={2}
-        style={{ fontFamily: 'Fraunces_300Light_Italic' }}
-        className="text-center text-5xl text-[--color-text]"
-      >
-        {t('onboarding.welcome.headline')}
-      </Text>
+    <Screen contentClassName="pt-10">
+      <View className="items-center px-8 pt-9">
+        <Wordmark />
+      </View>
 
-      <Pressable
-        onPress={() => router.push('/(onboarding)/dob')}
-        testID="onboarding-begin"
-        className="mt-16 min-h-12 justify-center border border-[--color-text] px-10 py-3"
-      >
+      <View className="flex-1 items-center justify-center gap-10 px-9">
+        {/* Stage constellation */}
+        <View className="flex-row gap-3">
+          {STAGE_DOT_CLASSES.map((className) => (
+            <View
+              key={className}
+              className={`size-2 rounded-full ${className}`}
+            />
+          ))}
+        </View>
+
+        <Text className="text-center font-display-italic text-[31px]/9 tracking-[-0.3px] text-ink">
+          {t('onboarding.welcome.tagline')}
+        </Text>
+
+        {/* Body copy */}
         <Text
-          numberOfLines={1}
-          style={{ fontFamily: 'Inter_400Regular', letterSpacing: 4 }}
-          className="text-center text-sm text-[--color-text] uppercase"
+          variant="meta"
+          tone="muted"
+          className="max-w-60 text-center leading-5 tracking-[0.3px]"
+        >
+          {t('onboarding.welcome.body')}
+        </Text>
+      </View>
+
+      {/* Bottom: Begin + step counter */}
+      <View className="items-center gap-4 px-9 pt-6 pb-14">
+        <PrimaryButton
+          onPress={() => router.push('/(onboarding)/dob')}
+          testID="onboarding-begin"
         >
           {t('onboarding.welcome.begin')}
+        </PrimaryButton>
+        <Text
+          variant="micro"
+          tone="faint"
+          className="tracking-[1.6px] uppercase"
+        >
+          {t('onboarding.welcome.step')}
         </Text>
-      </Pressable>
-    </View>
+      </View>
+    </Screen>
   );
 }
