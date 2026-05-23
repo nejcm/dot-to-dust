@@ -84,4 +84,10 @@ describe('computeGridLayout', () => {
     expect(usedHeight(layout)).toBeCloseTo(852, 5);
     expect(usedWidth(layout)).toBeLessThan(393);
   });
+
+  it('uses the full canvas width for months when height allows it', () => {
+    const layout = computeGridLayout('months', 393, 3000);
+    expect(fitsCanvas(layout, 393, 3000)).toBe(true);
+    expect(usedWidth(layout)).toBeCloseTo(393, 5);
+  });
 });
