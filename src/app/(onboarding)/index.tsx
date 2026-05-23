@@ -14,7 +14,7 @@ export default function WelcomeScreen() {
   return (
     <Screen contentClassName="pt-10">
       <View className="items-center px-8 pt-9">
-        <Wordmark />
+        <Wordmark size="xl" />
       </View>
 
       <View className="flex-1 items-center justify-center gap-10 px-9">

@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { Text } from './text';
 
-type WordmarkSize = 9 | 10 | 12;
+type WordmarkSize = 'sm' | 'md' | 'lg' | 'xl';
 
 interface WordmarkProps {
   size?: WordmarkSize;
@@ -9,20 +9,29 @@ interface WordmarkProps {
 }
 
 const WORDMARK_SIZE_CLASSES: Record<WordmarkSize, string> = {
-  9: 'text-[9px]',
-  10: 'text-[10px]',
-  12: 'text-[12px]',
+  sm: 'text-[10px]',
+  md: 'text-[12px]',
+  lg: 'text-[16px]',
+  xl: 'text-[18px]',
 };
 
 const WORDMARK_TO_SIZE_CLASSES: Record<WordmarkSize, string> = {
-  9: 'text-[11px]',
-  10: 'text-[12px]',
-  12: 'text-[14px]',
+  sm: 'text-[12px]',
+  md: 'text-[14px]',
+  lg: 'text-[18px]',
+  xl: 'text-[20px]',
 };
 
-export function Wordmark({ size = 12, className }: WordmarkProps) {
+const GAP_SIZE: Record<WordmarkSize, string> = {
+  sm: 'gap-0.25',
+  md: 'gap-0.5',
+  lg: 'gap-1',
+  xl: 'gap-1',
+};
+
+export function Wordmark({ size = 'md', className }: WordmarkProps) {
   return (
-    <View className="flex-row items-end gap-0.5">
+    <View className={`flex-row items-end ${GAP_SIZE[size]}`}>
       <Text
         className={['font-medium tracking-widest text-muted', WORDMARK_SIZE_CLASSES[size], className].filter(Boolean).join(' ')}
       >

@@ -1,5 +1,6 @@
 import type { SharedValue } from 'react-native-reanimated';
 import { useEffect } from 'react';
+import { StyleSheet } from 'react-native';
 import Animated, {
   cancelAnimation,
   Easing,
@@ -55,6 +56,9 @@ const PARTICLE_VECTORS = [
 ] as const;
 
 const DOT_COUNT = STAGE_DOTS.length;
+const DOT_CONTAINER_SIZE = 24;
+const PARTICLE_SIZE = 1.5;
+const PARTICLE_ANCHOR_OFFSET = (DOT_CONTAINER_SIZE - PARTICLE_SIZE) / 2;
 const DOT_STAGGER_MS = 100;
 const DISSOLVE_MS = 620;
 const REFORM_MS = 620;
@@ -65,6 +69,13 @@ const PARTICLE_WANDER_MS = 4000;
 const PARTICLE_WANDER_RADIUS = 2.2;
 const PARTICLE_PHASE_STEP = 0.83;
 const DOT_PHASE_STEP = 0.47;
+
+const styles = StyleSheet.create({
+  particleAnchor: {
+    left: PARTICLE_ANCHOR_OFFSET,
+    top: PARTICLE_ANCHOR_OFFSET,
+  },
+});
 
 interface StageDustDotsProps {
   testID?: string;
@@ -215,8 +226,8 @@ function DustParticle({
 
   return (
     <Animated.View
-      className={`absolute size-px rounded-full ${className}`}
-      style={particleStyle}
+      className={`absolute size-[1.5px] rounded-full ${className}`}
+      style={[styles.particleAnchor, particleStyle]}
       testID={testID}
     />
   );

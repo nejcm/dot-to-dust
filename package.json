@@ -142,6 +142,11 @@
       ]
     }
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@shopify/react-native-skia"
+    ]
+  },
   "osMetadata": {
     "initVersion": "9.0.0"
   }
