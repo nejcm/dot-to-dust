@@ -5,7 +5,7 @@
   "license": "UNLICENSED",
   "packageManager": "pnpm@10.33.3",
   "engines": {
-    "node": "^22.13.0 || >=24"
+    "node": "22.13.0 || >=24"
   },
   "main": "index",
   "scripts": {
@@ -53,16 +53,16 @@
     "knip:check": "pnpm exec knip"
   },
   "dependencies": {
-    "@expo-google-fonts/cormorant-garamond": "^0.4.1",
+    "@expo-google-fonts/cormorant-garamond": "0.4.1",
     "@expo-google-fonts/fraunces": "0.4.1",
-    "@expo-google-fonts/geist": "^0.4.2",
-    "@expo-google-fonts/geist-mono": "^0.4.2",
+    "@expo-google-fonts/geist": "0.4.2",
+    "@expo-google-fonts/geist-mono": "0.4.2",
     "@expo-google-fonts/inter": "0.4.2",
     "@expo/metro-runtime": "55.0.11",
     "@react-native-community/datetimepicker": "8.6.0",
     "@react-native-picker/picker": "2.11.4",
     "@shopify/react-native-skia": "2.4.18",
-    "culori": "^4.0.2",
+    "culori": "4.0.2",
     "date-fns": "4.1.0",
     "es-toolkit": "1.46.1",
     "expo": "55.0.26",
@@ -107,11 +107,12 @@
     "@formatjs/icu-messageformat-parser": "3.5.9",
     "@tailwindcss/cli": "4.2.4",
     "@testing-library/react-native": "13.3.3",
-    "@types/culori": "^4.0.1",
+    "@types/culori": "4.0.1",
     "@types/jest": "29.5.14",
     "@types/react": "19.2.14",
     "babel-plugin-module-resolver": "5.0.3",
     "cross-env": "10.1.0",
+    "eas-cli": "19.0.4",
     "eslint": "9.39.4",
     "eslint-plugin-better-tailwindcss": "4.5.0",
     "eslint-plugin-i18n-json": "4.0.1",
