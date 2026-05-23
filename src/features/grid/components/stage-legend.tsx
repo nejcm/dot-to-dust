@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Text } from '@/lib/theme/components/text';
@@ -12,7 +12,7 @@ const STAGES = [
   { name: 'Twilight', range: '60–80', dotClassName: 'bg-stage-4' },
 ] as const;
 
-export function StageLegend() {
+export const StageLegend = memo(() => {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -40,7 +40,7 @@ export function StageLegend() {
               variant="micro"
               tone="muted"
               numberOfLines={expanded ? undefined : 1}
-              className={expanded ? 'flex-1 text-micro tracking-[1.2px] uppercase' : 'text-[8px] tracking-[1.4px] uppercase'}
+              className={expanded ? 'flex-1 text-micro/tight tracking-[1.2px] uppercase' : 'text-[8px] tracking-[1.4px] uppercase'}
             >
               {stage.name}
             </Text>
@@ -54,4 +54,6 @@ export function StageLegend() {
       </View>
     </Pressable>
   );
-}
+});
+
+StageLegend.displayName = 'StageLegend';

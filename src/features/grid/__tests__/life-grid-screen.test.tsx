@@ -32,7 +32,7 @@ function renderLifeGridScreen(onOpenSettings = jest.fn()) {
     nativeEvent: { layout: { width: 320, height: 480 } },
   });
 
-  return view;
+  return { ...view, layoutTarget };
 }
 
 describe('life grid screen', () => {
@@ -81,6 +81,22 @@ describe('life grid screen', () => {
       expect.objectContaining({ width: 320, height: 480 }),
       undefined,
     );
+  });
+
+  it('does not re-render the grid for legend toggles or duplicate layout events', () => {
+    const { layoutTarget } = renderLifeGridScreen();
+
+    expect(jest.mocked(LifeGrid)).toHaveBeenCalledTimes(1);
+
+    fireEvent.press(screen.getByTestId('stage-legend-toggle'));
+
+    expect(jest.mocked(LifeGrid)).toHaveBeenCalledTimes(1);
+
+    fireEvent(layoutTarget!, 'layout', {
+      nativeEvent: { layout: { width: 320, height: 480 } },
+    });
+
+    expect(jest.mocked(LifeGrid)).toHaveBeenCalledTimes(1);
   });
 
   it('opens settings through the route callback', () => {

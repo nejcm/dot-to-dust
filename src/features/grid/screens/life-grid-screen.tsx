@@ -1,7 +1,8 @@
-import type { View as GridView } from '@/lib/view';
+import type { LayoutChangeEvent } from 'react-native';
 
+import type { View as GridView } from '@/lib/view';
 import { Redirect } from 'expo-router';
-import { useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { Text } from 'react-native';
 
 import { LifeGrid } from '@/features/grid/components/life-grid';
@@ -31,14 +32,14 @@ interface InlineHeaderProps {
   view: GridView;
 }
 
-function InlineHeader({
+const InlineHeader = memo(({
   dob,
   iconColor,
   onOpenSettings,
   settingsLabel,
   today,
   view,
-}: InlineHeaderProps) {
+}: InlineHeaderProps) => {
   const { t } = useAppTranslation();
   const lived = livedUnitsFor(view, dob, today);
   const total = totalUnitsFor(view);
@@ -73,7 +74,9 @@ function InlineHeader({
       <Hairline />
     </View>
   );
-}
+});
+
+InlineHeader.displayName = 'InlineHeader';
 
 export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
   const dob = usePreferencesStore.use.dob();
@@ -84,13 +87,20 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
   const iconColor = toHex(tokens.muted);
 
   const [gridLayout, setGridLayout] = useState<{ width: number; height: number } | null>(null);
+  const handleGridLayout = useCallback((e: LayoutChangeEvent) => {
+    const { width, height } = e.nativeEvent.layout;
+    setGridLayout((prev) => {
+      if (prev?.width === width && prev.height === height) return prev;
+      return { width, height };
+    });
+  }, []);
 
   if (dob === null) {
     return <Redirect href="/(onboarding)" />;
   }
 
   return (
-    <Screen testID="main-screen">
+    <Screen testID="main-screen" contentClassName="relative">
       <InlineHeader
         dob={dob}
         iconColor={iconColor}
@@ -100,14 +110,10 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
         view={defaultView}
       />
 
-      <View className="flex-1 px-4 pt-6">
+      <View className="flex-1 px-4 pt-6 pb-14">
         <View
           className="flex-1"
-          onLayout={(e) =>
-            setGridLayout({
-              width: e.nativeEvent.layout.width,
-              height: e.nativeEvent.layout.height,
-            })}
+          onLayout={handleGridLayout}
         >
           {gridLayout && (
             <LifeGrid
@@ -121,7 +127,7 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
         </View>
       </View>
 
-      <View className="px-4 pt-3 pb-5">
+      <View testID="stage-legend-overlay" className="absolute inset-x-4 bottom-5 z-10">
         <StageLegend />
       </View>
     </Screen>
