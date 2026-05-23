@@ -10,7 +10,7 @@ import { StageLegend } from '@/features/grid/components/stage-legend';
 import { buildLifeGridHeaderState, buildLifeGridState } from '@/features/grid/lib/life-grid-state';
 import { todayCivilDate } from '@/lib/civil-date';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
-import { usePreferencesStore } from '@/lib/storage/preferences-store';
+import { useDefaultViewPreference, useDobPreference } from '@/lib/storage/preferences';
 import { Hairline } from '@/lib/theme/components/hairline';
 import { GearIcon } from '@/lib/theme/components/icons';
 import { Screen } from '@/lib/theme/components/screen';
@@ -73,8 +73,8 @@ const InlineHeader = memo(({
 InlineHeader.displayName = 'InlineHeader';
 
 export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
-  const dob = usePreferencesStore.use.dob();
-  const defaultView = usePreferencesStore.use.defaultView();
+  const dob = useDobPreference();
+  const defaultView = useDefaultViewPreference();
   const today = todayCivilDate();
   const { t } = useAppTranslation();
   const { tokens } = useTheme();

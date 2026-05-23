@@ -4,7 +4,7 @@ import { Platform, Pressable, View } from 'react-native';
 import { defaultDobCivilDate, formatCivilDateForDisplay, todayCivilDate } from '@/lib/civil-date';
 import { NativeCivilDatePicker } from '@/lib/civil-date/native-civil-date-picker';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
-import { setDob, usePreferencesStore } from '@/lib/storage/preferences-store';
+import { setDobPreference, useDobPreference } from '@/lib/storage/preferences';
 import { Hairline } from '@/lib/theme/components/hairline';
 import { Text } from '@/lib/theme/components/text';
 
@@ -13,7 +13,7 @@ import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
 import { SettingRow } from './setting-row';
 
 export function DobRow() {
-  const dob = usePreferencesStore.use.dob();
+  const dob = useDobPreference();
   const { t } = useAppTranslation();
 
   const [editing, setEditing] = useState(false);
@@ -29,7 +29,7 @@ export function DobRow() {
   };
 
   const handleDone = () => {
-    setDob(pendingDob);
+    setDobPreference(pendingDob);
     setEditing(false);
   };
 
@@ -70,7 +70,7 @@ export function DobRow() {
               <NativeCivilDatePicker
                 value={pendingDob}
                 maximumValue={today}
-                onChange={setDob}
+                onChange={setDobPreference}
                 onAndroidClose={() => setEditing(false)}
               />
             )}

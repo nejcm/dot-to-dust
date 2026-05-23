@@ -2,11 +2,11 @@ import { router } from 'expo-router';
 
 import { DobPicker } from '@/features/onboarding/components/dob-picker';
 import { goBackOrFallback } from '@/lib/routing';
-import { setDob } from '@/lib/storage/preferences-store';
+import { setDobPreference } from '@/lib/storage/preferences';
 
 export default function DobScreen() {
   const handleConfirm = (dob: string) => {
-    setDob(dob);
+    setDobPreference(dob);
     router.replace('/(app)');
   };
 

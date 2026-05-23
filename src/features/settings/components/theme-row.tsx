@@ -2,7 +2,7 @@ import { Pressable, View } from 'react-native';
 import { cn } from 'tailwind-variants';
 
 import { useAppTranslation } from '@/lib/i18n/use-translation';
-import { setTheme, usePreferencesStore } from '@/lib/storage/preferences-store';
+import { setThemePreference, useThemePreference } from '@/lib/storage/preferences';
 import { Hairline } from '@/lib/theme/components/hairline';
 import { Text } from '@/lib/theme/components/text';
 
@@ -10,7 +10,7 @@ type Theme = 'light' | 'dark' | 'system';
 const THEMES: Theme[] = ['light', 'dark', 'system'];
 
 export function ThemeRow() {
-  const theme = usePreferencesStore.use.theme();
+  const theme = useThemePreference();
   const { t } = useAppTranslation();
 
   return (
@@ -23,7 +23,7 @@ export function ThemeRow() {
           {THEMES.map((th) => (
             <Pressable
               key={th}
-              onPress={() => setTheme(th)}
+              onPress={() => setThemePreference(th)}
               accessibilityRole="button"
               accessibilityState={{ selected: theme === th }}
               testID={`theme-${th}`}

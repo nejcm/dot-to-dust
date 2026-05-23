@@ -2,13 +2,13 @@ import { Pressable, View } from 'react-native';
 import { cn } from 'tailwind-variants';
 
 import { useAppTranslation } from '@/lib/i18n/use-translation';
-import { setDefaultView, usePreferencesStore } from '@/lib/storage/preferences-store';
+import { setDefaultViewPreference, useDefaultViewPreference } from '@/lib/storage/preferences';
 import { Hairline } from '@/lib/theme/components/hairline';
 import { Text } from '@/lib/theme/components/text';
 import { VIEWS } from '@/lib/view';
 
 export function DefaultViewRow() {
-  const defaultView = usePreferencesStore.use.defaultView();
+  const defaultView = useDefaultViewPreference();
   const { t } = useAppTranslation();
 
   return (
@@ -21,7 +21,7 @@ export function DefaultViewRow() {
           {VIEWS.map((v) => (
             <Pressable
               key={v}
-              onPress={() => setDefaultView(v)}
+              onPress={() => setDefaultViewPreference(v)}
               accessibilityRole="button"
               accessibilityState={{ selected: defaultView === v }}
               className="min-h-11 flex-1 items-center justify-center px-2 pt-3 pb-[14px]"
