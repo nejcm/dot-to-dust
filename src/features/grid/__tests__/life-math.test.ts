@@ -4,7 +4,9 @@ import {
   MONTHS_TOTAL,
   monthsLived,
   remainingFor,
+  stageForRatio,
   stageForWeek,
+  STAGES,
   WEEKS_TOTAL,
   weeksLived,
   YEARS_TOTAL,
@@ -100,6 +102,16 @@ describe('yearsLived', () => {
 // ─── stageForWeek ─────────────────────────────────────────────────────────────
 
 describe('stageForWeek', () => {
+  it('keeps canonical stage definitions', () => {
+    expect(STAGES).toEqual([
+      { index: 0, name: 'Formation', range: '0–11', startAge: 0, endAge: 11 },
+      { index: 1, name: 'Emergence', range: '12–22', startAge: 12, endAge: 22 },
+      { index: 2, name: 'Construction', range: '23–39', startAge: 23, endAge: 39 },
+      { index: 3, name: 'Tenure', range: '40–59', startAge: 40, endAge: 59 },
+      { index: 4, name: 'Twilight', range: '60–80', startAge: 60, endAge: 80 },
+    ]);
+  });
+
   it('week 1 (first week of life) is stage 0', () => {
     expect(stageForWeek(1)).toBe(0);
   });
@@ -142,6 +154,14 @@ describe('stageForWeek', () => {
 
   it('week 4160 (last week of 80-year span) is stage 4', () => {
     expect(stageForWeek(4160)).toBe(4);
+  });
+
+  it('maps ratios through the same stage catalog', () => {
+    expect(stageForRatio(11 / 80)).toBe(0);
+    expect(stageForRatio(12 / 80)).toBe(1);
+    expect(stageForRatio(23 / 80)).toBe(2);
+    expect(stageForRatio(40 / 80)).toBe(3);
+    expect(stageForRatio(60 / 80)).toBe(4);
   });
 });
 

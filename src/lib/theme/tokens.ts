@@ -1,3 +1,5 @@
+import type { StageIndex } from '@/features/grid/lib/life-math';
+
 import { formatHex, parse } from 'culori';
 
 export interface ColorTokens {
@@ -79,4 +81,4 @@ export const darkTokens: ColorTokens = {
   accent: 'oklch(0.78 0.075 70)',
 };
 
-export type StageIndex = 0 | 1 | 2 | 3 | 4;
+export type { StageIndex };

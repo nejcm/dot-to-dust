@@ -3,13 +3,14 @@ import { Pressable, View } from 'react-native';
 
 import { Text } from '@/lib/theme/components/text';
 import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
+import { STAGES } from '../lib/life-math';
 
-const STAGES = [
-  { name: 'Formation', range: '0–11', dotClassName: 'bg-stage-0' },
-  { name: 'Emergence', range: '12–22', dotClassName: 'bg-stage-1' },
-  { name: 'Construction', range: '23–39', dotClassName: 'bg-stage-2' },
-  { name: 'Tenure', range: '40–59', dotClassName: 'bg-stage-3' },
-  { name: 'Twilight', range: '60–80', dotClassName: 'bg-stage-4' },
+const STAGE_DOT_CLASS_NAMES = [
+  'bg-stage-0',
+  'bg-stage-1',
+  'bg-stage-2',
+  'bg-stage-3',
+  'bg-stage-4',
 ] as const;
 
 export const StageLegend = memo(() => {
@@ -34,7 +35,7 @@ export const StageLegend = memo(() => {
             className={expanded ? 'flex-row items-center gap-2' : 'flex-1 flex-row items-center gap-1.5'}
           >
             <View
-              className={`${expanded ? 'size-4' : 'size-2'} shrink-0 rounded-[6px] ${stage.dotClassName}`}
+              className={`${expanded ? 'size-4' : 'size-2'} shrink-0 rounded-[6px] ${STAGE_DOT_CLASS_NAMES[stage.index]}`}
             />
             <Text
               variant="micro"
