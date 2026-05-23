@@ -15,7 +15,6 @@ import { View } from '@/lib/theme/components/ui';
 import { Wordmark } from '@/lib/theme/components/wordmark';
 import { toHex } from '@/lib/theme/tokens';
 import { useTheme } from '@/lib/theme/use-theme';
-import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
 
 export default function SettingsScreen() {
   const { t } = useAppTranslation();
@@ -31,7 +30,6 @@ export default function SettingsScreen() {
           accessibilityLabel={t('settings.back')}
           testID="settings-back"
           className="gap-3 px-px"
-          style={getPressedStyle}
         >
           <ArrowLeftIcon color={iconColor} />
           <Text variant="meta" tone="inkSoft">
@@ -61,7 +59,7 @@ export default function SettingsScreen() {
         <Text
           variant="micro"
           tone="faint"
-          className="mt-2.5 mb-1 tracking-[2px] uppercase"
+          className="mb-1 tracking-[0.25em] uppercase"
         >
           {t('settings.group.life')}
         </Text>
@@ -71,7 +69,7 @@ export default function SettingsScreen() {
         <Text
           variant="micro"
           tone="faint"
-          className="mt-8 mb-1 tracking-[2px] uppercase"
+          className="mt-8 mb-1 tracking-[0.25em] uppercase"
         >
           {t('settings.group.appearance')}
         </Text>
@@ -81,7 +79,7 @@ export default function SettingsScreen() {
         <Text
           variant="micro"
           tone="faint"
-          className="mt-8 mb-1 tracking-[2px] uppercase"
+          className="mt-8 mb-1 tracking-[0.25em] uppercase"
         >
           {t('settings.group.about')}
         </Text>

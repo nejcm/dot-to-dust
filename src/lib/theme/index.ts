@@ -1,5 +1,11 @@
+export { Button } from './components/button';
+export type { ButtonProps } from './components/button';
+export type { ButtonSize } from './components/button-utils';
 export { GhostButton } from './components/ghost-button';
 export { Hairline } from './components/hairline';
+export { Input } from './components/input';
+export type { InputSize } from './components/input';
+export { OutlineButton } from './components/outline-button';
 export { PrimaryButton } from './components/primary-button';
 export { Text } from './components/text';
 export type { TextTone } from './components/text';

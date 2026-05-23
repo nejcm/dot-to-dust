@@ -5,36 +5,36 @@ import { tv } from 'tailwind-variants';
 import { Button } from './button';
 import { getButtonIndicatorSize } from './button-utils';
 
-const primaryButtonTv = tv({
+const outlineButtonTv = tv({
   slots: {
-    container: 'items-center justify-center rounded-pill',
-    label: 'font-ui font-medium uppercase',
-    indicator: 'accent-bg',
+    container: 'flex-row items-center justify-center rounded-pill border-[0.5px] bg-transparent',
+    label: 'font-ui font-medium tracking-[0.2px]',
+    indicator: 'accent-ink-soft',
   },
   variants: {
     size: {
       sm: {
-        container: 'min-h-10 px-6 py-3',
-        label: 'text-[12px] tracking-[1.2px]',
+        container: 'min-h-10 px-5 py-2.5',
+        label: 'text-[14px]',
       },
       md: {
-        container: 'min-h-12 px-8 py-[17px]',
-        label: 'text-[14px] tracking-[1.4px]',
+        container: 'min-h-12 px-6 py-3',
+        label: 'text-[15px]',
       },
       lg: {
-        container: 'min-h-14 px-10 py-5',
-        label: 'text-[15px] tracking-[1.5px]',
+        container: 'min-h-14 px-8 py-4',
+        label: 'text-[16px]',
       },
     },
     disabled: {
       true: {
-        container: 'bg-faint',
-        label: 'text-muted',
-        indicator: 'accent-muted',
+        container: 'border-faint',
+        label: 'text-faint',
+        indicator: 'accent-faint',
       },
       false: {
-        container: 'bg-ink',
-        label: 'text-bg',
+        container: 'border-hairline',
+        label: 'text-ink-soft',
       },
     },
     fullWidth: {
@@ -53,10 +53,9 @@ const primaryButtonTv = tv({
   },
 });
 
-interface PrimaryButtonProps extends Omit<PressableProps, 'children' | 'disabled'> {
+interface OutlineButtonProps extends Omit<PressableProps, 'children' | 'disabled'> {
   children: React.ReactNode;
   disabled?: boolean;
-  full?: boolean;
   fullWidth?: boolean;
   loading?: boolean;
   size?: ButtonSize;
@@ -64,23 +63,18 @@ interface PrimaryButtonProps extends Omit<PressableProps, 'children' | 'disabled
   textClassName?: string;
 }
 
-export function PrimaryButton({
+export function OutlineButton({
   children,
   className,
   disabled = false,
-  full,
-  fullWidth,
+  fullWidth = false,
   loading = false,
   size = 'md',
   testID,
   textClassName,
   ...props
-}: PrimaryButtonProps) {
-  const styles = primaryButtonTv({
-    disabled: disabled || loading,
-    fullWidth: fullWidth ?? full,
-    size,
-  });
+}: OutlineButtonProps) {
+  const styles = outlineButtonTv({ disabled: disabled || loading, fullWidth, size });
 
   return (
     <Button

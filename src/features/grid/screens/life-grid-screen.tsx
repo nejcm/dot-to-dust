@@ -12,13 +12,13 @@ import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
 import { todayCivilDate } from '@/lib/civil-date';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { useDefaultViewPreference, useDobPreference } from '@/lib/storage/preferences-store';
+import { Button } from '@/lib/theme/components/button';
 import { Hairline } from '@/lib/theme/components/hairline';
 import { GearIcon } from '@/lib/theme/components/icons';
 import { Screen } from '@/lib/theme/components/screen';
-import { Pressable, View } from '@/lib/theme/components/ui';
+import { View } from '@/lib/theme/components/ui';
 import { toHex } from '@/lib/theme/tokens';
 import { useTheme } from '@/lib/theme/use-theme';
-import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
 
 interface LifeGridScreenProps {
   onOpenSettings: () => void;
@@ -54,17 +54,15 @@ const InlineHeader = memo(({
           </Text>
         </View>
 
-        <Pressable
+        <Button
           onPress={onOpenSettings}
           hitSlop={12}
           accessibilityLabel={settingsLabel}
-          accessibilityRole="button"
           testID="settings-button"
           className="absolute right-4 min-h-9 min-w-8 items-center justify-center"
-          style={getPressedStyle}
         >
           <GearIcon color={iconColor} />
-        </Pressable>
+        </Button>
       </View>
       <Hairline />
     </View>

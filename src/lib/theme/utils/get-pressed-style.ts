@@ -10,6 +10,7 @@ import type { PressableStateCallbackType, StyleProp, ViewStyle } from 'react-nat
 export function getPressedStyle(
   state: PressableStateCallbackType,
   base?: StyleProp<ViewStyle>,
+  enabled = true,
 ): StyleProp<ViewStyle> {
-  return [base, state.pressed && { opacity: 0.6 }];
+  return [base, state.pressed && enabled && { opacity: 0.6 }];
 }

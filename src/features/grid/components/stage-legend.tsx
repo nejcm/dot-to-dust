@@ -1,8 +1,8 @@
 import { memo, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 
+import { Button } from '@/lib/theme/components/button';
 import { Text } from '@/lib/theme/components/text';
-import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
 import { STAGES } from '../lib/stages';
 
 const STAGE_DOT_CLASS_NAMES = [
@@ -17,13 +17,11 @@ export const StageLegend = memo(() => {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <Pressable
+    <Button
       accessibilityLabel={expanded ? 'Collapse life stage legend' : 'Expand life stage legend'}
-      accessibilityRole="button"
       accessibilityState={{ expanded }}
       hitSlop={6}
       onPress={() => setExpanded((value) => !value)}
-      style={getPressedStyle}
       testID="stage-legend-toggle"
       className={`border border-hairline/60 bg-surface/70 ${expanded ? 'rounded-2xl px-4 py-3' : 'rounded-pill px-3 py-2'}`}
     >
@@ -53,7 +51,7 @@ export const StageLegend = memo(() => {
           </View>
         ))}
       </View>
-    </Pressable>
+    </Button>
   );
 });
 

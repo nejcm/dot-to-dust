@@ -1,8 +1,9 @@
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import { cn } from 'tailwind-variants';
 
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { setThemePreference, useThemePreference } from '@/lib/storage/preferences-store';
+import { Button } from '@/lib/theme/components/button';
 import { Hairline } from '@/lib/theme/components/hairline';
 import { Text } from '@/lib/theme/components/text';
 
@@ -21,14 +22,12 @@ export function ThemeRow() {
         </Text>
         <View className="flex-row">
           {THEMES.map((th) => (
-            <Pressable
+            <Button
               key={th}
               onPress={() => setThemePreference(th)}
-              accessibilityRole="button"
               accessibilityState={{ selected: theme === th }}
               testID={`theme-${th}`}
               className="min-h-11 flex-1 items-center justify-center px-2 pt-3 pb-3.5"
-              style={({ pressed }) => pressed && { opacity: 0.65 }}
             >
               <Text
                 variant="micro"
@@ -44,7 +43,7 @@ export function ThemeRow() {
                   theme === th ? 'bg-ink' : 'bg-transparent',
                 )}
               />
-            </Pressable>
+            </Button>
           ))}
         </View>
         <Hairline />

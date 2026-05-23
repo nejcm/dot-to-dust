@@ -6,7 +6,6 @@ import { withUniwind } from 'uniwind';
 export {
   ActivityIndicator,
   Image,
-  Pressable,
   ScrollView,
   TouchableOpacity,
   View,

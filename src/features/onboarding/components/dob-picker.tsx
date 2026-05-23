@@ -1,18 +1,19 @@
 import { useState } from 'react';
-import { Platform, TextInput } from 'react-native';
+import { Platform } from 'react-native';
 
 import { yearsLived } from '@/features/grid/lib/life-math';
 import { defaultDobCivilDate, formatCivilDateShort, toCivilDateString, todayCivilDate, tryParseDate } from '@/lib/civil-date';
 import { NativeCivilDatePicker } from '@/lib/civil-date/native-civil-date-picker';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
+import { Button } from '@/lib/theme/components/button';
 import { ArrowLeftIcon } from '@/lib/theme/components/icons';
+import { Input } from '@/lib/theme/components/input';
 import { PrimaryButton } from '@/lib/theme/components/primary-button';
 import { Screen } from '@/lib/theme/components/screen';
 import { Text } from '@/lib/theme/components/text';
-import { Pressable, View } from '@/lib/theme/components/ui';
+import { View } from '@/lib/theme/components/ui';
 import { toHex } from '@/lib/theme/tokens';
 import { useTheme } from '@/lib/theme/use-theme';
-import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
 
 interface DobPickerProps {
   onConfirm: (dob: string) => void;
@@ -38,16 +39,14 @@ export function DobPicker({ onConfirm, onBack, initialDob }: DobPickerProps) {
     <Screen contentClassName="pt-16">
       {/* Top bar: back + step counter */}
       <View className="flex-row items-center justify-between px-7 pt-7">
-        <Pressable
+        <Button
           onPress={onBack}
           hitSlop={12}
           accessibilityLabel={t('settings.back')}
-          accessibilityRole="button"
           className="-ml-1 p-1"
-          style={getPressedStyle}
         >
           <ArrowLeftIcon color={iconColor} width={22} height={14} />
-        </Pressable>
+        </Button>
         <Text variant="micro" tone="faint" className="tracking-[1.6px] uppercase">
           {t('onboarding.dob.step')}
         </Text>
@@ -74,7 +73,7 @@ export function DobPicker({ onConfirm, onBack, initialDob }: DobPickerProps) {
 
       <View className="flex-1 items-center justify-center px-7">
         {Platform.OS === 'android' && (
-          <Pressable
+          <Button
             onPress={() => setShowAndroid(true)}
             testID="onboarding-dob-field"
             className="min-h-14 w-full items-center justify-center border-[0.5px] border-hairline p-4"
@@ -82,7 +81,7 @@ export function DobPicker({ onConfirm, onBack, initialDob }: DobPickerProps) {
             <Text variant="body" tone="ink" numberOfLines={1}>
               {formatCivilDateShort(dob)}
             </Text>
-          </Pressable>
+          </Button>
         )}
 
         {(Platform.OS === 'ios' || showAndroid) && (
@@ -96,10 +95,11 @@ export function DobPicker({ onConfirm, onBack, initialDob }: DobPickerProps) {
         )}
 
         {(Platform.OS === 'web') && (
-          <TextInput
-            testID="onboarding-web-dob-input"
-            className="text-center text-2xl"
+          <Input
+            align="center"
             defaultValue={dob}
+            size="lg"
+            testID="onboarding-web-dob-input"
             onChange={(e) => {
               const newVal = tryParseDate(e.nativeEvent.text);
               if (!newVal) return;

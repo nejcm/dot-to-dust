@@ -1,8 +1,9 @@
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import { cn } from 'tailwind-variants';
 
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { setDefaultViewPreference, useDefaultViewPreference } from '@/lib/storage/preferences-store';
+import { Button } from '@/lib/theme/components/button';
 import { Hairline } from '@/lib/theme/components/hairline';
 import { Text } from '@/lib/theme/components/text';
 import { VIEWS } from '@/lib/view';
@@ -19,13 +20,11 @@ export function DefaultViewRow() {
         </Text>
         <View className="flex-row">
           {VIEWS.map((v) => (
-            <Pressable
+            <Button
               key={v}
               onPress={() => setDefaultViewPreference(v)}
-              accessibilityRole="button"
               accessibilityState={{ selected: defaultView === v }}
               className="min-h-11 flex-1 items-center justify-center px-2 pt-3 pb-3.5"
-              style={({ pressed }) => pressed && { opacity: 0.65 }}
             >
               <Text
                 variant="micro"
@@ -41,7 +40,7 @@ export function DefaultViewRow() {
                   defaultView === v ? 'bg-ink' : 'bg-transparent',
                 )}
               />
-            </Pressable>
+            </Button>
           ))}
         </View>
         <Hairline />
