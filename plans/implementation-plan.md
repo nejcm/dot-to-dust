@@ -207,9 +207,8 @@ Every view renders from the same primitive: a flat array of dot states `{ stage:
 
 Computes `{ cols, rows, dotSize, gap }` per view to fit the available canvas with no scroll. Pre-computed on mount + dimension change.
 
-- Weeks: 52 cols × 80 rows
-- Months: 12 cols × 80 rows
-- Years: 10 cols × 8 rows
+- Columns are selected from the measured canvas to maximize dot size.
+- Rows are derived from the active view's total dot count.
 
 ### `src/features/grid/components/life-grid.tsx`
 

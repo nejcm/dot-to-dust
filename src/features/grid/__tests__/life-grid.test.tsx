@@ -66,6 +66,10 @@ function strokeCircles(tree: TestTree): TestNode[] {
   );
 }
 
+function usedHeight(layout: ReturnType<typeof computeGridLayout>): number {
+  return layout.rows * layout.dotSize + (layout.rows - 1) * layout.gap;
+}
+
 describe('life grid', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -78,12 +82,24 @@ describe('life grid', () => {
     const [ring] = strokeCircles(tree);
     const layout = computeGridLayout('weeks', 393, 852);
     const fillRadius = layout.dotSize / 2;
+    const yOffset = (852 - usedHeight(layout)) / 2;
 
     expect(ring).toBeDefined();
     expect(ring.props.cx).toBe(fillRadius);
-    expect(ring.props.cy).toBe(fillRadius);
+    expect(ring.props.cy).toBe(yOffset + fillRadius);
     expect((ring.props.r as number) + (ring.props.strokeWidth as number) / 2)
       .toBeLessThanOrEqual(fillRadius);
+  });
+
+  it('centers the dot field vertically when the canvas is taller than the grid', () => {
+    const height = 852;
+    const layout = computeGridLayout('weeks', 393, height);
+    const yOffset = (height - usedHeight(layout)) / 2;
+    const tree = renderLifeGrid().toJSON() as TestTree;
+    const [ring] = strokeCircles(tree);
+
+    expect(yOffset).toBeGreaterThan(0);
+    expect(ring.props.cy).toBe(layout.dotSize / 2 + yOffset);
   });
 
   it('does not draw a today ring in bonus time', () => {

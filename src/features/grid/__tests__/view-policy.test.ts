@@ -9,7 +9,6 @@ import {
   yearsLived,
 } from '../lib/life-math';
 import {
-  gridDimensionsFor,
   livedUnitsFor,
   totalUnitsFor,
   unitToWeekIndex,
@@ -18,12 +17,6 @@ import {
 describe('view policy', () => {
   it('keeps canonical view order', () => {
     expect(VIEWS).toEqual(['weeks', 'months', 'years']);
-  });
-
-  it('returns grid dimensions by view', () => {
-    expect(gridDimensionsFor('weeks')).toEqual({ cols: 52, rows: 80 });
-    expect(gridDimensionsFor('months')).toEqual({ cols: 12, rows: 80 });
-    expect(gridDimensionsFor('years')).toEqual({ cols: 10, rows: 8 });
   });
 
   it('returns total units by view', () => {

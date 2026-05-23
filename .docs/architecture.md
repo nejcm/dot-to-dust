@@ -69,9 +69,8 @@ In bonus time, every dot is lived and `isToday` is always false.
 
 Fits all dots in the available canvas without scroll:
 
-- weeks: `52 x 80`
-- months: `12 x 80`
-- years: `10 x 8`
+- Chooses the column count per measured canvas that maximizes dot size.
+- Rows are derived from the active view's total dot count.
 
 ### `src/lib/storage/preferences-store.ts`
 

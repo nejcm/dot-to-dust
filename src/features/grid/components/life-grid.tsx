@@ -19,9 +19,11 @@ export const LifeGrid = memo(({ state }: LifeGridProps) => {
   const { tokens } = useTheme();
   const skia = useMemo(() => toSkia(tokens), [tokens]);
 
-  const { cols, dotSize, gap } = state.layout;
+  const { cols, rows, dotSize, gap } = state.layout;
   const radius = dotSize / 2;
   const stride = dotSize + gap;
+  const gridHeight = rows * dotSize + (rows - 1) * gap;
+  const yOffset = Math.max(0, (state.height - gridHeight) / 2);
 
   const canvasStyle = useMemo(
     () => ({ width: state.width, height: state.height }),
@@ -35,7 +37,7 @@ export const LifeGrid = memo(({ state }: LifeGridProps) => {
           const col = index % cols;
           const row = Math.floor(index / cols);
           const cx = col * stride + radius;
-          const cy = row * stride + radius;
+          const cy = yOffset + row * stride + radius;
 
           if ('kind' in dot) {
             return (

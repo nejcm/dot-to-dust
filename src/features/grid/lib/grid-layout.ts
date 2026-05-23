@@ -1,6 +1,6 @@
 import type { View } from '@/lib/view';
 
-import { gridDimensionsFor } from './view-policy';
+import { totalUnitsFor } from './view-policy';
 
 export type GridLayout = {
   cols: number;
@@ -12,30 +12,33 @@ export type GridLayout = {
 // Ratio of gap to dotSize. Produces visually balanced spacing.
 const GAP_RATIO = 0.2;
 
-// Computes the largest proportional dotSize and gap that fit the dot field
-// inside the given canvas without scrolling. Width is preferred when possible
-// so the grid spans the full measured container.
+// Computes the largest proportional dotSize and gap that fit every dot inside
+// the given canvas without scrolling.
 export function computeGridLayout(
   view: View,
   canvasWidth: number,
   canvasHeight: number,
 ): GridLayout {
-  const { cols, rows } = gridDimensionsFor(view);
-  const widthUnits = gridUnits(cols);
-  const heightUnits = gridUnits(rows);
+  const total = totalUnitsFor(view);
 
   if (canvasWidth <= 0 || canvasHeight <= 0) {
-    return { cols, rows, dotSize: 0, gap: 0 };
+    return { cols: total, rows: 1, dotSize: 0, gap: 0 };
   }
 
-  const widthDotSize = canvasWidth / widthUnits;
-  const widthHeight = widthDotSize * heightUnits;
+  let best = layoutFor(total, 1, 0);
 
-  if (widthHeight <= canvasHeight) {
-    return layoutFor(cols, rows, widthDotSize);
+  for (let cols = 1; cols <= total; cols += 1) {
+    const rows = Math.ceil(total / cols);
+    const dotSize = Math.min(
+      canvasWidth / gridUnits(cols),
+      canvasHeight / gridUnits(rows),
+    );
+    if (dotSize > best.dotSize) {
+      best = layoutFor(cols, rows, dotSize);
+    }
   }
 
-  return layoutFor(cols, rows, canvasHeight / heightUnits);
+  return best;
 }
 
 function gridUnits(count: number): number {

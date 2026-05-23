@@ -9,21 +9,6 @@ import {
   yearsLived,
 } from './life-math';
 
-export type GridDimensions = {
-  cols: number;
-  rows: number;
-};
-
-export const GRID_DIMENSIONS: Record<View, GridDimensions> = {
-  weeks: { cols: 52, rows: 80 },
-  months: { cols: 12, rows: 80 },
-  years: { cols: 10, rows: 8 },
-};
-
-export function gridDimensionsFor(view: View): GridDimensions {
-  return GRID_DIMENSIONS[view];
-}
-
 export function totalUnitsFor(view: View): number {
   switch (view) {
     case 'weeks':
