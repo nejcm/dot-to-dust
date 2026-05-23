@@ -13,7 +13,6 @@ import { todayCivilDate } from '@/lib/civil-date';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { useDefaultViewPreference, useDobPreference } from '@/lib/storage/preferences-store';
 import { Button } from '@/lib/theme/components/button';
-import { Hairline } from '@/lib/theme/components/hairline';
 import { GearIcon } from '@/lib/theme/components/icons';
 import { Screen } from '@/lib/theme/components/screen';
 import { View } from '@/lib/theme/components/ui';
@@ -40,11 +39,11 @@ const InlineHeader = memo(({
   const { t } = useAppTranslation();
 
   return (
-    <View testID="inline-header">
-      <View className="relative flex-row items-center justify-center px-4 py-3">
+    <View testID="inline-header" className="px-4 pt-3">
+      <View className="relative flex-row items-center justify-center rounded-pill border border-hairline/60 bg-surface/70 px-4 py-1.5">
         <View className="flex-row items-baseline gap-2">
           <Text
-            className="font-display-italic text-display-m/5 tracking-[-0.3px] text-ink"
+            className="font-display-italic text-display-m/tight tracking-[-0.3px] text-ink"
             testID="headline-lived"
           >
             {header.lived.toLocaleString()}
@@ -59,12 +58,11 @@ const InlineHeader = memo(({
           hitSlop={12}
           accessibilityLabel={settingsLabel}
           testID="settings-button"
-          className="absolute right-4 min-h-9 min-w-8 items-center justify-center"
+          className="absolute right-2 min-h-9 min-w-9 items-center justify-center"
         >
           <GearIcon color={iconColor} />
         </Button>
       </View>
-      <Hairline />
     </View>
   );
 });
