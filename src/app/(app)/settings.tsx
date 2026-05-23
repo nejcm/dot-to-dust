@@ -95,7 +95,7 @@ export default function SettingsScreen() {
       </View>
 
       {/* Footer epigraph */}
-      <View className="items-center px-7 pb-10">
+      <View className="mt-auto items-center px-7 pb-10">
         <Text
           className="text-center font-display-italic text-meta/5 text-faint"
         >
@@ -110,7 +110,7 @@ function VersionRow() {
   const { t } = useAppTranslation();
 
   return (
-    <View className="flex-row items-center justify-between py-4">
+    <View className="flex-row items-center justify-between py-5">
       <Text variant="meta" tone="ink">
         {t('settings.version.label')}
       </Text>

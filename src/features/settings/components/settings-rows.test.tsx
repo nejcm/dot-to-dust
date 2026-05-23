@@ -58,7 +58,7 @@ describe('settings rows', () => {
   it('saves a changed date of birth', () => {
     render(<DobRow />);
 
-    fireEvent.press(screen.getByText('Edit'));
+    fireEvent.press(screen.getByLabelText('Edit'));
     fireEvent.press(screen.getByTestId('dob-picker'));
     fireEvent.press(screen.getByText('Done'));
 

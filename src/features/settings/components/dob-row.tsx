@@ -5,6 +5,7 @@ import { defaultDobCivilDate, formatCivilDateForDisplay, todayCivilDate } from '
 import { NativeCivilDatePicker } from '@/lib/civil-date/native-civil-date-picker';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { setDob, usePreferencesStore } from '@/lib/storage/preferences-store';
+import { Hairline } from '@/lib/theme/components/hairline';
 import { Text } from '@/lib/theme/components/text';
 
 import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
@@ -38,54 +39,67 @@ export function DobRow() {
   };
 
   return (
-    <SettingRow label={t('settings.dob.label')}>
+    <>
       {!editing && (
-        <View className="min-h-11 flex-row items-center justify-between gap-4">
-          <Text variant="body" tone="ink" numberOfLines={2} className="flex-1">
-            {formattedDob}
-          </Text>
-          <Pressable onPress={handleEdit} hitSlop={12} className="min-h-11 justify-center" style={getPressedStyle}>
-            <Text variant="eyebrow" tone="muted">
-              {t('settings.dob.edit')}
+        <SettingRow label={t('settings.dob.label')}>
+          <Pressable
+            onPress={handleEdit}
+            hitSlop={12}
+            accessibilityLabel={t('settings.dob.edit')}
+            accessibilityRole="button"
+            className="min-h-11 flex-row items-center justify-end gap-[10px]"
+            style={getPressedStyle}
+          >
+            <Text variant="meta" tone="muted" numberOfLines={1}>
+              {formattedDob}
+            </Text>
+            <Text tone="faint" className="text-micro">
+              ›
             </Text>
           </Pressable>
-        </View>
+        </SettingRow>
       )}
 
       {editing && (
-        <>
-          {Platform.OS === 'android' && (
-            <NativeCivilDatePicker
-              value={pendingDob}
-              maximumValue={today}
-              onChange={setDob}
-              onAndroidClose={() => setEditing(false)}
-            />
-          )}
-          {Platform.OS === 'ios' && (
-            <>
+        <View>
+          <View className="py-5">
+            <Text variant="meta" tone="ink" className="mb-3">
+              {t('settings.dob.label')}
+            </Text>
+            {Platform.OS === 'android' && (
               <NativeCivilDatePicker
                 value={pendingDob}
                 maximumValue={today}
-                onChange={setPendingDob}
-                display="spinner"
+                onChange={setDob}
+                onAndroidClose={() => setEditing(false)}
               />
-              <View className="mt-2 flex-row justify-end gap-6">
-                <Pressable onPress={handleCancel} className="min-h-11 justify-center" style={getPressedStyle}>
-                  <Text variant="eyebrow" tone="muted">
-                    {t('settings.dob.cancel')}
-                  </Text>
-                </Pressable>
-                <Pressable onPress={handleDone} className="min-h-11 justify-center" style={getPressedStyle}>
-                  <Text variant="eyebrow" tone="ink" className="font-medium">
-                    {t('settings.dob.done')}
-                  </Text>
-                </Pressable>
-              </View>
-            </>
-          )}
-        </>
+            )}
+            {Platform.OS === 'ios' && (
+              <>
+                <NativeCivilDatePicker
+                  value={pendingDob}
+                  maximumValue={today}
+                  onChange={setPendingDob}
+                  display="spinner"
+                />
+                <View className="mt-2 flex-row justify-end gap-6">
+                  <Pressable onPress={handleCancel} className="min-h-11 justify-center" style={getPressedStyle}>
+                    <Text variant="micro" tone="muted" className="font-medium tracking-[2px] uppercase">
+                      {t('settings.dob.cancel')}
+                    </Text>
+                  </Pressable>
+                  <Pressable onPress={handleDone} className="min-h-11 justify-center" style={getPressedStyle}>
+                    <Text variant="micro" tone="ink" className="font-medium tracking-[2px] uppercase">
+                      {t('settings.dob.done')}
+                    </Text>
+                  </Pressable>
+                </View>
+              </>
+            )}
+          </View>
+          <Hairline />
+        </View>
       )}
-    </SettingRow>
+    </>
   );
 }

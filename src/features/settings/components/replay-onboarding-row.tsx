@@ -12,7 +12,7 @@ export function ReplayOnboardingRow() {
 
   return (
     <SettingRow label={t('settings.replayOnboarding.label')}>
-      <PrimaryButton onPress={() => router.push('/(onboarding)')} testID="settings-replay-onboarding" full>
+      <PrimaryButton onPress={() => router.push('/(onboarding)')} testID="settings-replay-onboarding">
         {t('settings.replayOnboarding.action')}
       </PrimaryButton>
     </SettingRow>
