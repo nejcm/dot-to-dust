@@ -1,5 +1,5 @@
 import type { ComponentProps } from 'react';
-import { useClock } from '@shopify/react-native-skia';
+import { createPicture, Skia, useClock } from '@shopify/react-native-skia';
 import { render } from '@testing-library/react-native';
 import { Platform } from 'react-native';
 import { useReducedMotion as useReanimatedReducedMotion } from 'react-native-reanimated';
@@ -17,6 +17,16 @@ interface TestNode {
 
 type TestChild = TestNode | string;
 type TestTree = TestNode | TestNode[] | null;
+
+interface MockPicture {
+  drawCircle: jest.Mock;
+  rect: { height: number; width: number };
+}
+
+interface MockPaint {
+  setAntiAlias: jest.Mock;
+  setColor: jest.Mock;
+}
 
 const originalOS = Platform.OS;
 
@@ -70,6 +80,14 @@ function usedHeight(layout: ReturnType<typeof computeGridLayout>): number {
   return layout.rows * layout.dotSize + (layout.rows - 1) * layout.gap;
 }
 
+function latestPicture(): MockPicture {
+  return jest.mocked(createPicture).mock.results.at(-1)?.value as MockPicture;
+}
+
+function latestPaint(): MockPaint {
+  return jest.mocked(Skia.Paint).mock.results.at(-1)?.value as MockPaint;
+}
+
 describe('life grid', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -89,6 +107,41 @@ describe('life grid', () => {
     expect(ring.props.cy).toBe(yOffset + fillRadius);
     expect((ring.props.r as number) + (ring.props.strokeWidth as number) / 2)
       .toBeLessThanOrEqual(fillRadius);
+  });
+
+  it('records filled and future dots into one picture', () => {
+    renderLifeGrid({
+      state: buildLifeGridState({
+        view: 'weeks',
+        dob: '2000-01-01',
+        today: '2000-01-15',
+        width: 393,
+        height: 852,
+        reducedMotion: false,
+        platformOS: Platform.OS,
+      }),
+    });
+
+    const picture = latestPicture();
+    const paint = latestPaint();
+    const layout = computeGridLayout('weeks', 393, 852);
+    const radius = layout.dotSize / 2;
+    const yOffset = (852 - usedHeight(layout)) / 2;
+    const skia = toSkia(lightTokens);
+
+    expect(picture.rect).toEqual({ width: 393, height: 852 });
+    expect(picture.drawCircle).toHaveBeenCalledTimes(4160);
+    expect(picture.drawCircle).toHaveBeenNthCalledWith(1, radius, yOffset + radius, radius, paint);
+    expect(picture.drawCircle).toHaveBeenNthCalledWith(
+      3,
+      2 * (layout.dotSize + layout.gap) + radius,
+      yOffset + radius,
+      radius,
+      paint,
+    );
+    expect(paint.setColor).toHaveBeenNthCalledWith(1, skia.stages[0]);
+    expect(paint.setColor).toHaveBeenNthCalledWith(2, skia.stages[0]);
+    expect(paint.setColor).toHaveBeenNthCalledWith(3, skia.future);
   });
 
   it('centers the dot field vertically when the canvas is taller than the grid', () => {
@@ -116,6 +169,29 @@ describe('life grid', () => {
     }).toJSON() as TestTree;
 
     expect(strokeCircles(tree)).toHaveLength(0);
+  });
+
+  it('records staged dots through the full bonus-time grid', () => {
+    renderLifeGrid({
+      state: buildLifeGridState({
+        view: 'weeks',
+        dob: '1940-01-01',
+        today: '2020-01-01',
+        width: 393,
+        height: 852,
+        reducedMotion: false,
+        platformOS: Platform.OS,
+      }),
+    });
+
+    const picture = latestPicture();
+    const paint = latestPaint();
+    const skia = toSkia(lightTokens);
+
+    expect(picture.drawCircle).toHaveBeenCalledTimes(4160);
+    expect(paint.setColor).toHaveBeenNthCalledWith(1, skia.stages[0]);
+    expect(paint.setColor).toHaveBeenNthCalledWith(625, skia.stages[1]);
+    expect(paint.setColor).toHaveBeenNthCalledWith(4160, skia.stages[4]);
   });
 
   it('mounts the Skia clock only for pulsing rings', () => {
