@@ -7,7 +7,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { Circle, Path } from 'react-native-svg';
 import { scheduleOnRN } from 'react-native-worklets';
 
 import { Headline } from '@/features/grid/components/headline';
@@ -18,8 +17,9 @@ import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
 import { todayCivilDate } from '@/lib/civil-date';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
+import { GearIcon } from '@/lib/theme/components/icons';
 import { Screen } from '@/lib/theme/components/screen';
-import { Pressable, StyledSvg as Svg, View } from '@/lib/theme/components/ui';
+import { Pressable, View } from '@/lib/theme/components/ui';
 import { Wordmark } from '@/lib/theme/components/wordmark';
 import { spacing } from '@/lib/theme/spacing';
 import { toHex } from '@/lib/theme/tokens';
@@ -30,21 +30,6 @@ const CROSS_FADE_DURATION = 120;
 
 interface LifeGridScreenProps {
   onOpenSettings: () => void;
-}
-
-function GearIcon({ color }: { color: string }) {
-  return (
-    <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
-      <Circle cx={12} cy={12} r={3} stroke={color} strokeWidth={1.5} />
-      <Path
-        d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2Z"
-        stroke={color}
-        strokeWidth={1.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
 }
 
 export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {

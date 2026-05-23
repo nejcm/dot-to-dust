@@ -1,6 +1,4 @@
 import { router } from 'expo-router';
-import { Path } from 'react-native-svg';
-
 import { DefaultViewRow } from '@/features/settings/components/default-view-row';
 import { DobRow } from '@/features/settings/components/dob-row';
 import { LifeExpectancyRow } from '@/features/settings/components/life-expectancy-row';
@@ -8,9 +6,10 @@ import { ReplayOnboardingRow } from '@/features/settings/components/replay-onboa
 import { ThemeRow } from '@/features/settings/components/theme-row';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { goBackOrFallback } from '@/lib/routing';
+import { ArrowLeftIcon } from '@/lib/theme/components/icons';
 import { ScreenScrollView } from '@/lib/theme/components/screen';
 import { Text } from '@/lib/theme/components/text';
-import { Pressable, StyledSvg as Svg, View } from '@/lib/theme/components/ui';
+import { Pressable, View } from '@/lib/theme/components/ui';
 import { Wordmark } from '@/lib/theme/components/wordmark';
 import { spacing } from '@/lib/theme/spacing';
 import { toHex } from '@/lib/theme/tokens';
@@ -43,15 +42,7 @@ export default function SettingsScreen() {
           testID="settings-back"
           style={(s) => getPressedStyle(s, { flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 44, justifyContent: 'center' })}
         >
-          <Svg width={14} height={10} viewBox="0 0 14 10" fill="none">
-            <Path
-              d="M5 1L1 5l4 4M1 5h12"
-              stroke={iconColor}
-              strokeWidth={0.9}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </Svg>
+          <ArrowLeftIcon color={iconColor} />
           <Text variant="meta" tone="inkSoft">
             {t('settings.back')}
           </Text>

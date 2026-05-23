@@ -1,15 +1,14 @@
 import { useState } from 'react';
 import { Platform } from 'react-native';
-import { Path } from 'react-native-svg';
-
 import { yearsLived } from '@/features/grid/lib/life-math';
 import { defaultDobCivilDate, formatCivilDateShort, todayCivilDate } from '@/lib/civil-date';
 import { NativeCivilDatePicker } from '@/lib/civil-date/native-civil-date-picker';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
+import { ArrowLeftIcon } from '@/lib/theme/components/icons';
 import { PrimaryButton } from '@/lib/theme/components/primary-button';
 import { Screen } from '@/lib/theme/components/screen';
 import { Text } from '@/lib/theme/components/text';
-import { Pressable, StyledSvg as Svg, View } from '@/lib/theme/components/ui';
+import { Pressable, View } from '@/lib/theme/components/ui';
 import { spacing } from '@/lib/theme/spacing';
 import { toHex } from '@/lib/theme/tokens';
 import { fontFamily } from '@/lib/theme/typography';
@@ -55,15 +54,7 @@ export function DobPicker({ onConfirm, onBack, initialDob }: DobPickerProps) {
           accessibilityRole="button"
           style={(s) => getPressedStyle(s, { padding: 4, marginLeft: -4 })}
         >
-          <Svg width={22} height={14} viewBox="0 0 22 14" fill="none">
-            <Path
-              d="M7 1L1 7l6 6M1 7h20"
-              stroke={iconColor}
-              strokeWidth={0.9}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </Svg>
+          <ArrowLeftIcon color={iconColor} width={22} height={14} />
         </Pressable>
         <Text variant="micro" tone="faint" style={{ letterSpacing: 1.6, textTransform: 'uppercase' }}>
           {t('onboarding.dob.step')}

@@ -43,6 +43,7 @@ Uniwind.updateCSSVariables('dark', {
 jest.mock('react-native-worklets', () => ({
   __esModule: true,
   default: {},
+  scheduleOnRN: jest.fn((fn, ...args) => fn(...args)),
 }));
 
 // Mock react-native-reanimated
