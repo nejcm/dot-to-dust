@@ -39,7 +39,7 @@ export function Text({
   ...props
 }: TextProps) {
   const textClassName = React.useMemo(
-    () => cn(VARIANT_CLASS_NAMES[variant], TONE_CLASS_NAMES[tone], className),
+    () => cn('text-surface dark:text-ink', VARIANT_CLASS_NAMES[variant], TONE_CLASS_NAMES[tone], className),
     [className, tone, variant],
   );
 

@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
 
 import { DefaultViewRow } from '@/features/settings/components/default-view-row';
+import { DevRows } from '@/features/settings/components/dev-rows';
 import { DobRow } from '@/features/settings/components/dob-row';
 import { LifeExpectancyRow } from '@/features/settings/components/life-expectancy-row';
-import { ReplayOnboardingRow } from '@/features/settings/components/replay-onboarding-row';
 import { ThemeRow } from '@/features/settings/components/theme-row';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { goBackOrFallback } from '@/lib/routing';
@@ -83,32 +83,22 @@ export default function SettingsScreen() {
         >
           {t('settings.group.about')}
         </Text>
-        <ReplayOnboardingRow />
-        <VersionRow />
+        <View className="flex-row items-center justify-between py-5">
+          <Text variant="meta" tone="ink">
+            {t('settings.version.label')}
+          </Text>
+          <Text variant="meta" tone="muted">
+            {t('settings.version.value')}
+          </Text>
+        </View>
+        <DevRows />
       </View>
 
       <View className="mt-auto items-center px-6 pb-10">
-        <Text
-          className="text-center font-display-italic text-meta/5 text-faint"
-        >
+        <Text className="text-center font-display-italic text-meta/5 text-faint">
           {t('settings.epigraph')}
         </Text>
       </View>
     </ScreenScrollView>
-  );
-}
-
-function VersionRow() {
-  const { t } = useAppTranslation();
-
-  return (
-    <View className="flex-row items-center justify-between py-5">
-      <Text variant="meta" tone="ink">
-        {t('settings.version.label')}
-      </Text>
-      <Text variant="meta" tone="muted">
-        {t('settings.version.value')}
-      </Text>
-    </View>
   );
 }

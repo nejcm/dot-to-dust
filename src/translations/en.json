@@ -55,6 +55,7 @@
   "settings": {
     "back": "Back",
     "defaultView": {
+      "edit": "Edit",
       "label": "Default view"
     },
     "dob": {
@@ -75,12 +76,17 @@
       "label": "Life expectancy",
       "value": "80 years"
     },
+    "picker": {
+      "cancel": "Cancel",
+      "done": "Done"
+    },
     "replayOnboarding": {
       "action": "Show onboarding again",
       "label": "Developer tools"
     },
     "theme": {
       "dark": "Dark",
+      "edit": "Edit",
       "label": "Theme",
       "light": "Light",
       "system": "System"
