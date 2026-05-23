@@ -1,13 +1,13 @@
 import type { LayoutChangeEvent } from 'react-native';
 
-import type { View as GridView } from '@/lib/view';
+import type { LifeGridHeaderState } from '@/features/grid/lib/life-grid-state';
 import { Redirect } from 'expo-router';
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { Text } from 'react-native';
 
 import { LifeGrid } from '@/features/grid/components/life-grid';
 import { StageLegend } from '@/features/grid/components/stage-legend';
-import { livedUnitsFor, totalUnitsFor } from '@/features/grid/lib/view-policy';
+import { buildLifeGridHeaderState, buildLifeGridState } from '@/features/grid/lib/life-grid-state';
 import { todayCivilDate } from '@/lib/civil-date';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
@@ -24,25 +24,19 @@ interface LifeGridScreenProps {
 }
 
 interface InlineHeaderProps {
-  dob: string;
+  header: LifeGridHeaderState;
   iconColor: string;
   onOpenSettings: () => void;
   settingsLabel: string;
-  today: string;
-  view: GridView;
 }
 
 const InlineHeader = memo(({
-  dob,
+  header,
   iconColor,
   onOpenSettings,
   settingsLabel,
-  today,
-  view,
 }: InlineHeaderProps) => {
   const { t } = useAppTranslation();
-  const lived = livedUnitsFor(view, dob, today);
-  const total = totalUnitsFor(view);
 
   return (
     <View testID="inline-header">
@@ -52,10 +46,10 @@ const InlineHeader = memo(({
             className="font-display-italic text-display-m/5 tracking-[-0.3px] text-ink"
             testID="headline-lived"
           >
-            {lived.toLocaleString()}
+            {header.lived.toLocaleString()}
           </Text>
           <Text className="font-ui text-eyebrow tracking-[1.6px] text-muted uppercase">
-            {t('grid.headline.of', { total: total.toLocaleString() })}
+            {t('grid.headline.of', { total: header.total.toLocaleString() })}
           </Text>
         </View>
 
@@ -95,6 +89,25 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
     });
   }, []);
 
+  const header = useMemo(
+    () => dob === null ? { lived: 0, total: 0 } : buildLifeGridHeaderState(defaultView, dob, today),
+    [defaultView, dob, today],
+  );
+  const lifeGridState = useMemo(
+    () => {
+      if (dob === null || gridLayout === null) return null;
+
+      return buildLifeGridState({
+        view: defaultView,
+        dob,
+        today,
+        width: gridLayout.width,
+        height: gridLayout.height,
+      });
+    },
+    [defaultView, dob, gridLayout, today],
+  );
+
   if (dob === null) {
     return <Redirect href="/(onboarding)" />;
   }
@@ -102,12 +115,10 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
   return (
     <Screen testID="main-screen" contentClassName="relative">
       <InlineHeader
-        dob={dob}
+        header={header}
         iconColor={iconColor}
         onOpenSettings={onOpenSettings}
         settingsLabel={t('settings.title')}
-        today={today}
-        view={defaultView}
       />
 
       <View className="flex-1 px-4 pt-6 pb-14">
@@ -115,13 +126,9 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
           className="flex-1"
           onLayout={handleGridLayout}
         >
-          {gridLayout && (
+          {lifeGridState && (
             <LifeGrid
-              view={defaultView}
-              dob={dob}
-              today={today}
-              width={gridLayout.width}
-              height={gridLayout.height}
+              state={lifeGridState}
             />
           )}
         </View>

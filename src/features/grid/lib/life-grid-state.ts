@@ -1,0 +1,117 @@
+import type { DotState } from './dot-states';
+import type { GridLayout } from './grid-layout';
+import type { View } from '@/lib/view';
+
+import { buildDotStates } from './dot-states';
+import { computeGridLayout } from './grid-layout';
+import { bonusUnitsAhead, isBonusTime, LIFE_YEARS, remainingFor } from './life-math';
+import { livedUnitsFor, totalUnitsFor } from './view-policy';
+
+interface BuildLifeGridStateInput {
+  view: View;
+  dob: string;
+  today: string;
+  width: number;
+  height: number;
+}
+
+export interface LifeGridHeaderState {
+  lived: number;
+  total: number;
+}
+
+export interface LifeGridState {
+  view: View;
+  width: number;
+  height: number;
+  layout: GridLayout;
+  dots: DotState[];
+  header: LifeGridHeaderState;
+  bonus: boolean;
+}
+
+interface BuildHeadlineStateInput {
+  view: View;
+  dob: string;
+  today: string;
+}
+
+const EYEBROW_KEY = {
+  weeks: 'grid.headline.eyebrow.weeks',
+  months: 'grid.headline.eyebrow.months',
+  years: 'grid.headline.eyebrow.years',
+} as const satisfies Record<View, string>;
+
+const BONUS_EYEBROW_KEY = {
+  weeks: 'grid.headline.eyebrow.bonusWeeks',
+  months: 'grid.headline.eyebrow.bonusMonths',
+  years: 'grid.headline.eyebrow.bonusYears',
+} as const satisfies Record<View, string>;
+
+const SUBLINE_KEY = {
+  weeks: 'grid.headline.subline.weeks',
+  months: 'grid.headline.subline.months',
+  years: 'grid.headline.subline.years',
+} as const satisfies Record<View, string>;
+
+type EyebrowKey = (typeof EYEBROW_KEY)[View] | (typeof BONUS_EYEBROW_KEY)[View];
+type SublineKey = (typeof SUBLINE_KEY)[View];
+
+export interface HeadlineState extends LifeGridHeaderState {
+  bonus: boolean;
+  count: number;
+  remaining: number;
+  eyebrowKey: EyebrowKey;
+  sublineKey: SublineKey;
+  years: number;
+}
+
+export function buildLifeGridState(input: BuildLifeGridStateInput): LifeGridState {
+  const { dob, height, today, view, width } = input;
+
+  return {
+    view,
+    width,
+    height,
+    layout: computeGridLayout(view, width, height),
+    dots: buildDotStates(view, dob, today),
+    header: buildLifeGridHeaderState(view, dob, today),
+    bonus: isBonusTime(dob, today),
+  };
+}
+
+export function buildHeadlineState(input: BuildHeadlineStateInput): HeadlineState {
+  const { dob, today, view } = input;
+  const bonus = isBonusTime(dob, today);
+  const header = buildLifeGridHeaderState(view, dob, today);
+  const remaining = remainingFor(view, dob, today);
+
+  return {
+    ...header,
+    bonus,
+    count: bonus ? bonusUnitsAhead(view, dob, today) : header.lived,
+    remaining,
+    eyebrowKey: bonus ? BONUS_EYEBROW_KEY[view] : EYEBROW_KEY[view],
+    sublineKey: SUBLINE_KEY[view],
+    years: LIFE_YEARS,
+  };
+}
+
+export function shouldPulseTodayRing(
+  view: View,
+  reducedMotion: boolean,
+  platformOS: string,
+): boolean {
+  return platformOS !== 'web' && !reducedMotion && view !== 'years';
+}
+
+export function buildLifeGridHeaderState(
+  view: View,
+  dob: string,
+  today: string,
+): LifeGridHeaderState {
+  return {
+    lived: livedUnitsFor(view, dob, today),
+    total: totalUnitsFor(view),
+  };
+}

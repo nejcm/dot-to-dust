@@ -16,9 +16,9 @@ jest.mock('react-native-safe-area-context', () => ({
 }));
 
 jest.mock('@/features/grid/components/life-grid', () => ({
-  LifeGrid: jest.fn(({ view }: { view: string }) => {
+  LifeGrid: jest.fn(({ state }: { state: { view: string } }) => {
     const { Text } = require('react-native');
-    return <Text testID="life-grid">{view}</Text>;
+    return <Text testID="life-grid">{state.view}</Text>;
   }),
 }));
 
@@ -78,7 +78,9 @@ describe('life grid screen', () => {
     renderLifeGridScreen();
 
     expect(jest.mocked(LifeGrid)).toHaveBeenCalledWith(
-      expect.objectContaining({ width: 320, height: 480 }),
+      expect.objectContaining({
+        state: expect.objectContaining({ width: 320, height: 480 }),
+      }),
       undefined,
     );
   });

@@ -7,6 +7,7 @@ import { useReducedMotion as useReanimatedReducedMotion } from 'react-native-rea
 import { lightTokens, toSkia } from '@/lib/theme/tokens';
 import { LifeGrid } from '../components/life-grid';
 import { computeGridLayout } from '../lib/grid-layout';
+import { buildLifeGridState } from '../lib/life-grid-state';
 
 interface TestNode {
   type: string;
@@ -41,13 +42,17 @@ function findNodesByType(tree: TestTree, type: string): TestNode[] {
 }
 
 function renderLifeGrid(props?: Partial<ComponentProps<typeof LifeGrid>>) {
+  const state = buildLifeGridState({
+    view: 'weeks',
+    dob: '2000-01-01',
+    today: '2000-01-08',
+    width: 393,
+    height: 852,
+  });
+
   return render(
     <LifeGrid
-      view="weeks"
-      dob="2000-01-01"
-      today="2000-01-08"
-      width={393}
-      height={852}
+      state={state}
       {...props}
     />,
   );
@@ -81,8 +86,13 @@ describe('life grid', () => {
 
   it('does not draw a today ring in bonus time', () => {
     const tree = renderLifeGrid({
-      dob: '1940-01-01',
-      today: '2020-01-01',
+      state: buildLifeGridState({
+        view: 'weeks',
+        dob: '1940-01-01',
+        today: '2020-01-01',
+        width: 393,
+        height: 852,
+      }),
     }).toJSON() as TestTree;
 
     expect(strokeCircles(tree)).toHaveLength(0);
@@ -93,7 +103,15 @@ describe('life grid', () => {
     expect(useClock).toHaveBeenCalledTimes(1);
 
     jest.clearAllMocks();
-    renderLifeGrid({ view: 'years', today: '2001-01-01' });
+    renderLifeGrid({
+      state: buildLifeGridState({
+        view: 'years',
+        dob: '2000-01-01',
+        today: '2001-01-01',
+        width: 393,
+        height: 852,
+      }),
+    });
     expect(useClock).not.toHaveBeenCalled();
 
     jest.clearAllMocks();
@@ -111,7 +129,15 @@ describe('life grid', () => {
   });
 
   it('uses static opacity when the ring does not pulse', () => {
-    const tree = renderLifeGrid({ view: 'years', today: '2001-01-01' }).toJSON() as TestTree;
+    const tree = renderLifeGrid({
+      state: buildLifeGridState({
+        view: 'years',
+        dob: '2000-01-01',
+        today: '2001-01-01',
+        width: 393,
+        height: 852,
+      }),
+    }).toJSON() as TestTree;
     const [ring] = strokeCircles(tree);
 
     expect(ring.props.color).toBe(toSkia(lightTokens).ring);

@@ -1,5 +1,5 @@
 import type { SharedValue } from 'react-native-reanimated';
-import type { View } from '@/lib/view';
+import type { LifeGridState } from '../lib/life-grid-state';
 import { Canvas, Circle, Group, useClock } from '@shopify/react-native-skia';
 
 import { memo, useMemo } from 'react';
@@ -8,47 +8,36 @@ import { useDerivedValue } from 'react-native-reanimated';
 import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
 import { toSkia } from '@/lib/theme/tokens';
 import { useTheme } from '@/lib/theme/use-theme';
-import { buildDotStates } from '../lib/dot-states';
-import { computeGridLayout } from '../lib/grid-layout';
+import { shouldPulseTodayRing } from '../lib/life-grid-state';
 
 const RING_STROKE_WIDTH = 2;
 const RING_RADIUS_OFFSET = RING_STROKE_WIDTH / 2;
 const PULSE_PERIOD_MS = 2000;
 
 interface LifeGridProps {
-  view: View;
-  dob: string;
-  today: string;
-  width: number;
-  height: number;
+  state: LifeGridState;
 }
 
-export const LifeGrid = memo(({ view, dob, today, width, height }: LifeGridProps) => {
+export const LifeGrid = memo(({ state }: LifeGridProps) => {
   const { tokens } = useTheme();
   const skia = useMemo(() => toSkia(tokens), [tokens]);
   const reducedMotion = useReducedMotion();
 
-  const shouldPulse = Platform.OS !== 'web' && !reducedMotion && view !== 'years';
+  const shouldPulse = shouldPulseTodayRing(state.view, reducedMotion, Platform.OS);
 
-  const { cols, dotSize, gap } = useMemo(
-    () => computeGridLayout(view, width, height),
-    [view, width, height],
-  );
-
-  const dots = useMemo(
-    () => buildDotStates(view, dob, today),
-    [view, dob, today],
-  );
-
+  const { cols, dotSize, gap } = state.layout;
   const radius = dotSize / 2;
   const stride = dotSize + gap;
 
-  const canvasStyle = useMemo(() => ({ width, height }), [width, height]);
+  const canvasStyle = useMemo(
+    () => ({ width: state.width, height: state.height }),
+    [state.height, state.width],
+  );
 
   return (
     <Canvas style={canvasStyle}>
       <Group>
-        {dots.map((dot, index) => {
+        {state.dots.map((dot, index) => {
           const col = index % cols;
           const row = Math.floor(index / cols);
           const cx = col * stride + radius;
