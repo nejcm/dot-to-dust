@@ -3,12 +3,12 @@ import type { View as GridView } from '@/lib/view';
 import { Redirect } from 'expo-router';
 import { useState } from 'react';
 import Animated, {
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 import { Circle, Path } from 'react-native-svg';
+import { scheduleOnRN } from 'react-native-worklets';
 
 import { Headline } from '@/features/grid/components/headline';
 import { LifeGrid } from '@/features/grid/components/life-grid';
@@ -34,13 +34,14 @@ interface LifeGridScreenProps {
 
 function GearIcon({ color }: { color: string }) {
   return (
-    <Svg width={18} height={18} viewBox="0 0 18 18" fill="none">
-      <Circle cx={9} cy={9} r={2.2} stroke={color} strokeWidth={0.9} />
+    <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
+      <Circle cx={12} cy={12} r={3} stroke={color} strokeWidth={1.5} />
       <Path
-        d="M9 1.5v2M9 14.5v2M16.5 9h-2M3.5 9h-2M14.3 3.7l-1.4 1.4M5.1 12.9l-1.4 1.4M14.3 14.3l-1.4-1.4M5.1 5.1L3.7 3.7"
+        d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2Z"
         stroke={color}
-        strokeWidth={0.9}
+        strokeWidth={1.5}
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </Svg>
   );
@@ -79,7 +80,7 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
     // eslint-disable-next-line react-hooks/immutability -- Reanimated shared value; mutation is intentional
     gridOpacity.value = withTiming(0, { duration: CROSS_FADE_DURATION }, (finished) => {
       if (finished) {
-        runOnJS(setDisplayedView)(newView);
+        scheduleOnRN(setDisplayedView, newView);
         gridOpacity.value = withTiming(1, { duration: CROSS_FADE_DURATION });
       }
     });
