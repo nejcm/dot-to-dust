@@ -1,7 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Redirect } from 'expo-router';
 import { View } from 'react-native';
-import { withTiming } from 'react-native-reanimated';
 
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
 
@@ -45,12 +44,12 @@ describe('life grid screen', () => {
     });
   });
 
-  it('does not animate when pressing the active view', () => {
+  it('does not render view controls on the grid screen', () => {
     renderLifeGridScreen();
 
-    fireEvent.press(screen.getByText('Weeks'));
-
-    expect(withTiming).not.toHaveBeenCalled();
+    expect(screen.queryByText('Weeks')).toBeNull();
+    expect(screen.queryByText('Months')).toBeNull();
+    expect(screen.queryByText('Years')).toBeNull();
     expect(screen.getByTestId('life-grid')).toHaveTextContent('weeks');
   });
 
@@ -62,12 +61,15 @@ describe('life grid screen', () => {
     expect(screen.getByText(/of 4[,.]160/)).toBeTruthy();
   });
 
-  it('updates the displayed grid after the view transition completes', () => {
+  it('renders the stored default view', () => {
+    usePreferencesStore.setState({
+      dob: '1990-01-01',
+      theme: 'system',
+      defaultView: 'months',
+    });
+
     renderLifeGridScreen();
 
-    fireEvent.press(screen.getByText('Months'));
-
-    expect(withTiming).toHaveBeenCalled();
     expect(screen.getByTestId('life-grid')).toHaveTextContent('months');
   });
 
