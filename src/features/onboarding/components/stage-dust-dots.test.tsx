@@ -17,7 +17,7 @@ describe('stage dust dots', () => {
       true,
     );
     expect(stageDots()).toHaveLength(5);
-    expect(dustParticles()).toHaveLength(60);
+    expect(dustParticles()).toHaveLength(145);
   });
 
   it('renders static dots without particles when reduced motion is enabled', () => {
@@ -37,7 +37,7 @@ function stageDots() {
 
 function dustParticles() {
   return Array.from({ length: 5 }, (_, dotIndex) =>
-    Array.from({ length: 12 }, (_, particleIndex) =>
+    Array.from({ length: 29 }, (_, particleIndex) =>
       screen.queryByTestId(
         `stage-dust-dots-particle-${dotIndex}-${particleIndex}`,
         { includeHiddenElements: true },

@@ -121,7 +121,7 @@ export const LifeGridScreen = memo(({ onOpenSettings }: LifeGridScreenProps) => 
         settingsLabel={t('settings.title')}
       />
 
-      <View className="flex-1 px-4 pt-6 pb-14">
+      <View className="flex-1 px-4 pt-6 pb-16">
         <View
           className="flex-1"
           onLayout={handleGridLayout}
