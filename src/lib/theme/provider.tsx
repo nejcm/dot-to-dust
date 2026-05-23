@@ -1,15 +1,16 @@
-import type { ColorTokens } from './tokens';
+import type { ColorTokens, SkiaTokens } from './tokens';
 import { createContext, useEffect, useMemo } from 'react';
 
 import { useColorScheme } from 'react-native';
 import { Uniwind } from 'uniwind';
 
 import { useThemePreference } from '@/lib/storage/preferences-store';
-import { darkTokens, lightTokens } from './tokens';
+import { darkSkiaTokens, darkTokens, lightSkiaTokens, lightTokens } from './tokens';
 
 export interface ThemeContextValue {
   colorScheme: 'light' | 'dark';
   tokens: ColorTokens;
+  skiaTokens: SkiaTokens;
   isDark: boolean;
 }
 
@@ -17,6 +18,7 @@ export interface ThemeContextValue {
 export const ThemeContext = createContext<ThemeContextValue>({
   colorScheme: 'light',
   tokens: lightTokens,
+  skiaTokens: lightSkiaTokens,
   isDark: false,
 });
 
@@ -34,9 +36,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     = themePref === 'system' ? systemColorScheme : themePref;
   const isDark = colorScheme === 'dark';
   const tokens = isDark ? darkTokens : lightTokens;
+  const skiaTokens = isDark ? darkSkiaTokens : lightSkiaTokens;
   const value = useMemo(
-    () => ({ colorScheme, tokens, isDark }),
-    [colorScheme, isDark, tokens],
+    () => ({ colorScheme, tokens, skiaTokens, isDark }),
+    [colorScheme, isDark, skiaTokens, tokens],
   );
 
   return (

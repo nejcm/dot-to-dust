@@ -81,4 +81,7 @@ export const darkTokens: ColorTokens = {
   accent: 'oklch(0.78 0.075 70)',
 };
 
+export const lightSkiaTokens = toSkia(lightTokens);
+export const darkSkiaTokens = toSkia(darkTokens);
+
 export type { StageIndex };

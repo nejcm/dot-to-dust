@@ -7,7 +7,6 @@ import { Canvas, Circle, createPicture, Picture, Skia, useClock } from '@shopify
 
 import { memo, useMemo } from 'react';
 import { useDerivedValue } from 'react-native-reanimated';
-import { toSkia } from '@/lib/theme/tokens';
 import { useTheme } from '@/lib/theme/use-theme';
 
 const RING_STROKE_WIDTH = 2;
@@ -19,8 +18,7 @@ interface LifeGridProps {
 }
 
 export const LifeGrid = memo(({ state }: LifeGridProps) => {
-  const { tokens } = useTheme();
-  const skia = useMemo(() => toSkia(tokens), [tokens]);
+  const { skiaTokens: skia } = useTheme();
 
   const { rows, dotSize, gap } = state.layout;
   const gridHeight = rows * dotSize + (rows - 1) * gap;
