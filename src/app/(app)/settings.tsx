@@ -6,7 +6,6 @@ import { DobRow } from '@/features/settings/components/dob-row';
 import { LifeExpectancyRow } from '@/features/settings/components/life-expectancy-row';
 import { ThemeRow } from '@/features/settings/components/theme-row';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
-import { goBackOrFallback } from '@/lib/routing';
 import { GhostButton } from '@/lib/theme';
 import { ArrowLeftIcon } from '@/lib/theme/components/icons';
 import { ScreenScrollView } from '@/lib/theme/components/screen';
@@ -25,7 +24,7 @@ export default function SettingsScreen() {
     <ScreenScrollView testID="settings-screen" contentContainerClassName="grow">
       <View className="flex-row items-center justify-between px-6 pt-2 pb-8">
         <GhostButton
-          onPress={() => goBackOrFallback(router, '/(app)')}
+          onPress={() => router.navigate('/(app)')}
           hitSlop={12}
           accessibilityLabel={t('settings.back')}
           testID="settings-back"

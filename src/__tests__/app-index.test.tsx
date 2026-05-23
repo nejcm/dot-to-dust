@@ -5,7 +5,7 @@ import AppIndex from '@/app/(app)';
 
 jest.mock('expo-router', () => ({
   router: {
-    push: jest.fn(),
+    navigate: jest.fn(),
   },
 }));
 
@@ -26,6 +26,6 @@ describe('app index', () => {
 
     fireEvent.press(screen.getByTestId('life-grid-screen'));
 
-    expect(router.push).toHaveBeenCalledWith('/(app)/settings');
+    expect(router.navigate).toHaveBeenCalledWith('/(app)/settings');
   });
 });

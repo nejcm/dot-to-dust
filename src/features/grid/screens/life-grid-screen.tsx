@@ -69,7 +69,7 @@ const InlineHeader = memo(({
 
 InlineHeader.displayName = 'InlineHeader';
 
-export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
+export const LifeGridScreen = memo(({ onOpenSettings }: LifeGridScreenProps) => {
   const dob = useDobPreference();
   const defaultView = useDefaultViewPreference();
   const today = todayCivilDate();
@@ -139,4 +139,6 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
       </View>
     </Screen>
   );
-}
+});
+
+LifeGridScreen.displayName = 'LifeGridScreen';
