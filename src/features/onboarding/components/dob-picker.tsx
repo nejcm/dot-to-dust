@@ -97,6 +97,7 @@ export function DobPicker({ onConfirm, onBack, initialDob }: DobPickerProps) {
         {(Platform.OS === 'web') && (
           <Input
             align="center"
+            className="border-0 px-0 text-2xl"
             defaultValue={dob}
             size="lg"
             testID="onboarding-web-dob-input"

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { GhostButton } from '../components/ghost-button';
 import { Hairline } from '../components/hairline';
@@ -143,6 +143,25 @@ describe('input primitive', () => {
     expect(screen.getByTestId('input').props.accessibilityState).toMatchObject({
       disabled: true,
     });
+  });
+
+  it('marks read-only inputs as disabled for styling and accessibility', () => {
+    render(<Input editable={false} testID="input" />);
+
+    expect(screen.getByTestId('input').props.className).toEqual(expect.stringContaining('opacity-50'));
+    expect(screen.getByTestId('input').props.editable).toBe(false);
+    expect(screen.getByTestId('input').props.accessibilityState).toMatchObject({
+      disabled: true,
+    });
+  });
+
+  it('keeps error styling while focused', () => {
+    render(<Input error="Invalid" testID="input" />);
+
+    fireEvent(screen.getByTestId('input'), 'focus');
+
+    expect(screen.getByTestId('input').props.className).toEqual(expect.stringContaining('border-accent'));
+    expect(screen.getByTestId('input').props.className).not.toEqual(expect.stringContaining('border-ink'));
   });
 });
 

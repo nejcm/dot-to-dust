@@ -59,7 +59,7 @@ export default function SettingsScreen() {
         <Text
           variant="micro"
           tone="faint"
-          className="mb-1 tracking-[0.25em] uppercase"
+          className="mt-2.5 mb-1 tracking-[2px] uppercase"
         >
           {t('settings.group.life')}
         </Text>
@@ -69,7 +69,7 @@ export default function SettingsScreen() {
         <Text
           variant="micro"
           tone="faint"
-          className="mt-8 mb-1 tracking-[0.25em] uppercase"
+          className="mt-8 mb-1 tracking-[2px] uppercase"
         >
           {t('settings.group.appearance')}
         </Text>
@@ -79,7 +79,7 @@ export default function SettingsScreen() {
         <Text
           variant="micro"
           tone="faint"
-          className="mt-8 mb-1 tracking-[0.25em] uppercase"
+          className="mt-8 mb-1 tracking-[2px] uppercase"
         >
           {t('settings.group.about')}
         </Text>

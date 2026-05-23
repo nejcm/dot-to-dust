@@ -45,12 +45,12 @@ export function DobRow() {
             onPress={handleEdit}
             hitSlop={12}
             accessibilityLabel={t('settings.dob.edit')}
-            className="min-h-11 flex-row items-center justify-end gap-2.5"
+            className="justify-end gap-3"
           >
             <Text variant="meta" tone="muted" numberOfLines={1}>
               {formattedDob}
             </Text>
-            <Text tone="faint" className="text-micro">
+            <Text tone="faint" className="pb-1 text-xl">
               ›
             </Text>
           </Button>

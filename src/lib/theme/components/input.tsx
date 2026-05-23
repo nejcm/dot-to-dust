@@ -94,14 +94,14 @@ export function Input({
   ...props
 }: InputProps) {
   const [focused, setFocused] = React.useState(false);
+  const isDisabled = disabled || !editable;
   const styles = inputTv({
     align,
-    disabled,
+    disabled: isDisabled,
     error: Boolean(error),
-    focused,
+    focused: focused && !error,
     size,
   });
-  const isEditable = editable && !disabled;
 
   const handleBlur = (event: BlurEvent) => {
     setFocused(false);
@@ -126,12 +126,12 @@ export function Input({
       <TextInput
         accessibilityState={{
           ...accessibilityState,
-          ...(disabled || accessibilityState?.disabled !== undefined
-            ? { disabled: disabled || accessibilityState?.disabled }
+          ...(isDisabled || accessibilityState?.disabled !== undefined
+            ? { disabled: isDisabled || accessibilityState?.disabled }
             : {}),
         }}
         className={cn(styles.input(), className)}
-        editable={isEditable}
+        editable={!isDisabled}
         onBlur={handleBlur}
         onFocus={handleFocus}
         placeholderTextColorClassName={placeholderTextColorClassName}

@@ -56,6 +56,7 @@ interface GhostButtonProps extends Omit<PressableProps, 'children' | 'disabled'>
   disabled?: boolean;
   fullWidth?: boolean;
   loading?: boolean;
+  onPress: NonNullable<PressableProps['onPress']>;
   size?: ButtonSize;
   testID?: string;
   textClassName?: string;

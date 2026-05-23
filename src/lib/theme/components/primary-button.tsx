@@ -59,6 +59,7 @@ interface PrimaryButtonProps extends Omit<PressableProps, 'children' | 'disabled
   full?: boolean;
   fullWidth?: boolean;
   loading?: boolean;
+  onPress: NonNullable<PressableProps['onPress']>;
   size?: ButtonSize;
   testID?: string;
   textClassName?: string;
