@@ -23,7 +23,7 @@ export default function SettingsScreen() {
 
   return (
     <ScreenScrollView testID="settings-screen" contentContainerClassName="grow">
-      <View className="flex-row items-center justify-between px-6 pt-2">
+      <View className="flex-row items-center justify-between px-6 pt-2 pb-8">
         <GhostButton
           onPress={() => goBackOrFallback(router, '/(app)')}
           hitSlop={12}
@@ -37,14 +37,14 @@ export default function SettingsScreen() {
           </Text>
         </GhostButton>
         <Wordmark />
-        <View className="w-12.5" />
+        <View className="w-12" />
       </View>
 
-      <View className="px-6 pt-8 pb-7">
+      <View className="px-6 pb-10">
         <Text
           variant="eyebrow"
           tone="muted"
-          className="mb-2.5 tracking-[2.2px] uppercase"
+          className="mb-2 tracking-[0.25em] uppercase"
         >
           {t('settings.eyebrow')}
         </Text>
@@ -55,11 +55,11 @@ export default function SettingsScreen() {
         </Text>
       </View>
 
-      <View className="px-6 pb-8">
+      <View className="px-6 pb-10">
         <Text
           variant="micro"
           tone="faint"
-          className="mt-2.5 mb-1 tracking-[2px] uppercase"
+          className="mb-1 tracking-[0.25em] uppercase"
         >
           {t('settings.group.life')}
         </Text>
@@ -69,7 +69,7 @@ export default function SettingsScreen() {
         <Text
           variant="micro"
           tone="faint"
-          className="mt-8 mb-1 tracking-[2px] uppercase"
+          className="mt-8 mb-1 tracking-[0.25em] uppercase"
         >
           {t('settings.group.appearance')}
         </Text>
@@ -79,7 +79,7 @@ export default function SettingsScreen() {
         <Text
           variant="micro"
           tone="faint"
-          className="mt-8 mb-1 tracking-[2px] uppercase"
+          className="mt-8 mb-1 tracking-[0.25em] uppercase"
         >
           {t('settings.group.about')}
         </Text>

@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
+import { Platform } from 'react-native';
 
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
 import { DefaultViewRow } from './default-view-row';
@@ -29,9 +30,19 @@ jest.mock('@react-native-community/datetimepicker', () => ({
   }),
 }));
 
+const originalOS = Platform.OS;
+
+function setPlatformOS(os: typeof Platform.OS) {
+  Object.defineProperty(Platform, 'OS', {
+    configurable: true,
+    get: () => os,
+  });
+}
+
 describe('settings rows', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    setPlatformOS(originalOS);
     usePreferencesStore.setState({
       dob: '1990-01-01',
       theme: 'system',
@@ -60,6 +71,19 @@ describe('settings rows', () => {
 
     fireEvent.press(screen.getByLabelText('Edit'));
     fireEvent.press(screen.getByTestId('dob-picker'));
+    fireEvent.press(screen.getByText('Done'));
+
+    expect(usePreferencesStore.getState().dob).toBe('2001-05-03');
+  });
+
+  it('saves a changed date of birth from the web input', () => {
+    setPlatformOS('web');
+    render(<DobRow />);
+
+    fireEvent.press(screen.getByLabelText('Edit'));
+    fireEvent(screen.getByTestId('settings-web-dob-input'), 'change', {
+      nativeEvent: { text: '2001-05-03' },
+    });
     fireEvent.press(screen.getByText('Done'));
 
     expect(usePreferencesStore.getState().dob).toBe('2001-05-03');

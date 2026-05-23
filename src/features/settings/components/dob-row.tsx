@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Platform, View } from 'react-native';
 
-import { defaultDobCivilDate, formatCivilDateForDisplay, todayCivilDate } from '@/lib/civil-date';
+import { defaultDobCivilDate, formatCivilDateForDisplay, toCivilDateString, todayCivilDate, tryParseDate } from '@/lib/civil-date';
 import { NativeCivilDatePicker } from '@/lib/civil-date/native-civil-date-picker';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { setDobPreference, useDobPreference } from '@/lib/storage/preferences-store';
 import { Button } from '@/lib/theme/components/button';
 import { Hairline } from '@/lib/theme/components/hairline';
+import { Input } from '@/lib/theme/components/input';
 import { Text } from '@/lib/theme/components/text';
 
 import { SettingRow } from './setting-row';
@@ -37,6 +38,12 @@ export function DobRow() {
     setEditing(false);
   };
 
+  const handleWebChange = (value: string) => {
+    const newDob = tryParseDate(value);
+    if (!newDob) return;
+    setPendingDob(toCivilDateString(newDob));
+  };
+
   return (
     <>
       {!editing && (
@@ -45,7 +52,7 @@ export function DobRow() {
             onPress={handleEdit}
             hitSlop={12}
             accessibilityLabel={t('settings.dob.edit')}
-            className="justify-end gap-3"
+            className="justify-end gap-3 pr-0"
           >
             <Text variant="meta" tone="muted" numberOfLines={1}>
               {formattedDob}
@@ -78,6 +85,30 @@ export function DobRow() {
                   maximumValue={today}
                   onChange={setPendingDob}
                   display="spinner"
+                />
+                <View className="mt-2 flex-row justify-end gap-6">
+                  <Button onPress={handleCancel} className="min-h-11 justify-center">
+                    <Text variant="micro" tone="muted" className="font-medium tracking-[2px] uppercase">
+                      {t('settings.dob.cancel')}
+                    </Text>
+                  </Button>
+                  <Button onPress={handleDone} className="min-h-11 justify-center">
+                    <Text variant="micro" tone="ink" className="font-medium tracking-[2px] uppercase">
+                      {t('settings.dob.done')}
+                    </Text>
+                  </Button>
+                </View>
+              </>
+            )}
+            {Platform.OS === 'web' && (
+              <>
+                <Input
+                  align="center"
+                  className="border-0 px-0 text-2xl"
+                  defaultValue={pendingDob}
+                  size="lg"
+                  testID="settings-web-dob-input"
+                  onChange={(e) => handleWebChange(e.nativeEvent.text)}
                 />
                 <View className="mt-2 flex-row justify-end gap-6">
                   <Button onPress={handleCancel} className="min-h-11 justify-center">

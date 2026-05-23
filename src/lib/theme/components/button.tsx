@@ -9,7 +9,10 @@ import type {
 } from 'react-native';
 import { ActivityIndicator, Pressable, Text } from 'react-native';
 
+import { cn } from 'tailwind-variants';
 import { getPressedStyle } from '../utils/get-pressed-style';
+
+const baseCls = 'flex flex-row items-center justify-center px-4';
 
 export interface ButtonProps extends Omit<PressableProps, 'children'> {
   children?: React.ReactNode;
@@ -52,7 +55,7 @@ export function Button({
     <Pressable
       accessibilityRole={accessibilityRole ?? 'button'}
       accessibilityState={resolvedAccessibilityState}
-      className={className}
+      className={cn(baseCls, className)}
       disabled={isDisabled || undefined}
       style={(state: PressableStateCallbackType) => getPressedStyle(
         state,
