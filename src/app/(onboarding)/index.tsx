@@ -1,19 +1,12 @@
 import { router } from 'expo-router';
 
+import { StageDustDots } from '@/features/onboarding/components/stage-dust-dots';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { PrimaryButton } from '@/lib/theme/components/primary-button';
 import { Screen } from '@/lib/theme/components/screen';
 import { Text } from '@/lib/theme/components/text';
 import { View } from '@/lib/theme/components/ui';
 import { Wordmark } from '@/lib/theme/components/wordmark';
-
-const STAGE_DOT_CLASSES = [
-  'bg-stage-0',
-  'bg-stage-1',
-  'bg-stage-2',
-  'bg-stage-3',
-  'bg-stage-4',
-] as const;
 
 export default function WelcomeScreen() {
   const { t } = useAppTranslation();
@@ -25,15 +18,7 @@ export default function WelcomeScreen() {
       </View>
 
       <View className="flex-1 items-center justify-center gap-10 px-9">
-        {/* Stage constellation */}
-        <View className="flex-row gap-3">
-          {STAGE_DOT_CLASSES.map((className) => (
-            <View
-              key={className}
-              className={`size-2 rounded-full ${className}`}
-            />
-          ))}
-        </View>
+        <StageDustDots />
 
         <Text className="text-center font-display-italic text-[31px]/9 tracking-[-0.3px] text-ink">
           {t('onboarding.welcome.tagline')}
