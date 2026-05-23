@@ -13,6 +13,8 @@ interface BuildLifeGridStateInput {
   today: string;
   width: number;
   height: number;
+  reducedMotion: boolean;
+  platformOS: string;
 }
 
 export interface LifeGridHeaderState {
@@ -27,7 +29,9 @@ export interface LifeGridState {
   layout: GridLayout;
   dots: DotState[];
   header: LifeGridHeaderState;
+  headline: HeadlineState;
   bonus: boolean;
+  todayRing: TodayRingPolicy;
 }
 
 interface BuildHeadlineStateInput {
@@ -56,6 +60,7 @@ const SUBLINE_KEY = {
 
 type EyebrowKey = (typeof EYEBROW_KEY)[View] | (typeof BONUS_EYEBROW_KEY)[View];
 type SublineKey = (typeof SUBLINE_KEY)[View];
+export type TodayRingPolicy = 'pulse' | 'static';
 
 export interface HeadlineState extends LifeGridHeaderState {
   bonus: boolean;
@@ -67,7 +72,8 @@ export interface HeadlineState extends LifeGridHeaderState {
 }
 
 export function buildLifeGridState(input: BuildLifeGridStateInput): LifeGridState {
-  const { dob, height, today, view, width } = input;
+  const { dob, height, platformOS, reducedMotion, today, view, width } = input;
+  const headline = buildHeadlineState({ view, dob, today });
 
   return {
     view,
@@ -75,8 +81,13 @@ export function buildLifeGridState(input: BuildLifeGridStateInput): LifeGridStat
     height,
     layout: computeGridLayout(view, width, height),
     dots: buildDotStates(view, dob, today),
-    header: buildLifeGridHeaderState(view, dob, today),
-    bonus: isBonusTime(dob, today),
+    header: {
+      lived: headline.lived,
+      total: headline.total,
+    },
+    headline,
+    bonus: headline.bonus,
+    todayRing: todayRingPolicyFor(view, reducedMotion, platformOS),
   };
 }
 
@@ -97,12 +108,12 @@ export function buildHeadlineState(input: BuildHeadlineStateInput): HeadlineStat
   };
 }
 
-export function shouldPulseTodayRing(
+export function todayRingPolicyFor(
   view: View,
   reducedMotion: boolean,
   platformOS: string,
-): boolean {
-  return platformOS !== 'web' && !reducedMotion && view !== 'years';
+): TodayRingPolicy {
+  return platformOS !== 'web' && !reducedMotion && view !== 'years' ? 'pulse' : 'static';
 }
 
 export function buildLifeGridHeaderState(

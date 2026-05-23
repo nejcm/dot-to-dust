@@ -116,6 +116,11 @@ describe('stageForWeek', () => {
     expect(stageForWeek(1)).toBe(0);
   });
 
+  it('preserves stage 0 for non-positive week indices', () => {
+    expect(stageForWeek(0)).toBe(0);
+    expect(stageForWeek(-1)).toBe(0);
+  });
+
   // Stage 0 → 1 boundary (childhood → adolescence): 0–11 | 12–22
   it('week 624 is the last childhood week (stage 0)', () => {
     expect(stageForWeek(624)).toBe(0);

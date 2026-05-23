@@ -3,11 +3,12 @@ import type { LayoutChangeEvent } from 'react-native';
 import type { LifeGridHeaderState } from '@/features/grid/lib/life-grid-state';
 import { Redirect } from 'expo-router';
 import { memo, useCallback, useMemo, useState } from 'react';
-import { Text } from 'react-native';
+import { Platform, Text } from 'react-native';
 
 import { LifeGrid } from '@/features/grid/components/life-grid';
 import { StageLegend } from '@/features/grid/components/stage-legend';
 import { buildLifeGridHeaderState, buildLifeGridState } from '@/features/grid/lib/life-grid-state';
+import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
 import { todayCivilDate } from '@/lib/civil-date';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
 import { useDefaultViewPreference, useDobPreference } from '@/lib/storage/preferences';
@@ -79,6 +80,7 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
   const { t } = useAppTranslation();
   const { tokens } = useTheme();
   const iconColor = toHex(tokens.muted);
+  const reducedMotion = useReducedMotion();
 
   const [gridLayout, setGridLayout] = useState<{ width: number; height: number } | null>(null);
   const handleGridLayout = useCallback((e: LayoutChangeEvent) => {
@@ -103,9 +105,11 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
         today,
         width: gridLayout.width,
         height: gridLayout.height,
+        reducedMotion,
+        platformOS: Platform.OS,
       });
     },
-    [defaultView, dob, gridLayout, today],
+    [defaultView, dob, gridLayout, reducedMotion, today],
   );
 
   if (dob === null) {

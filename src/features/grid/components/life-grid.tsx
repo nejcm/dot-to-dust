@@ -3,12 +3,9 @@ import type { LifeGridState } from '../lib/life-grid-state';
 import { Canvas, Circle, Group, useClock } from '@shopify/react-native-skia';
 
 import { memo, useMemo } from 'react';
-import { Platform } from 'react-native';
 import { useDerivedValue } from 'react-native-reanimated';
-import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
 import { toSkia } from '@/lib/theme/tokens';
 import { useTheme } from '@/lib/theme/use-theme';
-import { shouldPulseTodayRing } from '../lib/life-grid-state';
 
 const RING_STROKE_WIDTH = 2;
 const RING_RADIUS_OFFSET = RING_STROKE_WIDTH / 2;
@@ -21,9 +18,6 @@ interface LifeGridProps {
 export const LifeGrid = memo(({ state }: LifeGridProps) => {
   const { tokens } = useTheme();
   const skia = useMemo(() => toSkia(tokens), [tokens]);
-  const reducedMotion = useReducedMotion();
-
-  const shouldPulse = shouldPulseTodayRing(state.view, reducedMotion, Platform.OS);
 
   const { cols, dotSize, gap } = state.layout;
   const radius = dotSize / 2;
@@ -69,7 +63,7 @@ export const LifeGrid = memo(({ state }: LifeGridProps) => {
                 cy={cy}
                 radius={radius}
                 color={skia.ring}
-                pulse={shouldPulse}
+                pulse={state.todayRing === 'pulse'}
               />
             </Group>
           );

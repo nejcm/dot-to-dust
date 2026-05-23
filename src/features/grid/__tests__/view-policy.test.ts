@@ -1,10 +1,8 @@
 import { VIEWS } from '@/lib/view';
 
 import {
-  bonusUnitsAhead,
   MONTHS_TOTAL,
   monthsLived,
-  remainingFor,
   WEEKS_TOTAL,
   weeksLived,
   YEARS_TOTAL,
@@ -12,8 +10,6 @@ import {
 } from '../lib/life-math';
 import {
   gridDimensionsFor,
-  headlineCountFor,
-  headlineKeyFor,
   livedUnitsFor,
   totalUnitsFor,
   unitToWeekIndex,
@@ -50,24 +46,5 @@ describe('view policy', () => {
     expect(unitToWeekIndex('months', 1)).toBe(1);
     expect(unitToWeekIndex('months', 13)).toBe(53);
     expect(unitToWeekIndex('years', 2)).toBe(53);
-  });
-
-  it('returns headline translation keys by view and bonus state', () => {
-    expect(headlineKeyFor('weeks', false)).toBe('grid.headline.weeksAhead');
-    expect(headlineKeyFor('months', false)).toBe('grid.headline.monthsAhead');
-    expect(headlineKeyFor('years', false)).toBe('grid.headline.yearsAhead');
-    expect(headlineKeyFor('weeks', true)).toBe('grid.headline.bonusWeeks');
-    expect(headlineKeyFor('months', true)).toBe('grid.headline.bonusMonths');
-    expect(headlineKeyFor('years', true)).toBe('grid.headline.bonusYears');
-  });
-
-  it('delegates headline counts to life math', () => {
-    const dob = '1940-01-01';
-    const today = '2026-05-22';
-
-    for (const view of VIEWS) {
-      expect(headlineCountFor(view, dob, today, false)).toBe(remainingFor(view, dob, today));
-      expect(headlineCountFor(view, dob, today, true)).toBe(bonusUnitsAhead(view, dob, today));
-    }
   });
 });

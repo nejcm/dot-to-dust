@@ -45,6 +45,7 @@ export function yearsLived(dob: string, today: string): number {
 // Stage is determined by completed years at the start of that week.
 // Boundaries: 0-11 → 0 | 12-22 → 1 | 23-39 → 2 | 40-59 → 3 | 60-80 → 4
 function stageForAge(age: number): StageIndex {
+  if (age <= 0) return 0;
   return STAGES.find((stage) => age >= stage.startAge && age <= stage.endAge)?.index ?? 4;
 }
 

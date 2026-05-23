@@ -1,4 +1,4 @@
-import { buildHeadlineState, buildLifeGridState, shouldPulseTodayRing } from '../lib/life-grid-state';
+import { buildHeadlineState, buildLifeGridState, todayRingPolicyFor } from '../lib/life-grid-state';
 import { WEEKS_TOTAL } from '../lib/life-math';
 
 describe('life grid state', () => {
@@ -9,12 +9,16 @@ describe('life grid state', () => {
       today: '2000-01-08',
       width: 393,
       height: 852,
+      reducedMotion: false,
+      platformOS: 'ios',
     });
 
     expect(state.header).toEqual({ lived: 1, total: WEEKS_TOTAL });
+    expect(state.headline.count).toBe(1);
     expect(state.layout.cols).toBe(52);
     expect(state.dots[0]).toEqual({ stage: 0, isToday: true });
     expect(state.bonus).toBe(false);
+    expect(state.todayRing).toBe('pulse');
   });
 
   it('prepares bonus headline state without changing the visible count rule', () => {
@@ -37,9 +41,9 @@ describe('life grid state', () => {
   });
 
   it('keeps Today Ring pulse policy out of the canvas implementation', () => {
-    expect(shouldPulseTodayRing('weeks', false, 'ios')).toBe(true);
-    expect(shouldPulseTodayRing('years', false, 'ios')).toBe(false);
-    expect(shouldPulseTodayRing('weeks', true, 'ios')).toBe(false);
-    expect(shouldPulseTodayRing('weeks', false, 'web')).toBe(false);
+    expect(todayRingPolicyFor('weeks', false, 'ios')).toBe('pulse');
+    expect(todayRingPolicyFor('years', false, 'ios')).toBe('static');
+    expect(todayRingPolicyFor('weeks', true, 'ios')).toBe('static');
+    expect(todayRingPolicyFor('weeks', false, 'web')).toBe('static');
   });
 });

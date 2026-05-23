@@ -48,6 +48,8 @@ function renderLifeGrid(props?: Partial<ComponentProps<typeof LifeGrid>>) {
     today: '2000-01-08',
     width: 393,
     height: 852,
+    reducedMotion: false,
+    platformOS: Platform.OS,
   });
 
   return render(
@@ -92,6 +94,8 @@ describe('life grid', () => {
         today: '2020-01-01',
         width: 393,
         height: 852,
+        reducedMotion: false,
+        platformOS: Platform.OS,
       }),
     }).toJSON() as TestTree;
 
@@ -110,20 +114,42 @@ describe('life grid', () => {
         today: '2001-01-01',
         width: 393,
         height: 852,
+        reducedMotion: false,
+        platformOS: Platform.OS,
       }),
     });
     expect(useClock).not.toHaveBeenCalled();
 
     jest.clearAllMocks();
     jest.mocked(useReanimatedReducedMotion).mockReturnValue(true);
-    renderLifeGrid();
+    renderLifeGrid({
+      state: buildLifeGridState({
+        view: 'weeks',
+        dob: '2000-01-01',
+        today: '2000-01-08',
+        width: 393,
+        height: 852,
+        reducedMotion: true,
+        platformOS: Platform.OS,
+      }),
+    });
     expect(useClock).not.toHaveBeenCalled();
   });
 
   it('does not mount the Skia clock on web', () => {
     setPlatformOS('web');
 
-    renderLifeGrid();
+    renderLifeGrid({
+      state: buildLifeGridState({
+        view: 'weeks',
+        dob: '2000-01-01',
+        today: '2000-01-08',
+        width: 393,
+        height: 852,
+        reducedMotion: false,
+        platformOS: Platform.OS,
+      }),
+    });
 
     expect(useClock).not.toHaveBeenCalled();
   });
@@ -136,6 +162,8 @@ describe('life grid', () => {
         today: '2001-01-01',
         width: 393,
         height: 852,
+        reducedMotion: false,
+        platformOS: Platform.OS,
       }),
     }).toJSON() as TestTree;
     const [ring] = strokeCircles(tree);
