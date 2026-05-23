@@ -1,6 +1,9 @@
 import type { SharedValue } from 'react-native-reanimated';
+import type { DotState } from '../lib/dot-states';
+import type { GridLayout } from '../lib/grid-layout';
 import type { LifeGridState } from '../lib/life-grid-state';
-import { Canvas, Circle, Group, useClock } from '@shopify/react-native-skia';
+import type { SkiaTokens } from '@/lib/theme/tokens';
+import { Canvas, Circle, createPicture, Picture, Skia, useClock } from '@shopify/react-native-skia';
 
 import { memo, useMemo } from 'react';
 import { useDerivedValue } from 'react-native-reanimated';
@@ -19,11 +22,28 @@ export const LifeGrid = memo(({ state }: LifeGridProps) => {
   const { tokens } = useTheme();
   const skia = useMemo(() => toSkia(tokens), [tokens]);
 
-  const { cols, rows, dotSize, gap } = state.layout;
-  const radius = dotSize / 2;
-  const stride = dotSize + gap;
+  const { rows, dotSize, gap } = state.layout;
   const gridHeight = rows * dotSize + (rows - 1) * gap;
   const yOffset = Math.max(0, (state.height - gridHeight) / 2);
+  const staticDotsPicture = useMemo(
+    () => createStaticDotsPicture({
+      dots: state.dots,
+      height: state.height,
+      layout: state.layout,
+      skia,
+      width: state.width,
+      yOffset,
+    }),
+    [skia, state.dots, state.height, state.layout, state.width, yOffset],
+  );
+  const todayRing = useMemo(
+    () => todayRingGeometryFor({
+      dots: state.dots,
+      layout: state.layout,
+      yOffset,
+    }),
+    [state.dots, state.layout, yOffset],
+  );
 
   const canvasStyle = useMemo(
     () => ({ width: state.width, height: state.height }),
@@ -32,50 +52,101 @@ export const LifeGrid = memo(({ state }: LifeGridProps) => {
 
   return (
     <Canvas style={canvasStyle}>
-      <Group>
-        {state.dots.map((dot, index) => {
-          const col = index % cols;
-          const row = Math.floor(index / cols);
-          const cx = col * stride + radius;
-          const cy = yOffset + row * stride + radius;
-
-          if ('kind' in dot) {
-            return (
-              <Circle
-                key={index}
-                cx={cx}
-                cy={cy}
-                r={radius}
-                color={skia.future}
-              />
-            );
-          }
-
-          const fill = skia.stages[dot.stage];
-
-          if (!dot.isToday) {
-            return <Circle key={index} cx={cx} cy={cy} r={radius} color={fill} />;
-          }
-
-          return (
-            <Group key={index}>
-              <Circle cx={cx} cy={cy} r={radius} color={fill} />
-              <TodayRing
-                cx={cx}
-                cy={cy}
-                radius={radius}
-                color={skia.ring}
-                pulse={state.todayRing === 'pulse'}
-              />
-            </Group>
-          );
-        })}
-      </Group>
+      <Picture picture={staticDotsPicture} />
+      {todayRing && (
+        <TodayRing
+          cx={todayRing.cx}
+          cy={todayRing.cy}
+          radius={todayRing.radius}
+          color={skia.ring}
+          pulse={state.todayRing === 'pulse'}
+        />
+      )}
     </Canvas>
   );
 });
 
 LifeGrid.displayName = 'LifeGrid';
+
+interface StaticDotsPictureInput {
+  dots: DotState[];
+  height: number;
+  layout: GridLayout;
+  skia: SkiaTokens;
+  width: number;
+  yOffset: number;
+}
+
+interface TodayRingGeometryInput {
+  dots: DotState[];
+  layout: GridLayout;
+  yOffset: number;
+}
+
+interface TodayRingGeometry {
+  cx: number;
+  cy: number;
+  radius: number;
+}
+
+interface DotCenterInput {
+  cols: number;
+  index: number;
+  radius: number;
+  stride: number;
+  yOffset: number;
+}
+
+function createStaticDotsPicture(input: StaticDotsPictureInput) {
+  const { dots, height, layout, skia, width, yOffset } = input;
+  const { cols, dotSize, gap } = layout;
+  const radius = dotSize / 2;
+  const stride = dotSize + gap;
+  const futureColor = Skia.Color(skia.future);
+  const stageColors = skia.stages.map((color) => Skia.Color(color));
+
+  return createPicture((canvas) => {
+    const paint = Skia.Paint();
+    paint.setAntiAlias(true);
+
+    dots.forEach((dot, index) => {
+      const color = 'kind' in dot ? futureColor : stageColors[dot.stage];
+      const { cx, cy } = dotCenterFor({ cols, index, radius, stride, yOffset });
+      paint.setColor(color);
+      canvas.drawCircle(cx, cy, radius, paint);
+    });
+  }, { width, height });
+}
+
+function todayRingGeometryFor(input: TodayRingGeometryInput): TodayRingGeometry | null {
+  const { dots, layout, yOffset } = input;
+  const { cols, dotSize, gap } = layout;
+  const index = dots.findIndex((dot) => !('kind' in dot) && dot.isToday);
+
+  if (index < 0) return null;
+
+  return {
+    ...dotCenterFor({
+      cols,
+      index,
+      radius: dotSize / 2,
+      stride: dotSize + gap,
+      yOffset,
+    }),
+    radius: dotSize / 2,
+  };
+}
+
+function dotCenterFor(input: DotCenterInput) {
+  const { cols, index, radius, stride, yOffset } = input;
+  const col = index % cols;
+  const row = Math.floor(index / cols);
+
+  return {
+    cx: col * stride + radius,
+    cy: yOffset + row * stride + radius,
+  };
+}
 
 interface TodayRingProps {
   cx: number;

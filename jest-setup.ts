@@ -98,11 +98,25 @@ jest.mock('@shopify/react-native-skia', () => {
   const View = require('react-native').View;
   const SkiaNode = (type: string) => (props: { children?: unknown }) =>
     React.createElement(type, props, props.children);
+  const createPicture = jest.fn((draw, rect) => {
+    const drawCircle = jest.fn();
+    draw({ drawCircle });
+    return { drawCircle, rect };
+  });
 
   return {
     Canvas: View,
     Circle: SkiaNode('skCircle'),
     Group: SkiaNode('skGroup'),
+    Picture: SkiaNode('skPicture'),
+    Skia: {
+      Color: jest.fn((color) => color),
+      Paint: jest.fn(() => ({
+        setAntiAlias: jest.fn(),
+        setColor: jest.fn(),
+      })),
+    },
+    createPicture,
     useClock: jest.fn(() => ({ value: 0 })),
   };
 });
