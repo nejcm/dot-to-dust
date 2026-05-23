@@ -1,4 +1,4 @@
-import type { StageIndex } from '@/features/grid/lib/life-math';
+import type { StageIndex } from './stages';
 import type { ColorTokens } from '@/lib/theme/tokens';
 
 export type { StageIndex };

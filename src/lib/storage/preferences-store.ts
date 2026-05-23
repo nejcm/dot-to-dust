@@ -75,11 +75,26 @@ const _usePreferencesStore = create<PreferencesState>()(
 
 export const usePreferencesStore = createSelectors(_usePreferencesStore);
 
-export function getPreferencesState(): PreferencesState {
+export type ThemePreference = PreferencesState['theme'];
+export type DefaultViewPreference = PreferencesState['defaultView'];
+
+export function useDobPreference(): PreferencesState['dob'] {
+  return usePreferencesStore((state) => state.dob);
+}
+
+export function useThemePreference(): ThemePreference {
+  return usePreferencesStore((state) => state.theme);
+}
+
+export function useDefaultViewPreference(): DefaultViewPreference {
+  return usePreferencesStore((state) => state.defaultView);
+}
+
+export function getPreferences(): PreferencesState {
   return _usePreferencesStore.getState();
 }
 
-export function updatePreferencesState(
+function updatePreferencesState(
   state: Partial<PreferencesState> | ((prev: PreferencesState) => Partial<PreferencesState>),
 ): void {
   _usePreferencesStore.setState((prev) => ({
@@ -88,14 +103,14 @@ export function updatePreferencesState(
   }));
 }
 
-export function setDob(dob: string | null): void {
+export function setDobPreference(dob: string | null): void {
   updatePreferencesState({ dob: dobSchema.catch(null).parse(dob) });
 }
 
-export function setTheme(theme: PreferencesState['theme']): void {
+export function setThemePreference(theme: ThemePreference): void {
   updatePreferencesState({ theme });
 }
 
-export function setDefaultView(defaultView: PreferencesState['defaultView']): void {
+export function setDefaultViewPreference(defaultView: DefaultViewPreference): void {
   updatePreferencesState({ defaultView });
 }

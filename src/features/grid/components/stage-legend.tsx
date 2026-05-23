@@ -3,7 +3,7 @@ import { Pressable, View } from 'react-native';
 
 import { Text } from '@/lib/theme/components/text';
 import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
-import { STAGES } from '../lib/life-math';
+import { STAGES } from '../lib/stages';
 
 const STAGE_DOT_CLASS_NAMES = [
   'bg-stage-0',

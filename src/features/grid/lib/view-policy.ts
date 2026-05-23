@@ -56,3 +56,21 @@ export function unitToWeekIndex(view: View, unitIndex: number): number {
       return (unitIndex - 1) * 52 + 1;
   }
 }
+
+export const EYEBROW_KEY = {
+  weeks: 'grid.headline.eyebrow.weeks',
+  months: 'grid.headline.eyebrow.months',
+  years: 'grid.headline.eyebrow.years',
+} as const satisfies Record<View, string>;
+
+export const BONUS_EYEBROW_KEY = {
+  weeks: 'grid.headline.eyebrow.bonusWeeks',
+  months: 'grid.headline.eyebrow.bonusMonths',
+  years: 'grid.headline.eyebrow.bonusYears',
+} as const satisfies Record<View, string>;
+
+export const SUBLINE_KEY = {
+  weeks: 'grid.headline.subline.weeks',
+  months: 'grid.headline.subline.months',
+  years: 'grid.headline.subline.years',
+} as const satisfies Record<View, string>;

@@ -1,4 +1,4 @@
-import type { StageIndex } from '@/features/grid/lib/life-math';
+import type { StageIndex } from '@/features/grid/lib/stages';
 
 import { formatHex, parse } from 'culori';
 

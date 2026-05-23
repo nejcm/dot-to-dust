@@ -1,6 +1,6 @@
 import { Redirect } from 'expo-router';
 
-import { useDobPreference } from '@/lib/storage/preferences';
+import { useDobPreference } from '@/lib/storage/preferences-store';
 
 export default function Index() {
   const dob = useDobPreference();

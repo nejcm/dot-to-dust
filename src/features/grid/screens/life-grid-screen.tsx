@@ -11,7 +11,7 @@ import { buildLifeGridHeaderState, buildLifeGridState } from '@/features/grid/li
 import { useReducedMotion } from '@/lib/a11y/use-reduced-motion';
 import { todayCivilDate } from '@/lib/civil-date';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
-import { useDefaultViewPreference, useDobPreference } from '@/lib/storage/preferences';
+import { useDefaultViewPreference, useDobPreference } from '@/lib/storage/preferences-store';
 import { Hairline } from '@/lib/theme/components/hairline';
 import { GearIcon } from '@/lib/theme/components/icons';
 import { Screen } from '@/lib/theme/components/screen';

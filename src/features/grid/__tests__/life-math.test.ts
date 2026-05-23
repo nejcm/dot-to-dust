@@ -6,12 +6,12 @@ import {
   remainingFor,
   stageForRatio,
   stageForWeek,
-  STAGES,
   WEEKS_TOTAL,
   weeksLived,
   YEARS_TOTAL,
   yearsLived,
 } from '../lib/life-math';
+import { STAGES } from '../lib/stages';
 
 // ─── weeksLived ───────────────────────────────────────────────────────────────
 

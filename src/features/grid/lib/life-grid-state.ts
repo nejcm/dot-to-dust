@@ -5,7 +5,7 @@ import type { View } from '@/lib/view';
 import { buildDotStates } from './dot-states';
 import { computeGridLayout } from './grid-layout';
 import { bonusUnitsAhead, isBonusTime, LIFE_YEARS, remainingFor } from './life-math';
-import { livedUnitsFor, totalUnitsFor } from './view-policy';
+import { BONUS_EYEBROW_KEY, EYEBROW_KEY, livedUnitsFor, SUBLINE_KEY, totalUnitsFor } from './view-policy';
 
 interface BuildLifeGridStateInput {
   view: View;
@@ -39,24 +39,6 @@ interface BuildHeadlineStateInput {
   dob: string;
   today: string;
 }
-
-const EYEBROW_KEY = {
-  weeks: 'grid.headline.eyebrow.weeks',
-  months: 'grid.headline.eyebrow.months',
-  years: 'grid.headline.eyebrow.years',
-} as const satisfies Record<View, string>;
-
-const BONUS_EYEBROW_KEY = {
-  weeks: 'grid.headline.eyebrow.bonusWeeks',
-  months: 'grid.headline.eyebrow.bonusMonths',
-  years: 'grid.headline.eyebrow.bonusYears',
-} as const satisfies Record<View, string>;
-
-const SUBLINE_KEY = {
-  weeks: 'grid.headline.subline.weeks',
-  months: 'grid.headline.subline.months',
-  years: 'grid.headline.subline.years',
-} as const satisfies Record<View, string>;
 
 type EyebrowKey = (typeof EYEBROW_KEY)[View] | (typeof BONUS_EYEBROW_KEY)[View];
 type SublineKey = (typeof SUBLINE_KEY)[View];

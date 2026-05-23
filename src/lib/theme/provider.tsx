@@ -4,7 +4,7 @@ import { createContext, useEffect, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 import { Uniwind } from 'uniwind';
 
-import { useThemePreference } from '@/lib/storage/preferences';
+import { useThemePreference } from '@/lib/storage/preferences-store';
 import { darkTokens, lightTokens } from './tokens';
 
 export interface ThemeContextValue {

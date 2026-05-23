@@ -1,33 +1,20 @@
+import type { StageIndex } from './stages';
+
 import type { View } from '@/lib/view';
 
 import { differenceInMonths, differenceInWeeks, differenceInYears } from 'date-fns';
 
 import { parseCivilDate } from '@/lib/civil-date';
+import { STAGES } from './stages';
 
+export type { StageDefinition, StageIndex } from './stages';
+export { STAGES } from './stages';
 export type { View } from '@/lib/view';
-
-export type StageIndex = 0 | 1 | 2 | 3 | 4;
-
-export interface StageDefinition {
-  index: StageIndex;
-  name: string;
-  range: string;
-  startAge: number;
-  endAge: number;
-}
 
 export const LIFE_YEARS = 80;
 export const WEEKS_TOTAL = LIFE_YEARS * 52; // 4160
 export const MONTHS_TOTAL = LIFE_YEARS * 12; // 960
 export const YEARS_TOTAL = LIFE_YEARS; // 80
-
-export const STAGES = [
-  { index: 0, name: 'Formation', range: '0–11', startAge: 0, endAge: 11 },
-  { index: 1, name: 'Emergence', range: '12–22', startAge: 12, endAge: 22 },
-  { index: 2, name: 'Construction', range: '23–39', startAge: 23, endAge: 39 },
-  { index: 3, name: 'Tenure', range: '40–59', startAge: 40, endAge: 59 },
-  { index: 4, name: 'Twilight', range: '60–80', startAge: 60, endAge: 80 },
-] as const satisfies readonly StageDefinition[];
 
 export function weeksLived(dob: string, today: string): number {
   return Math.max(0, differenceInWeeks(parseCivilDate(today), parseCivilDate(dob)));

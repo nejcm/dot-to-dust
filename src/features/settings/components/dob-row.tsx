@@ -4,7 +4,7 @@ import { Platform, Pressable, View } from 'react-native';
 import { defaultDobCivilDate, formatCivilDateForDisplay, todayCivilDate } from '@/lib/civil-date';
 import { NativeCivilDatePicker } from '@/lib/civil-date/native-civil-date-picker';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
-import { setDobPreference, useDobPreference } from '@/lib/storage/preferences';
+import { setDobPreference, useDobPreference } from '@/lib/storage/preferences-store';
 import { Hairline } from '@/lib/theme/components/hairline';
 import { Text } from '@/lib/theme/components/text';
 

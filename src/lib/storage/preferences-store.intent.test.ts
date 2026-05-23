@@ -1,4 +1,4 @@
-import type * as PreferencesModule from './preferences';
+import type * as PreferencesModule from './preferences-store';
 
 interface MmkvMock {
   __mockMmkvClear: () => void;
@@ -10,7 +10,7 @@ function mmkvMock(): MmkvMock {
 
 function loadPreferencesModule(): typeof PreferencesModule {
   jest.resetModules();
-  return require('./preferences') as typeof PreferencesModule;
+  return require('./preferences-store') as typeof PreferencesModule;
 }
 
 describe('preferences intent', () => {

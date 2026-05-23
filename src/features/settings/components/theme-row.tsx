@@ -2,7 +2,7 @@ import { Pressable, View } from 'react-native';
 import { cn } from 'tailwind-variants';
 
 import { useAppTranslation } from '@/lib/i18n/use-translation';
-import { setThemePreference, useThemePreference } from '@/lib/storage/preferences';
+import { setThemePreference, useThemePreference } from '@/lib/storage/preferences-store';
 import { Hairline } from '@/lib/theme/components/hairline';
 import { Text } from '@/lib/theme/components/text';
 

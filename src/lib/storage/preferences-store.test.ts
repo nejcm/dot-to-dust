@@ -113,19 +113,19 @@ describe('preferences store', () => {
   });
 
   it('rejects future DOB setter values', () => {
-    const { setDob, usePreferencesStore } = loadStoreModule();
+    const { setDobPreference, usePreferencesStore } = loadStoreModule();
 
-    setDob('2024-03-02');
+    setDobPreference('2024-03-02');
 
     expect(usePreferencesStore.getState().dob).toBeNull();
   });
 
   it('persists setter mutations so they survive a reload', () => {
-    const { setDefaultView, setDob, setTheme } = loadStoreModule();
+    const { setDefaultViewPreference, setDobPreference, setThemePreference } = loadStoreModule();
 
-    setDob('1990-06-15');
-    setTheme('dark');
-    setDefaultView('months');
+    setDobPreference('1990-06-15');
+    setThemePreference('dark');
+    setDefaultViewPreference('months');
 
     expect(JSON.parse(mmkvMock().__mockMmkvGetString(STORAGE_KEY) ?? '')).toEqual({
       state: {
