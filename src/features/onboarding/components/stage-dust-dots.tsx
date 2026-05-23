@@ -1,4 +1,5 @@
 import type { SharedValue } from 'react-native-reanimated';
+import { useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {
@@ -99,6 +100,8 @@ interface DustParticleProps {
 
 export function StageDustDots({ testID = 'onboarding-stage-dust-dots' }: StageDustDotsProps) {
   const reducedMotion = useReducedMotion();
+  const isFocused = useIsFocused();
+  const animated = isFocused && !reducedMotion;
 
   return (
     <View
@@ -110,7 +113,7 @@ export function StageDustDots({ testID = 'onboarding-stage-dust-dots' }: StageDu
       {STAGE_DOTS.map((dot, index) => {
         const dotTestID = `${testID}-dot-${index}`;
 
-        if (reducedMotion) {
+        if (!animated) {
           return (
             <View
               key={dot.colorClassName}
