@@ -4,6 +4,7 @@ import { View } from 'react-native';
 
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
 
+import { LifeGrid } from '../components/life-grid';
 import { LifeGridScreen } from '../screens/life-grid-screen';
 
 jest.mock('expo-router', () => ({
@@ -24,7 +25,7 @@ jest.mock('@/features/grid/components/life-grid', () => ({
 function renderLifeGridScreen(onOpenSettings = jest.fn()) {
   const view = render(<LifeGridScreen onOpenSettings={onOpenSettings} />);
   const layoutTarget = view.UNSAFE_getAllByType(View).find(
-    (node) => node.props.className?.includes('flex-1') && typeof node.props.onLayout === 'function',
+    (node) => node.props.className === 'flex-1' && typeof node.props.onLayout === 'function',
   );
 
   fireEvent(layoutTarget!, 'layout', {
@@ -71,6 +72,15 @@ describe('life grid screen', () => {
     renderLifeGridScreen();
 
     expect(screen.getByTestId('life-grid')).toHaveTextContent('months');
+  });
+
+  it('passes the inner grid container dimensions to the canvas', () => {
+    renderLifeGridScreen();
+
+    expect(jest.mocked(LifeGrid)).toHaveBeenCalledWith(
+      expect.objectContaining({ width: 320, height: 480 }),
+      undefined,
+    );
   });
 
   it('opens settings through the route callback', () => {

@@ -18,8 +18,6 @@ import { toHex } from '@/lib/theme/tokens';
 import { useTheme } from '@/lib/theme/use-theme';
 import { getPressedStyle } from '@/lib/theme/utils/get-pressed-style';
 
-const GRID_TOP_PADDING = 24;
-
 interface LifeGridScreenProps {
   onOpenSettings: () => void;
 }
@@ -83,7 +81,7 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
   const today = todayCivilDate();
   const { t } = useAppTranslation();
   const { tokens } = useTheme();
-  const iconColor = toHex(tokens.inkSoft);
+  const iconColor = toHex(tokens.muted);
 
   const [gridLayout, setGridLayout] = useState<{ width: number; height: number } | null>(null);
 
@@ -102,15 +100,15 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
         view={defaultView}
       />
 
-      <View
-        className="flex-1 px-4 pt-6"
-        onLayout={(e) =>
-          setGridLayout({
-            width: e.nativeEvent.layout.width,
-            height: e.nativeEvent.layout.height - GRID_TOP_PADDING,
-          })}
-      >
-        <View className="flex-1">
+      <View className="flex-1 px-4 pt-6">
+        <View
+          className="flex-1"
+          onLayout={(e) =>
+            setGridLayout({
+              width: e.nativeEvent.layout.width,
+              height: e.nativeEvent.layout.height,
+            })}
+        >
           {gridLayout && (
             <LifeGrid
               view={defaultView}
@@ -123,7 +121,7 @@ export function LifeGridScreen({ onOpenSettings }: LifeGridScreenProps) {
         </View>
       </View>
 
-      <View className="px-5 py-6">
+      <View className="px-4 pt-3 pb-5">
         <StageLegend />
       </View>
     </Screen>
