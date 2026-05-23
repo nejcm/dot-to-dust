@@ -9,10 +9,19 @@ const DEVICE_SCREENS = [
   { name: 'Pixel 8 Pro', width: 448, height: 998 },
 ] as const;
 
+const WIDTH_FITTED_VIEWS = ['weeks', 'years'] as const;
+const EPSILON = 0.000001;
+
 function fitsCanvas(layout: GridLayout, width: number, height: number): boolean {
-  const usedW = layout.cols * layout.dotSize + (layout.cols - 1) * layout.gap;
-  const usedH = layout.rows * layout.dotSize + (layout.rows - 1) * layout.gap;
-  return usedW <= width && usedH <= height;
+  return usedWidth(layout) <= width + EPSILON && usedHeight(layout) <= height + EPSILON;
+}
+
+function usedWidth(layout: GridLayout): number {
+  return layout.cols * layout.dotSize + (layout.cols - 1) * layout.gap;
+}
+
+function usedHeight(layout: GridLayout): number {
+  return layout.rows * layout.dotSize + (layout.rows - 1) * layout.gap;
 }
 
 describe('computeGridLayout', () => {
@@ -22,6 +31,11 @@ describe('computeGridLayout', () => {
       expect(layout.dotSize).toBeGreaterThan(4);
       expect(layout.gap).toBeGreaterThan(0);
       expect(fitsCanvas(layout, width, height)).toBe(true);
+    });
+
+    it.each(WIDTH_FITTED_VIEWS)('view=%s: uses the full canvas width when height allows it', (view) => {
+      const layout = computeGridLayout(view, width, height);
+      expect(usedWidth(layout)).toBeCloseTo(width, 5);
     });
   });
 
@@ -43,10 +57,7 @@ describe('computeGridLayout', () => {
     expect(layout.rows).toBe(8);
   });
 
-  // Regression: a tight canvas can push the floor of dotSize*GAP_RATIO to 0,
-  // making the minimum-1 gap overflow the canvas dimension. The algorithm must
-  // step dotSize down until the integer pair fits.
-  it('does not overflow on tight canvases where gap=1 exceeds the ratio bound', () => {
+  it('does not overflow on tight canvases', () => {
     const layout = computeGridLayout('weeks', 375, 390);
     expect(fitsCanvas(layout, 375, 390)).toBe(true);
   });
@@ -58,5 +69,19 @@ describe('computeGridLayout', () => {
   ])('view=$view at $width × $height fits without overflow', ({ view, width, height }) => {
     const layout = computeGridLayout(view, width, height);
     expect(fitsCanvas(layout, width, height)).toBe(true);
+  });
+
+  it('scales down instead of overflowing when full-width weeks would exceed height', () => {
+    const layout = computeGridLayout('weeks', 375, 390);
+    expect(fitsCanvas(layout, 375, 390)).toBe(true);
+    expect(usedHeight(layout)).toBeCloseTo(390, 5);
+    expect(usedWidth(layout)).toBeLessThan(375);
+  });
+
+  it('scales months by height because full-width proportional dots would overflow', () => {
+    const layout = computeGridLayout('months', 393, 852);
+    expect(fitsCanvas(layout, 393, 852)).toBe(true);
+    expect(usedHeight(layout)).toBeCloseTo(852, 5);
+    expect(usedWidth(layout)).toBeLessThan(393);
   });
 });
