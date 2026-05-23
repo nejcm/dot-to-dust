@@ -10,30 +10,34 @@
       ]
     },
     "JavaScript": {
-      "formatter": [],
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      }
+      "formatter": [
+        { "code_action": "source.fixAll.eslint" },
+        { "code_action": "source.organizeImports.ts" },
+        { "code_action": "source.removeUnused.ts" }
+      ]
     },
     "JSX": {
-      "formatter": [],
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      }
+      "formatter": [
+        { "code_action": "source.fixAll.eslint" },
+        { "code_action": "source.organizeImports.ts" },
+        { "code_action": "source.removeUnused.ts" }
+      ]
     },
     "TypeScript": {
       "prettier": { "allowed": false },
-      "formatter": [],
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      }
+      "formatter": [
+        { "code_action": "source.fixAll.eslint" },
+        { "code_action": "source.organizeImports.ts" },
+        { "code_action": "source.removeUnused.ts" }
+      ]
     },
     "TSX": {
       "prettier": { "allowed": false },
-      "formatter": [],
-      "code_actions_on_format": {
-        "source.fixAll.eslint": true
-      }
+      "formatter": [
+        { "code_action": "source.fixAll.eslint" },
+        { "code_action": "source.organizeImports.ts" },
+        { "code_action": "source.removeUnused.ts" }
+      ]
     }
   },
   "lsp": {
