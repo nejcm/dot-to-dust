@@ -31,7 +31,7 @@
     "build:preview:ios": "eas build --profile preview --platform ios",
     "build:preview:android": "eas build --profile preview --platform android",
     "build:production:ios": "eas build --profile production --platform ios",
-    "build:production:android": "eas build --profile production --platform android",
+    "build:production:android": "cross-env EAS_LOCAL_BUILD_WORKINGDIR=$HOME/.cache/eas-local-builds/dot-to-dust eas build --profile production --platform android",
     "submit:preview:ios": "eas submit --profile preview --platform ios --latest",
     "submit:preview:android": "eas submit --profile preview --platform android --latest",
     "release:preview:ios": "eas build --profile preview --platform ios --auto-submit",

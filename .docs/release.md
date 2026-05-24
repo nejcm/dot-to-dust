@@ -82,3 +82,4 @@ Confirm the preview bundle/package ids and EAS project ID in the output.
 - OTA updates are configured with the committed EAS project ID; `EAS_PROJECT_ID` can override it locally.
 - The EAS project is `@ncncm/dot-to-dust`; `app.config.ts` includes its project ID.
 - Preview Android builds use AAB output so they can be submitted to Google Play Internal Testing.
+- Local Android production builds use `$HOME/.cache/eas-local-builds/dot-to-dust` as the EAS working directory because `/tmp` may be tmpfs-backed and too small for native C++ builds.
