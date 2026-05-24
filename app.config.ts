@@ -17,7 +17,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   scheme: Env.EXPO_PUBLIC_SCHEME,
   slug: 'dot-to-dust',
   version: Env.EXPO_PUBLIC_VERSION.toString(),
-  icon: './assets/icon.png',
+  icon: './assets/logo.png',
   orientation: 'portrait',
   userInterfaceStyle: 'automatic',
   ...(EAS_PROJECT_ID
@@ -42,7 +42,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     adaptiveIcon: {
       backgroundColor: '#faf8f5',
-      foregroundImage: './assets/adaptive-icon.png',
+      foregroundImage: './assets/logo.png',
     },
     package: Env.EXPO_PUBLIC_PACKAGE,
   },
