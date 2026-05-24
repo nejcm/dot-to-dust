@@ -48,7 +48,7 @@ export default function SettingsScreen() {
           {t('settings.eyebrow')}
         </Text>
         <Text
-          className="font-display-italic text-[36px]/11 tracking-[-0.4px] text-ink"
+          className="font-display-italic text-[36px] leading-[44px] tracking-[-0.4px] text-ink"
         >
           {t('settings.title')}
         </Text>

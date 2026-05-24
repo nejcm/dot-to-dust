@@ -76,7 +76,7 @@ export function DobPicker({ onConfirm, onBack, initialDob }: DobPickerProps) {
           <Button
             onPress={() => setShowAndroid(true)}
             testID="onboarding-dob-field"
-            className="min-h-14 w-full items-center justify-center border-0 p-4"
+            className="min-h-14 w-full items-center justify-center rounded-pill border-0 p-4"
           >
             <Text variant="body" tone="ink" numberOfLines={1}>
               {formatCivilDateShort(dob)}
