@@ -80,5 +80,5 @@ Confirm the preview bundle/package ids and EAS project ID in the output.
 - Keep `android/` and `ios/` generated.
 - `runtimeVersion` follows `appVersion`.
 - OTA updates are configured with the committed EAS project ID; `EAS_PROJECT_ID` can override it locally.
-- The EAS project is `@nejcm/dot-to-dust`; `app.config.ts` includes its project ID.
+- The EAS project is `@ncncm/dot-to-dust`; `app.config.ts` includes its project ID.
 - Preview Android builds use AAB output so they can be submitted to Google Play Internal Testing.

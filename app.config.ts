@@ -7,7 +7,7 @@ import Env from './env';
 
 const EXPO_ACCOUNT_OWNER = 'ncncm';
 const EAS_PROJECT_ID
-  = process.env.EAS_PROJECT_ID ?? '72119c8c-0258-4253-999d-428b83723319';
+  = process.env.EAS_PROJECT_ID ?? 'f8cf91d4-9b67-4550-9b14-0e6494fc1e07';
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
