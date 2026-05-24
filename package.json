@@ -1,6 +1,6 @@
 {
   "name": "dot-to-dust",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "license": "UNLICENSED",
   "packageManager": "pnpm@10.33.3",
@@ -112,7 +112,7 @@
     "@types/react": "19.2.14",
     "babel-plugin-module-resolver": "5.0.3",
     "cross-env": "10.1.0",
-    "eas-cli": "19.0.4",
+    "eas-cli": "19.0.8",
     "eslint": "9.39.4",
     "eslint-plugin-better-tailwindcss": "4.5.0",
     "eslint-plugin-i18n-json": "4.0.1",
