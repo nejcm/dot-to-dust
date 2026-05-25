@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { DefaultViewRow } from '@/features/settings/components/default-view-row';
 import { DevRows } from '@/features/settings/components/dev-rows';
 import { DobRow } from '@/features/settings/components/dob-row';
+import { ExternalLinkRow } from '@/features/settings/components/external-link-row';
 import { LifeExpectancyRow } from '@/features/settings/components/life-expectancy-row';
 import { ThemeRow } from '@/features/settings/components/theme-row';
 import { useAppTranslation } from '@/lib/i18n/use-translation';
@@ -48,7 +49,7 @@ export default function SettingsScreen() {
           {t('settings.eyebrow')}
         </Text>
         <Text
-          className="font-display-italic text-[36px] leading-[44px] tracking-[-0.4px] text-ink"
+          className="font-display-italic text-[36px]/11 tracking-[-0.4px] text-ink"
         >
           {t('settings.title')}
         </Text>
@@ -82,6 +83,24 @@ export default function SettingsScreen() {
         >
           {t('settings.group.about')}
         </Text>
+        <ExternalLinkRow
+          actionLabel={t('settings.linkAction')}
+          label={t('settings.privacy.label')}
+          linkKey="privacy"
+          testID="settings-privacy"
+        />
+        <ExternalLinkRow
+          actionLabel={t('settings.linkAction')}
+          label={t('settings.bugReport.label')}
+          linkKey="bugs"
+          testID="settings-bug-report"
+        />
+        <ExternalLinkRow
+          actionLabel={t('settings.linkAction')}
+          label={t('settings.supportMe.label')}
+          linkKey="support"
+          testID="settings-support-me"
+        />
         <View className="flex-row items-center justify-between py-5">
           <Text variant="meta" tone="ink">
             {t('settings.version.label')}

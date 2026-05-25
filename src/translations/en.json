@@ -54,6 +54,9 @@
   },
   "settings": {
     "back": "Back",
+    "bugReport": {
+      "label": "Bug report"
+    },
     "defaultView": {
       "edit": "Edit",
       "label": "Default view"
@@ -76,13 +79,20 @@
       "label": "Life expectancy",
       "value": "80 years"
     },
+    "linkAction": "Open",
     "picker": {
       "cancel": "Cancel",
       "done": "Done"
     },
+    "privacy": {
+      "label": "Privacy policy"
+    },
     "replayOnboarding": {
       "action": "Show onboarding again",
       "label": "Developer tools"
+    },
+    "supportMe": {
+      "label": "Support me"
     },
     "theme": {
       "dark": "Dark",
