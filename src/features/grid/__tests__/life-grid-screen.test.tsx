@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Redirect } from 'expo-router';
-import { View } from 'react-native';
 
 import { usePreferencesStore } from '@/lib/storage/preferences-store';
 
@@ -24,11 +23,9 @@ jest.mock('@/features/grid/components/life-grid', () => ({
 
 function renderLifeGridScreen(onOpenSettings = jest.fn()) {
   const view = render(<LifeGridScreen onOpenSettings={onOpenSettings} />);
-  const layoutTarget = view.UNSAFE_getAllByType(View).find(
-    (node) => node.props.className === 'flex-1' && typeof node.props.onLayout === 'function',
-  );
+  const layoutTarget = screen.getByTestId('life-grid-layout');
 
-  fireEvent(layoutTarget!, 'layout', {
+  fireEvent(layoutTarget, 'layout', {
     nativeEvent: { layout: { width: 320, height: 480 } },
   });
 

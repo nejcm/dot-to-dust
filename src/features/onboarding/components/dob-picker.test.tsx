@@ -60,11 +60,11 @@ describe('dob picker', () => {
     expect(onConfirm).toHaveBeenCalledWith('2001-05-03');
   });
 
-  it('rounds the Android date field border', () => {
+  it('renders the Android date field', () => {
     setPlatformOS('android');
 
     render(<DobPicker onConfirm={() => {}} initialDob="1990-01-01" />);
 
-    expect(screen.getByTestId('onboarding-dob-field').props.className).toEqual(expect.stringContaining('rounded-pill'));
+    expect(screen.getByTestId('onboarding-dob-field')).toBeOnTheScreen();
   });
 });

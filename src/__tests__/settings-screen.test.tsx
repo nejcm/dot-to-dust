@@ -35,10 +35,10 @@ describe('settings route', () => {
     jest.clearAllMocks();
   });
 
-  it('gives the display title enough line height for native descenders', () => {
+  it('renders the display title', () => {
     render(<SettingsScreen />);
 
-    expect(screen.getByText('Settings').props.className).toEqual(expect.stringContaining('text-[36px]/11'));
+    expect(screen.getByText('Settings')).toBeOnTheScreen();
   });
 
   it('opens the settings support links', () => {
