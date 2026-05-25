@@ -38,7 +38,7 @@ describe('settings route', () => {
   it('gives the display title enough line height for native descenders', () => {
     render(<SettingsScreen />);
 
-    expect(screen.getByText('Settings').props.className).toEqual(expect.stringContaining('leading-[44px]'));
+    expect(screen.getByText('Settings').props.className).toEqual(expect.stringContaining('text-[36px]/11'));
   });
 
   it('opens the settings support links', () => {
