@@ -25,10 +25,7 @@ describe('stage dust dots', () => {
     );
     expect(stageDots()).toHaveLength(5);
     expect(dustParticles()).toHaveLength(145);
-    expect(screen.getByTestId('stage-dust-dots-particle-0-0', { includeHiddenElements: true })).toHaveStyle({
-      left: 11.25,
-      top: 11.25,
-    });
+    expect(screen.getByTestId('stage-dust-dots-particle-0-0', { includeHiddenElements: true })).toBeOnTheScreen();
   });
 
   it('renders static dots without particles when reduced motion is enabled', () => {

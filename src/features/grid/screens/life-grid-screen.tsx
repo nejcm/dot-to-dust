@@ -130,6 +130,7 @@ export const LifeGridScreen = memo(({ onOpenSettings }: LifeGridScreenProps) => 
         <View
           className="flex-1"
           onLayout={handleGridLayout}
+          testID="life-grid-layout"
         >
           {lifeGridState && (
             <LifeGrid
