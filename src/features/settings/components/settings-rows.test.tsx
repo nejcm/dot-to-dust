@@ -40,6 +40,7 @@ jest.mock('@react-native-picker/picker', () => {
     itemStyle?: unknown;
     mode?: unknown;
     numberOfLines?: unknown;
+    onBlur?: () => void;
     onValueChange?: (value: string, index: number) => void;
     prompt?: unknown;
     selectedValue?: unknown;
@@ -105,6 +106,20 @@ describe('settings rows', () => {
     expect(usePreferencesStore.getState().theme).toBe('dark');
     expect(screen.getByTestId('settings-theme-edit')).toBeTruthy();
     expect(screen.queryByText('Done')).toBeNull();
+  });
+
+  it('reopens the Android picker after dismissing the dialog without a value change', () => {
+    setPlatformOS('android');
+    render(<ThemeRow />);
+
+    fireEvent.press(screen.getByTestId('settings-theme-edit'));
+    fireEvent(screen.getByTestId('settings-theme-picker'), 'blur');
+
+    expect(screen.queryByTestId('settings-theme-picker')).toBeNull();
+
+    fireEvent.press(screen.getByTestId('settings-theme-edit'));
+
+    expect(screen.getByTestId('settings-theme-picker')).toBeTruthy();
   });
 
   it('updates the default view preference', () => {

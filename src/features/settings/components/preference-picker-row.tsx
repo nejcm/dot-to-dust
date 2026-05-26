@@ -104,10 +104,18 @@ export function PreferencePickerRow<T extends string>({
     setEditing(false);
   };
 
+  const handlePickerBlur = () => {
+    if (!isAndroid) return;
+
+    setPendingValue(value);
+    setEditing(false);
+  };
+
   const picker = (
     <Picker
       ref={pickerRef}
       selectedValue={pendingValue}
+      onBlur={handlePickerBlur}
       onValueChange={handlePickerChange}
       style={pickerStyle}
       itemStyle={pickerItemStyle}
