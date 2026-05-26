@@ -1,4 +1,9 @@
 {
+  "common": {
+    "months": "Months",
+    "weeks": "Weeks",
+    "years": "Years"
+  },
   "errors": {
     "description": "The app hit a problem. Try again or reopen Dot to Dust.",
     "retry": "Try again",

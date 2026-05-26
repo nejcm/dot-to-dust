@@ -1,10 +1,11 @@
 import type { LayoutChangeEvent } from 'react-native';
 
 import type { LifeGridHeaderState } from '@/features/grid/lib/life-grid-state';
+import type { PreferencesState } from '@/lib/storage/preferences-store';
 import { Redirect } from 'expo-router';
 import { memo, useCallback, useMemo, useState } from 'react';
-import { Platform, Text } from 'react-native';
 
+import { Platform, Text } from 'react-native';
 import { LifeGrid } from '@/features/grid/components/life-grid';
 import { StageLegend } from '@/features/grid/components/stage-legend';
 import { buildLifeGridHeaderState, buildLifeGridState } from '@/features/grid/lib/life-grid-state';
@@ -28,6 +29,7 @@ interface InlineHeaderProps {
   iconColor: string;
   onOpenSettings: () => void;
   settingsLabel: string;
+  defaultView: PreferencesState['defaultView'];
 }
 
 const InlineHeader = memo(({
@@ -35,12 +37,14 @@ const InlineHeader = memo(({
   iconColor,
   onOpenSettings,
   settingsLabel,
+  defaultView,
 }: InlineHeaderProps) => {
   const { t } = useAppTranslation();
 
   return (
     <View testID="inline-header" className="px-4 pt-3">
-      <View className="relative flex-row items-center justify-center rounded-pill border border-hairline/60 bg-surface/70 px-4 py-1.5">
+      <View className="relative flex-row items-center justify-between rounded-pill border border-hairline/60 bg-surface/70 px-4 py-1.5">
+        <Text className="font-display-italic text-base/tight tracking-[-0.3px] text-muted">{t(`common.${defaultView}`)}</Text>
         <View className="flex-row items-baseline gap-2">
           <Text
             className="font-display-italic text-display-m/tight tracking-[-0.3px] text-ink"
@@ -48,7 +52,7 @@ const InlineHeader = memo(({
           >
             {header.lived.toLocaleString()}
           </Text>
-          <Text className="font-ui text-eyebrow tracking-[1.6px] text-muted uppercase">
+          <Text className="font-ui text-eyebrow tracking-[1.6px] text-muted">
             {t('grid.headline.of', { total: header.total.toLocaleString() })}
           </Text>
         </View>
@@ -58,7 +62,7 @@ const InlineHeader = memo(({
           hitSlop={12}
           accessibilityLabel={settingsLabel}
           testID="settings-button"
-          className="absolute right-2 min-h-9 min-w-9 items-center justify-center"
+          className="-mr-2 items-center justify-center px-2"
         >
           <GearIcon color={iconColor} />
         </Button>
@@ -117,6 +121,7 @@ export const LifeGridScreen = memo(({ onOpenSettings }: LifeGridScreenProps) => 
       <InlineHeader
         header={header}
         iconColor={iconColor}
+        defaultView={defaultView}
         onOpenSettings={onOpenSettings}
         settingsLabel={t('settings.title')}
       />
