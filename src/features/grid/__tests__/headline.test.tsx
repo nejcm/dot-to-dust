@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react-native';
 
 import { Headline } from '../components/headline';
-import { bonusUnitsAhead } from '../lib/life-math';
+import { viewSpec } from '../lib/view-policy';
 
 describe('headline', () => {
   it('shows eyebrow for active view', () => {
@@ -36,7 +36,7 @@ describe('headline', () => {
   });
 
   it('shows bonus count as main number in bonus time', () => {
-    const count = bonusUnitsAhead('weeks', '1939-01-01', '2020-01-01');
+    const count = viewSpec('weeks').bonusAhead('1939-01-01', '2020-01-01');
 
     render(<Headline view="weeks" dob="1939-01-01" today="2020-01-01" />);
 

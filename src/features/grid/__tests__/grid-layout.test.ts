@@ -2,7 +2,7 @@ import type { GridLayout } from '../lib/grid-layout';
 import type { View } from '@/lib/view';
 import { VIEWS } from '@/lib/view';
 import { computeGridLayout } from '../lib/grid-layout';
-import { totalUnitsFor } from '../lib/view-policy';
+import { viewSpec } from '../lib/view-policy';
 
 const DEVICE_SCREENS = [
   { name: 'iPhone SE', width: 375, height: 667 },
@@ -27,12 +27,12 @@ function usedHeight(layout: GridLayout): number {
 }
 
 function fitsAllDots(layout: GridLayout, view: View): boolean {
-  return layout.cols * layout.rows >= totalUnitsFor(view);
+  return layout.cols * layout.rows >= viewSpec(view).total;
 }
 
 function maxDotSizeFor(view: View, width: number, height: number): number {
   let maxDotSize = 0;
-  const total = totalUnitsFor(view);
+  const total = viewSpec(view).total;
 
   for (let cols = 1; cols <= total; cols += 1) {
     const rows = Math.ceil(total / cols);

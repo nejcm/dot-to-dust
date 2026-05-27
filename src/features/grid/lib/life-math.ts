@@ -1,7 +1,5 @@
 import type { StageIndex } from './stages';
 
-import type { View } from '@/lib/view';
-
 import { differenceInMonths, differenceInWeeks, differenceInYears } from 'date-fns';
 
 import { parseCivilDate } from '@/lib/civil-date';
@@ -48,32 +46,4 @@ export function stageForRatio(ratio: number): StageIndex {
 
 export function isBonusTime(dob: string, today: string): boolean {
   return weeksLived(dob, today) >= WEEKS_TOTAL;
-}
-
-// Returns units remaining before the 80-year mark. Zero or negative in bonus time.
-export function remainingFor(view: View, dob: string, today: string): number {
-  switch (view) {
-    case 'weeks':
-      return WEEKS_TOTAL - weeksLived(dob, today);
-    case 'months':
-      return MONTHS_TOTAL - monthsLived(dob, today);
-    case 'years':
-      return YEARS_TOTAL - yearsLived(dob, today);
-  }
-}
-
-// Returns bonus units accrued beyond the 80-year mark in the active view's unit.
-// Zero if not in bonus time. Also clamped to zero when bonus time is entered via
-// weeks but the user has not yet crossed the corresponding months/years threshold
-// (4160 weeks ≈ 79.72 years, so years/months can lag for several months).
-export function bonusUnitsAhead(view: View, dob: string, today: string): number {
-  if (!isBonusTime(dob, today)) return 0;
-  switch (view) {
-    case 'weeks':
-      return Math.max(0, weeksLived(dob, today) - WEEKS_TOTAL);
-    case 'months':
-      return Math.max(0, monthsLived(dob, today) - MONTHS_TOTAL);
-    case 'years':
-      return Math.max(0, yearsLived(dob, today) - YEARS_TOTAL);
-  }
 }

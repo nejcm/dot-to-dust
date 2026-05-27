@@ -1,6 +1,6 @@
 import type { View } from '@/lib/view';
 
-import { totalUnitsFor } from './view-policy';
+import { viewSpec } from './view-policy';
 
 export type GridLayout = {
   cols: number;
@@ -19,7 +19,7 @@ export function computeGridLayout(
   canvasWidth: number,
   canvasHeight: number,
 ): GridLayout {
-  const total = totalUnitsFor(view);
+  const total = viewSpec(view).total;
 
   if (canvasWidth <= 0 || canvasHeight <= 0) {
     return { cols: total, rows: 1, dotSize: 0, gap: 0 };

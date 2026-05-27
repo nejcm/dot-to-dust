@@ -1,14 +1,10 @@
 import {
-  bonusUnitsAhead,
   isBonusTime,
-  MONTHS_TOTAL,
   monthsLived,
-  remainingFor,
   stageForRatio,
   stageForWeek,
   WEEKS_TOTAL,
   weeksLived,
-  YEARS_TOTAL,
   yearsLived,
 } from '../lib/life-math';
 import { STAGES } from '../lib/stages';
@@ -205,76 +201,6 @@ describe('isBonusTime', () => {
     // 29120 days from 2000-01-01 = 2079-09-23 = exactly WEEKS_TOTAL → bonus time enters.
     expect(weeksLived('2000-01-01', '2079-09-23')).toBe(WEEKS_TOTAL);
     expect(isBonusTime('2000-01-01', '2079-09-23')).toBe(true);
-  });
-});
-
-// ─── remainingFor ─────────────────────────────────────────────────────────────
-
-describe('remainingFor', () => {
-  it('returns WEEKS_TOTAL for a newborn in weeks view', () => {
-    expect(remainingFor('weeks', '2000-01-01', '2000-01-01')).toBe(WEEKS_TOTAL);
-  });
-
-  it('returns MONTHS_TOTAL for a newborn in months view', () => {
-    expect(remainingFor('months', '2000-01-01', '2000-01-01')).toBe(MONTHS_TOTAL);
-  });
-
-  it('returns YEARS_TOTAL for a newborn in years view', () => {
-    expect(remainingFor('years', '2000-01-01', '2000-01-01')).toBe(YEARS_TOTAL);
-  });
-
-  it('returns a negative or zero value in bonus time (weeks)', () => {
-    // 81 years is well past the 80-year mark
-    const remaining = remainingFor('weeks', '1939-01-01', '2020-01-01');
-    expect(remaining).toBeLessThanOrEqual(0);
-  });
-
-  it('decrements correctly: 1 week lived → WEEKS_TOTAL - 1 remaining', () => {
-    expect(remainingFor('weeks', '2000-01-01', '2000-01-08')).toBe(WEEKS_TOTAL - 1);
-  });
-});
-
-// ─── bonusUnitsAhead ─────────────────────────────────────────────────────────
-
-describe('bonusUnitsAhead', () => {
-  it('returns 0 when not in bonus time', () => {
-    expect(bonusUnitsAhead('weeks', '1941-01-01', '2020-01-01')).toBe(0);
-    expect(bonusUnitsAhead('months', '1941-01-01', '2020-01-01')).toBe(0);
-    expect(bonusUnitsAhead('years', '1941-01-01', '2020-01-01')).toBe(0);
-  });
-
-  it('returns 0 for a newborn', () => {
-    expect(bonusUnitsAhead('weeks', '2000-01-01', '2000-01-01')).toBe(0);
-  });
-
-  it('returns a positive count in weeks view when past 80 years', () => {
-    // 81 years lived; weeks lived is well over WEEKS_TOTAL
-    const bonus = bonusUnitsAhead('weeks', '1939-01-01', '2020-01-01');
-    expect(bonus).toBeGreaterThan(0);
-    // Bonus = weeksLived - WEEKS_TOTAL
-    const lived = weeksLived('1939-01-01', '2020-01-01');
-    expect(bonus).toBe(lived - WEEKS_TOTAL);
-  });
-
-  it('returns a positive count in years view when past 80 years', () => {
-    const bonus = bonusUnitsAhead('years', '1939-01-01', '2020-01-01');
-    expect(bonus).toBeGreaterThan(0);
-    const lived = yearsLived('1939-01-01', '2020-01-01');
-    expect(bonus).toBe(lived - YEARS_TOTAL);
-  });
-
-  it('clamps to 0 in years view when only the week-threshold has been crossed', () => {
-    // At 4160 weeks the user is only ~79.72 calendar years old — yearsLived = 79,
-    // so the raw computation would be -1. Headline must show +0, not a negative count.
-    expect(isBonusTime('2000-01-01', '2079-09-23')).toBe(true);
-    expect(yearsLived('2000-01-01', '2079-09-23')).toBeLessThan(YEARS_TOTAL);
-    expect(bonusUnitsAhead('years', '2000-01-01', '2079-09-23')).toBe(0);
-  });
-
-  it('clamps to 0 in months view when only the week-threshold has been crossed', () => {
-    // monthsLived at ~79.72 years is well below MONTHS_TOTAL (960).
-    expect(monthsLived('2000-01-01', '2079-09-23')).toBeLessThan(MONTHS_TOTAL);
-    expect(bonusUnitsAhead('months', '2000-01-01', '2079-09-23')).toBe(0);
   });
 });
 

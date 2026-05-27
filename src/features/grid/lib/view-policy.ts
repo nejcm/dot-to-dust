@@ -1,6 +1,7 @@
 import type { View } from '@/lib/view';
 
 import {
+  isBonusTime,
   MONTHS_TOTAL,
   monthsLived,
   WEEKS_TOTAL,
@@ -9,53 +10,78 @@ import {
   yearsLived,
 } from './life-math';
 
-export function totalUnitsFor(view: View): number {
-  switch (view) {
-    case 'weeks':
-      return WEEKS_TOTAL;
-    case 'months':
-      return MONTHS_TOTAL;
-    case 'years':
-      return YEARS_TOTAL;
-  }
+export type HeadlineEyebrowKey
+  = | 'grid.headline.eyebrow.weeks'
+    | 'grid.headline.eyebrow.months'
+    | 'grid.headline.eyebrow.years'
+    | 'grid.headline.eyebrow.bonusWeeks'
+    | 'grid.headline.eyebrow.bonusMonths'
+    | 'grid.headline.eyebrow.bonusYears';
+
+export type HeadlineSublineKey
+  = | 'grid.headline.subline.weeks'
+    | 'grid.headline.subline.months'
+    | 'grid.headline.subline.years';
+
+export interface ViewSpec {
+  readonly view: View;
+  readonly total: number;
+  readonly unitsLived: (dob: string, today: string) => number;
+  // Approximate: maps to the week containing the start of the unit. Stage colour only — not cross-view aligned.
+  readonly toWeekIndex: (unitIndex: number) => number;
+  // Returns total - unitsLived. Negative when in Bonus Time; callers must guard on the bonus flag.
+  readonly remaining: (dob: string, today: string) => number;
+  readonly bonusAhead: (dob: string, today: string) => number;
+  readonly eyebrowKey: HeadlineEyebrowKey;
+  readonly bonusEyebrowKey: HeadlineEyebrowKey;
+  readonly sublineKey: HeadlineSublineKey;
 }
 
-export function livedUnitsFor(view: View, dob: string, today: string): number {
-  switch (view) {
-    case 'weeks':
-      return weeksLived(dob, today);
-    case 'months':
-      return monthsLived(dob, today);
-    case 'years':
-      return yearsLived(dob, today);
-  }
+const weeksSpec: ViewSpec = {
+  view: 'weeks',
+  total: WEEKS_TOTAL,
+  unitsLived: (dob, today) => weeksLived(dob, today),
+  toWeekIndex: (i) => i,
+  remaining: (dob, today) => WEEKS_TOTAL - weeksLived(dob, today),
+  bonusAhead: (dob, today) =>
+    isBonusTime(dob, today) ? Math.max(0, weeksLived(dob, today) - WEEKS_TOTAL) : 0,
+  eyebrowKey: 'grid.headline.eyebrow.weeks',
+  bonusEyebrowKey: 'grid.headline.eyebrow.bonusWeeks',
+  sublineKey: 'grid.headline.subline.weeks',
+};
+
+const monthsSpec: ViewSpec = {
+  view: 'months',
+  total: MONTHS_TOTAL,
+  unitsLived: (dob, today) => monthsLived(dob, today),
+  toWeekIndex: (i) => Math.round(((i - 1) / 12) * 52) + 1,
+  remaining: (dob, today) => MONTHS_TOTAL - monthsLived(dob, today),
+  bonusAhead: (dob, today) =>
+    isBonusTime(dob, today) ? Math.max(0, monthsLived(dob, today) - MONTHS_TOTAL) : 0,
+  eyebrowKey: 'grid.headline.eyebrow.months',
+  bonusEyebrowKey: 'grid.headline.eyebrow.bonusMonths',
+  sublineKey: 'grid.headline.subline.months',
+};
+
+const yearsSpec: ViewSpec = {
+  view: 'years',
+  total: YEARS_TOTAL,
+  unitsLived: (dob, today) => yearsLived(dob, today),
+  toWeekIndex: (i) => (i - 1) * 52 + 1,
+  remaining: (dob, today) => YEARS_TOTAL - yearsLived(dob, today),
+  bonusAhead: (dob, today) =>
+    isBonusTime(dob, today) ? Math.max(0, yearsLived(dob, today) - YEARS_TOTAL) : 0,
+  eyebrowKey: 'grid.headline.eyebrow.years',
+  bonusEyebrowKey: 'grid.headline.eyebrow.bonusYears',
+  sublineKey: 'grid.headline.subline.years',
+};
+
+export const VIEW_SPECS: Record<View, ViewSpec> = {
+  weeks: weeksSpec,
+  months: monthsSpec,
+  years: yearsSpec,
+};
+
+export function viewSpec(view: View): ViewSpec {
+  return VIEW_SPECS[view];
 }
-
-export function unitToWeekIndex(view: View, unitIndex: number): number {
-  switch (view) {
-    case 'weeks':
-      return unitIndex;
-    case 'months':
-      return Math.round(((unitIndex - 1) / 12) * 52) + 1;
-    case 'years':
-      return (unitIndex - 1) * 52 + 1;
-  }
-}
-
-export const EYEBROW_KEY = {
-  weeks: 'grid.headline.eyebrow.weeks',
-  months: 'grid.headline.eyebrow.months',
-  years: 'grid.headline.eyebrow.years',
-} as const satisfies Record<View, string>;
-
-export const BONUS_EYEBROW_KEY = {
-  weeks: 'grid.headline.eyebrow.bonusWeeks',
-  months: 'grid.headline.eyebrow.bonusMonths',
-  years: 'grid.headline.eyebrow.bonusYears',
-} as const satisfies Record<View, string>;
-
-export const SUBLINE_KEY = {
-  weeks: 'grid.headline.subline.weeks',
-  months: 'grid.headline.subline.months',
-  years: 'grid.headline.subline.years',
-} as const satisfies Record<View, string>;

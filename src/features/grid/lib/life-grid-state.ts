@@ -1,11 +1,12 @@
 import type { DotState } from './dot-states';
 import type { GridLayout } from './grid-layout';
-import type { View } from '@/lib/view';
+import type { HeadlineEyebrowKey, HeadlineSublineKey } from './view-policy';
 
+import type { View } from '@/lib/view';
 import { buildDotStates } from './dot-states';
 import { computeGridLayout } from './grid-layout';
-import { bonusUnitsAhead, isBonusTime, LIFE_YEARS, remainingFor } from './life-math';
-import { BONUS_EYEBROW_KEY, EYEBROW_KEY, livedUnitsFor, SUBLINE_KEY, totalUnitsFor } from './view-policy';
+import { isBonusTime, LIFE_YEARS } from './life-math';
+import { viewSpec } from './view-policy';
 
 interface BuildLifeGridStateInput {
   view: View;
@@ -40,16 +41,14 @@ interface BuildHeadlineStateInput {
   today: string;
 }
 
-type EyebrowKey = (typeof EYEBROW_KEY)[View] | (typeof BONUS_EYEBROW_KEY)[View];
-type SublineKey = (typeof SUBLINE_KEY)[View];
 export type TodayRingPolicy = 'pulse' | 'static';
 
 export interface HeadlineState extends LifeGridHeaderState {
   bonus: boolean;
   count: number;
   remaining: number;
-  eyebrowKey: EyebrowKey;
-  sublineKey: SublineKey;
+  eyebrowKey: HeadlineEyebrowKey;
+  sublineKey: HeadlineSublineKey;
   years: number;
 }
 
@@ -75,17 +74,17 @@ export function buildLifeGridState(input: BuildLifeGridStateInput): LifeGridStat
 
 export function buildHeadlineState(input: BuildHeadlineStateInput): HeadlineState {
   const { dob, today, view } = input;
+  const spec = viewSpec(view);
   const bonus = isBonusTime(dob, today);
   const header = buildLifeGridHeaderState(view, dob, today);
-  const remaining = remainingFor(view, dob, today);
 
   return {
     ...header,
     bonus,
-    count: bonus ? bonusUnitsAhead(view, dob, today) : header.lived,
-    remaining,
-    eyebrowKey: bonus ? BONUS_EYEBROW_KEY[view] : EYEBROW_KEY[view],
-    sublineKey: SUBLINE_KEY[view],
+    count: bonus ? spec.bonusAhead(dob, today) : header.lived,
+    remaining: spec.remaining(dob, today),
+    eyebrowKey: bonus ? spec.bonusEyebrowKey : spec.eyebrowKey,
+    sublineKey: spec.sublineKey,
     years: LIFE_YEARS,
   };
 }
@@ -103,8 +102,9 @@ export function buildLifeGridHeaderState(
   dob: string,
   today: string,
 ): LifeGridHeaderState {
+  const spec = viewSpec(view);
   return {
-    lived: livedUnitsFor(view, dob, today),
-    total: totalUnitsFor(view),
+    lived: spec.unitsLived(dob, today),
+    total: spec.total,
   };
 }
