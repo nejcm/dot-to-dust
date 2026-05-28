@@ -55,7 +55,7 @@ describe('life grid screen', () => {
 
     expect(screen.getByTestId('inline-header')).toBeTruthy();
     expect(screen.getByTestId('headline-lived')).toBeTruthy();
-    expect(screen.getByText(/of 4[,.]160/)).toBeTruthy();
+    expect(screen.getByText(/of 4[,.]160 .+%/)).toBeTruthy();
   });
 
   it('renders the stored default view', () => {

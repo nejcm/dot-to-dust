@@ -17,6 +17,12 @@ describe('headline', () => {
     expect(screen.getByTestId('headline-lived')).toBeTruthy();
   });
 
+  it('shows percent lived at the end of the total translation', () => {
+    render(<Headline view="months" dob="2000-01-01" today="2040-01-01" />);
+
+    expect(screen.getByText('of 960 · 50%')).toBeTruthy();
+  });
+
   it('shows remaining count in subline', () => {
     render(<Headline view="months" dob="2000-01-01" today="2000-01-01" />);
 

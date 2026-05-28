@@ -35,7 +35,10 @@ export function Headline({ view, dob, today }: HeadlineProps) {
           <Text
             className="font-ui text-[12px] tracking-[0.3px] text-muted"
           >
-            {t('grid.headline.of', { total: headline.total.toLocaleString() })}
+            {t('grid.headline.of', {
+              percent: headline.percent,
+              total: headline.total.toLocaleString(),
+            })}
           </Text>
         )}
       </RNView>

@@ -24,7 +24,7 @@
         "years": "Years lived"
       },
       "monthsAhead": "{count, plural, one {# month ahead} other {# months ahead}}",
-      "of": "of {total}",
+      "of": "of {total} · {percent}%",
       "subline": {
         "months": "{count, plural, one {# month ahead} other {# months ahead}} · assuming {years} years",
         "weeks": "{count, plural, one {# week ahead} other {# weeks ahead}} · assuming {years} years",

@@ -13,12 +13,22 @@ describe('life grid state', () => {
       platformOS: 'ios',
     });
 
-    expect(state.header).toEqual({ lived: 1, total: WEEKS_TOTAL });
+    expect(state.header).toEqual({ lived: 1, percent: 0, total: WEEKS_TOTAL });
     expect(state.headline.count).toBe(1);
     expect(state.layout.cols).toBe(44);
     expect(state.dots[0]).toEqual({ stage: 0, isToday: true });
     expect(state.bonus).toBe(false);
     expect(state.todayRing).toBe('pulse');
+  });
+
+  it('prepares rounded header percentage', () => {
+    const headline = buildHeadlineState({
+      view: 'months',
+      dob: '2000-01-01',
+      today: '2040-01-01',
+    });
+
+    expect(headline.percent).toBe(50);
   });
 
   it('prepares bonus headline state without changing the visible count rule', () => {

@@ -20,6 +20,7 @@ interface BuildLifeGridStateInput {
 
 export interface LifeGridHeaderState {
   lived: number;
+  percent: number;
   total: number;
 }
 
@@ -64,6 +65,7 @@ export function buildLifeGridState(input: BuildLifeGridStateInput): LifeGridStat
     dots: buildDotStates(view, dob, today),
     header: {
       lived: headline.lived,
+      percent: headline.percent,
       total: headline.total,
     },
     headline,
@@ -103,8 +105,12 @@ export function buildLifeGridHeaderState(
   today: string,
 ): LifeGridHeaderState {
   const spec = viewSpec(view);
+  const lived = spec.unitsLived(dob, today);
+  const percent = Math.min(100, Math.round((lived / spec.total) * 100));
+
   return {
-    lived: spec.unitsLived(dob, today),
+    lived,
+    percent,
     total: spec.total,
   };
 }

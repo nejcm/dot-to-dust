@@ -53,7 +53,10 @@ const InlineHeader = memo(({
             {header.lived.toLocaleString()}
           </Text>
           <Text className="font-ui text-eyebrow tracking-[1.6px] text-muted">
-            {t('grid.headline.of', { total: header.total.toLocaleString() })}
+            {t('grid.headline.of', {
+              percent: header.percent,
+              total: header.total.toLocaleString(),
+            })}
           </Text>
         </View>
 
@@ -92,7 +95,7 @@ export const LifeGridScreen = memo(({ onOpenSettings }: LifeGridScreenProps) => 
   }, []);
 
   const header = useMemo(
-    () => dob === null ? { lived: 0, total: 0 } : buildLifeGridHeaderState(defaultView, dob, today),
+    () => dob === null ? { lived: 0, percent: 0, total: 0 } : buildLifeGridHeaderState(defaultView, dob, today),
     [defaultView, dob, today],
   );
   const lifeGridState = useMemo(
