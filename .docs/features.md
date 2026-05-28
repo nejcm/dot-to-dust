@@ -54,6 +54,17 @@ Preferences:
 - Theme: `system`, `light`, `dark`
 - Default view: `weeks`, `months`, `years`
 
+## Widgets
+
+Behavior:
+
+- Home-screen widgets show current life progress outside the app.
+- Small widgets show the active view label, lived/total count, percent, and a single progress bar.
+- Medium and large widgets add a Widget Grid when each dot can render at least 2 px.
+- Widgets follow the saved default view and theme.
+- Widget data refreshes at the next active-view boundary and uses a daily safety refresh.
+- Tapping a widget opens the main grid; if DOB is unset, the widget prompts for DOB.
+
 ## Internationalization
 
 Files:

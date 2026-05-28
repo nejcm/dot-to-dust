@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@drawable/dot_to_dust_widget_background"
+  android:gravity="center"
+  android:orientation="vertical"
+  android:paddingHorizontal="10dp"
+  android:paddingVertical="8dp">
+
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ellipsize="end"
+    android:gravity="center"
+    android:maxLines="1"
+    android:text="@string/dot_to_dust_widget_preview_label"
+    android:textColor="#8a8a8a"
+    android:textSize="11sp"
+    android:textStyle="italic" />
+
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ellipsize="end"
+    android:gravity="center"
+    android:maxLines="1"
+    android:text="@string/dot_to_dust_widget_preview_hero"
+    android:textColor="#2b2520"
+    android:textSize="18sp" />
+
+  <ProgressBar
+    style="?android:attr/progressBarStyleHorizontal"
+    android:layout_width="match_parent"
+    android:layout_height="5dp"
+    android:layout_marginTop="4dp"
+    android:max="100"
+    android:progress="45" />
+</LinearLayout>

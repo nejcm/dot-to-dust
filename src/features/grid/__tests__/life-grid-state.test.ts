@@ -1,4 +1,4 @@
-import { buildHeadlineState, buildLifeGridState, todayRingPolicyFor } from '../lib/life-grid-state';
+import { buildHeadlineState, buildLifeGridProjection, buildLifeGridState, todayRingPolicyFor } from '../lib/life-grid-state';
 import { WEEKS_TOTAL } from '../lib/life-math';
 
 describe('life grid state', () => {
@@ -29,6 +29,19 @@ describe('life grid state', () => {
     });
 
     expect(headline.percent).toBe(50);
+  });
+
+  it('prepares layout-free Life Grid projection for non-canvas callers', () => {
+    const projection = buildLifeGridProjection({
+      view: 'months',
+      dob: '2000-01-01',
+      today: '2000-02-01',
+    });
+
+    expect(projection.header).toEqual({ lived: 1, percent: 0, total: 960 });
+    expect(projection.headline.count).toBe(1);
+    expect(projection.dots).toHaveLength(960);
+    expect(projection.bonus).toBe(false);
   });
 
   it('prepares bonus headline state without changing the visible count rule', () => {

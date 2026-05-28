@@ -16,6 +16,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { withUniwind } from 'uniwind';
 
+import { useWidgetSnapshotSync } from '@/features/widget/lib/use-widget-snapshot-sync';
 import { AppErrorBoundary } from '@/lib/app-error-boundary';
 import { toNavTheme } from '@/lib/theme/nav-theme';
 import { ThemeProvider } from '@/lib/theme/provider';
@@ -44,6 +45,7 @@ function RootNavigator() {
   const { colorScheme, tokens, isDark } = useTheme();
   const navTheme = toNavTheme(tokens, isDark);
   const backgroundColor = toHex(tokens.bg);
+  useWidgetSnapshotSync(colorScheme);
 
   return (
     <NavigationThemeProvider value={navTheme}>

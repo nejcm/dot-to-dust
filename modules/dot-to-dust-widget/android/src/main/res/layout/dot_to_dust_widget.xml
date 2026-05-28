@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/widget_root"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@drawable/dot_to_dust_widget_background"
+  android:gravity="center_horizontal"
+  android:orientation="vertical"
+  android:padding="14dp">
+
+  <TextView
+    android:id="@+id/widget_view_label"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ellipsize="end"
+    android:gravity="center"
+    android:maxLines="1"
+    android:textColor="#8a8a8a"
+    android:textSize="12sp"
+    android:textStyle="italic" />
+
+  <TextView
+    android:id="@+id/widget_hero"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ellipsize="end"
+    android:gravity="center"
+    android:maxLines="1"
+    android:textColor="#2b2520"
+    android:textSize="24sp" />
+
+  <ProgressBar
+    android:id="@+id/widget_progress"
+    style="?android:attr/progressBarStyleHorizontal"
+    android:layout_width="match_parent"
+    android:layout_height="6dp"
+    android:layout_marginTop="6dp"
+    android:max="100"
+    android:visibility="gone" />
+
+  <ImageView
+    android:id="@+id/widget_grid"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_marginTop="8dp"
+    android:layout_weight="1"
+    android:contentDescription="@null"
+    android:scaleType="fitCenter" />
+</LinearLayout>

@@ -1,5 +1,8 @@
 import type { View } from '@/lib/view';
 
+import { addMonths, addWeeks, addYears } from 'date-fns';
+
+import { parseCivilDate, toCivilDateString } from '@/lib/civil-date';
 import {
   isBonusTime,
   MONTHS_TOTAL,
@@ -84,4 +87,13 @@ export const VIEW_SPECS: Record<View, ViewSpec> = {
 
 export function viewSpec(view: View): ViewSpec {
   return VIEW_SPECS[view];
+}
+
+export function nextViewBoundaryDate(view: View, dob: string, today: string): string {
+  const start = parseCivilDate(dob);
+  const nextUnit = viewSpec(view).unitsLived(dob, today) + 1;
+
+  if (view === 'weeks') return toCivilDateString(addWeeks(start, nextUnit));
+  if (view === 'months') return toCivilDateString(addMonths(start, nextUnit));
+  return toCivilDateString(addYears(start, nextUnit));
 }

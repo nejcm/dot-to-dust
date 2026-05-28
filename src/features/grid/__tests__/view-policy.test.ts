@@ -8,7 +8,7 @@ import {
   YEARS_TOTAL,
   yearsLived,
 } from '../lib/life-math';
-import { VIEW_SPECS, viewSpec } from '../lib/view-policy';
+import { nextViewBoundaryDate, VIEW_SPECS, viewSpec } from '../lib/view-policy';
 
 describe('vIEW_SPECS registry', () => {
   it('contains an entry for every view', () => {
@@ -123,6 +123,14 @@ describe('viewSpec.bonusAhead', () => {
 
   it('clamps to 0 in months view when only the week-threshold has been crossed', () => {
     expect(viewSpec('months').bonusAhead('2000-01-01', '2079-09-23')).toBe(0);
+  });
+});
+
+describe('nextViewBoundaryDate', () => {
+  it('returns the next active-view boundary date', () => {
+    expect(nextViewBoundaryDate('weeks', '2000-01-01', '2000-01-08')).toBe('2000-01-15');
+    expect(nextViewBoundaryDate('months', '2000-01-15', '2000-02-20')).toBe('2000-03-15');
+    expect(nextViewBoundaryDate('years', '2000-02-29', '2001-03-01')).toBe('2002-02-28');
   });
 });
 

@@ -72,6 +72,23 @@ Fits all dots in the available canvas without scroll:
 - Chooses the column count per measured canvas that maximizes dot size.
 - Rows are derived from the active view's total dot count.
 
+### `src/features/widget/lib/widget-snapshot.ts`
+
+Builds the derived JSON model native widgets render:
+
+- Uses the saved view, theme, DOB, and current civil date.
+- Emits summary counts, progress, colors, optional Widget Grid data, and refresh dates.
+- Keeps native widget code from reimplementing life math.
+
+### `modules/dot-to-dust-widget`
+
+Provides native widget integration:
+
+- iOS writes the app-generated snapshot to App Group `UserDefaults`.
+- WidgetKit extension templates read the same payload for small, medium, and large home-screen widgets.
+- Android writes the app-generated snapshot to module `SharedPreferences`.
+- Android AppWidget renders summary rows and draws the Widget Grid into a bitmap when there is room.
+
 ### `src/lib/storage/preferences-store.ts`
 
 Persists `{ dob, theme, defaultView }` to MMKV using a plain JSON record. Invalid persisted state falls back to defaults.

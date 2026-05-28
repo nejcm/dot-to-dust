@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple", "android"],
+  "apple": {
+    "modules": ["DotToDustWidgetModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.dottodustwidget.DotToDustWidgetModule"]
+  }
+}
