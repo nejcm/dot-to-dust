@@ -1,3 +1,4 @@
+. "$(dirname "$0")/common.sh"
 
 function changed {
     git diff --name-only HEAD@{1} HEAD | grep "^$1" >/dev/null 2>&1
