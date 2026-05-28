@@ -3,6 +3,7 @@ import type * as WidgetSnapshotStoreModule from '../lib/widget-snapshot-store';
 interface MmkvMock {
   __mockMmkvClear: () => void;
   __mockMmkvGetString: (key: string) => string | undefined;
+  __mockMmkvSetString: (key: string, value: string) => void;
 }
 
 function mmkvMock(): MmkvMock {
@@ -71,5 +72,25 @@ describe('widget snapshot store', () => {
         nextSafetyRefreshDate: '2026-05-29',
       },
     });
+  });
+
+  it('rejects stale ready snapshots with persisted grid payloads', () => {
+    const { readPersistedWidgetSnapshot, WIDGET_SNAPSHOT_KEY } = loadModule();
+
+    mmkvMock().__mockMmkvSetString(
+      WIDGET_SNAPSHOT_KEY,
+      JSON.stringify({
+        schemaVersion: 3,
+        snapshot: {
+          colors: {},
+          dob: '2000-01-01',
+          dots: [],
+          kind: 'ready',
+          widgetGrid: null,
+        },
+      }),
+    );
+
+    expect(readPersistedWidgetSnapshot()).toBeNull();
   });
 });

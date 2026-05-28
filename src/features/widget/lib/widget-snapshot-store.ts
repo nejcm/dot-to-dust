@@ -145,5 +145,7 @@ function isPersistedWidgetSnapshot(value: unknown): value is PersistedWidgetSnap
     && 'dob' in value.snapshot
     && typeof value.snapshot.dob === 'string'
     && 'colors' in value.snapshot
+    && !('dots' in value.snapshot)
+    && !('widgetGrid' in value.snapshot)
   );
 }
