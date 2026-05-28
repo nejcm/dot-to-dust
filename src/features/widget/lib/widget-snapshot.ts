@@ -63,6 +63,7 @@ export interface WidgetReadySnapshot {
   percent: number;
   progress: number;
   bonus: boolean;
+  dots: DotState[];
   display: WidgetDisplay;
   colors: WidgetColors;
   widgetGrid: WidgetGridSnapshot | null;
@@ -102,6 +103,7 @@ export function buildWidgetSnapshot(input: BuildWidgetSnapshotInput): WidgetSnap
 
   const header = buildLifeGridHeaderState(view, dob, today);
   const headline = buildHeadlineState({ view, dob, today });
+  const dots = buildDotStates(view, dob, today);
   const progress = headline.bonus ? 1 : Math.min(1, header.lived / header.total);
 
   return {
@@ -114,6 +116,7 @@ export function buildWidgetSnapshot(input: BuildWidgetSnapshotInput): WidgetSnap
     percent: header.percent,
     progress,
     bonus: headline.bonus,
+    dots,
     display: {
       hero: headline.bonus
         ? `+${formatCount(headline.count)} ${view}`
@@ -125,8 +128,7 @@ export function buildWidgetSnapshot(input: BuildWidgetSnapshotInput): WidgetSnap
     widgetGrid: buildWidgetGridSnapshot({
       area: widgetGridArea,
       bonus: headline.bonus,
-      dob,
-      today,
+      dots,
       view,
       widgetSize,
     }),
@@ -138,14 +140,13 @@ export function buildWidgetSnapshot(input: BuildWidgetSnapshotInput): WidgetSnap
 interface BuildWidgetGridSnapshotInput {
   area: WidgetGridArea | undefined;
   bonus: boolean;
-  dob: string;
-  today: string;
+  dots: DotState[];
   view: View;
   widgetSize: WidgetSize;
 }
 
 function buildWidgetGridSnapshot(input: BuildWidgetGridSnapshotInput): WidgetGridSnapshot | null {
-  const { area, bonus, dob, today, view, widgetSize } = input;
+  const { area, bonus, dots, view, widgetSize } = input;
 
   if (widgetSize === 'small' || !area) return null;
 
@@ -154,7 +155,7 @@ function buildWidgetGridSnapshot(input: BuildWidgetGridSnapshotInput): WidgetGri
 
   return {
     layout,
-    dots: buildDotStates(view, dob, today),
+    dots,
     dotSize: layout.dotSize,
     todayRing: bonus ? null : 'static',
   };

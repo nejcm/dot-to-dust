@@ -17,6 +17,7 @@ describe('buildWidgetSnapshot', () => {
     expect(snapshot.lived).toBe(52);
     expect(snapshot.total).toBe(4160);
     expect(snapshot.percent).toBe(1);
+    expect(snapshot.dots).toHaveLength(4160);
     expect(snapshot.progress).toBeCloseTo(52 / 4160);
     expect(snapshot.display).toEqual({
       hero: '52 / 4,160',
