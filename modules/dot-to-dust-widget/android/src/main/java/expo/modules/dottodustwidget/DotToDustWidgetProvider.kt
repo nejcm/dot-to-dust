@@ -87,7 +87,12 @@ class DotToDustWidgetProvider : AppWidgetProvider() {
       val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 110)
       val maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH, minWidth)
       val maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, minHeight)
-      val isCompact = minHeight < GRID_WIDGET_MIN_HEIGHT_DP
+      // Portrait dims: minWidth/maxHeight. Landscape dims: maxWidth/minHeight.
+      // Render the grid for portrait (the common home-screen orientation); fitCenter
+      // handles graceful downscale if the widget ever shows in landscape.
+      val portraitWidth = minWidth
+      val portraitHeight = maxHeight
+      val isCompact = portraitHeight < GRID_WIDGET_MIN_HEIGHT_DP
       val layout = if (isCompact) R.layout.dot_to_dust_widget_compact else R.layout.dot_to_dust_widget
       val views = RemoteViews(context.packageName, layout)
 
@@ -109,8 +114,8 @@ class DotToDustWidgetProvider : AppWidgetProvider() {
 
         val grid = if (isCompact) null else drawGrid(
           snapshot,
-          max(minWidth, maxWidth),
-          max(minHeight, maxHeight),
+          portraitWidth,
+          portraitHeight,
           context.resources.displayMetrics.density,
         )
         if (isCompact || grid == null) {

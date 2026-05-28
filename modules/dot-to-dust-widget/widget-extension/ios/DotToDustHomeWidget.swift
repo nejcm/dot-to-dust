@@ -134,6 +134,11 @@ struct DotToDustWidgetView: View {
             .frame(maxHeight: .infinity, alignment: .top)
         }
       }
+      .frame(
+        maxWidth: .infinity,
+        maxHeight: .infinity,
+        alignment: family == .systemSmall ? .center : .top
+      )
       .padding(14)
       .widgetBackground(backgroundColor(snapshot))
       .widgetURL(URL(string: "dottodust://"))
