@@ -32,6 +32,14 @@ Avoid: selected dot, cursor.
 The state after week `4160`, where the grid stays fully lived and the headline counts up.
 Avoid: expired, over limit.
 
+**Widget**:
+A home-screen surface that shows current life progress outside the app.
+Avoid: wallpaper, notification, complication.
+
+**Widget Grid**:
+The dot representation shown inside a Widget when there is enough room.
+Avoid: Life Grid, preview, mini chart.
+
 ## Relationships
 
 - A **View** determines units and grid layout, not date math policy.
@@ -39,6 +47,7 @@ Avoid: expired, over limit.
 - `dot-states` converts date math into the only shape the canvas renders.
 - **Future Dots** never carry a **Stage**.
 - **Bonus Time** has no **Today Ring**.
+- A **Widget Grid** follows the same **View** as the app preference, but is not the in-app **Life Grid**.
 - The headline uses `ahead`; avoid `left` unless requirements change.
 
 ## Flagged Ambiguities

@@ -1,0 +1,186 @@
+import type { DotState } from '@/features/grid/lib/dot-states';
+import type { GridLayout } from '@/features/grid/lib/grid-layout';
+import type { ThemePreference } from '@/lib/storage/preferences-store';
+import type { View } from '@/lib/view';
+
+import { addDays, addMonths, addWeeks, addYears } from 'date-fns';
+
+import { buildDotStates } from '@/features/grid/lib/dot-states';
+import { computeGridLayout } from '@/features/grid/lib/grid-layout';
+import { buildHeadlineState, buildLifeGridHeaderState } from '@/features/grid/lib/life-grid-state';
+import { parseCivilDate, toCivilDateString } from '@/lib/civil-date';
+import { darkSkiaTokens, lightSkiaTokens } from '@/lib/theme/tokens';
+
+export type WidgetSize = 'small' | 'medium' | 'large';
+export type ResolvedWidgetTheme = 'light' | 'dark';
+
+export interface WidgetGridArea {
+  width: number;
+  height: number;
+}
+
+export interface BuildWidgetSnapshotInput {
+  dob: string | null;
+  resolvedColorScheme?: ResolvedWidgetTheme;
+  theme: ThemePreference;
+  today: string;
+  view: View;
+  widgetSize: WidgetSize;
+  widgetGridArea?: WidgetGridArea;
+}
+
+export interface WidgetDisplay {
+  hero: string;
+  percent: string;
+  viewLabel: View;
+}
+
+export interface WidgetGridSnapshot {
+  layout: GridLayout;
+  dots: DotState[];
+  dotSize: number;
+  todayRing: 'static' | null;
+}
+
+export interface WidgetColors {
+  stages: readonly [string, string, string, string, string];
+  future: string;
+  ring: string;
+  accent: string;
+}
+
+export type WidgetSnapshot
+  = | WidgetReadySnapshot
+    | WidgetSetupSnapshot;
+
+export interface WidgetReadySnapshot {
+  kind: 'ready';
+  view: View;
+  theme: ThemePreference;
+  resolvedTheme: ResolvedWidgetTheme;
+  lived: number;
+  total: number;
+  percent: number;
+  progress: number;
+  bonus: boolean;
+  display: WidgetDisplay;
+  colors: WidgetColors;
+  widgetGrid: WidgetGridSnapshot | null;
+  nextViewBoundaryDate: string;
+  nextSafetyRefreshDate: string;
+}
+
+export interface WidgetSetupSnapshot {
+  kind: 'setup';
+  cta: 'Set date of birth';
+  nextSafetyRefreshDate: string;
+}
+
+const MIN_WIDGET_DOT_SIZE = 2;
+const NUMBER_FORMAT = new Intl.NumberFormat('en-US');
+
+export function buildWidgetSnapshot(input: BuildWidgetSnapshotInput): WidgetSnapshot {
+  const {
+    dob,
+    resolvedColorScheme = 'light',
+    theme,
+    today,
+    view,
+    widgetGridArea,
+    widgetSize,
+  } = input;
+  const nextSafetyRefreshDate = toCivilDateString(addDays(parseCivilDate(today), 1));
+  const resolvedTheme = resolveWidgetTheme(theme, resolvedColorScheme);
+
+  if (dob === null) {
+    return {
+      kind: 'setup',
+      cta: 'Set date of birth',
+      nextSafetyRefreshDate,
+    };
+  }
+
+  const header = buildLifeGridHeaderState(view, dob, today);
+  const headline = buildHeadlineState({ view, dob, today });
+  const progress = headline.bonus ? 1 : Math.min(1, header.lived / header.total);
+
+  return {
+    kind: 'ready',
+    view,
+    theme,
+    resolvedTheme,
+    lived: header.lived,
+    total: header.total,
+    percent: header.percent,
+    progress,
+    bonus: headline.bonus,
+    display: {
+      hero: headline.bonus
+        ? `+${formatCount(headline.count)} ${view}`
+        : `${formatCount(header.lived)} / ${formatCount(header.total)}`,
+      percent: `${headline.bonus ? 100 : header.percent}%`,
+      viewLabel: view,
+    },
+    colors: colorsForTheme(resolvedTheme),
+    widgetGrid: buildWidgetGridSnapshot({
+      area: widgetGridArea,
+      bonus: headline.bonus,
+      dob,
+      today,
+      view,
+      widgetSize,
+    }),
+    nextViewBoundaryDate: nextViewBoundaryDate(view, dob, today),
+    nextSafetyRefreshDate,
+  };
+}
+
+interface BuildWidgetGridSnapshotInput {
+  area: WidgetGridArea | undefined;
+  bonus: boolean;
+  dob: string;
+  today: string;
+  view: View;
+  widgetSize: WidgetSize;
+}
+
+function buildWidgetGridSnapshot(input: BuildWidgetGridSnapshotInput): WidgetGridSnapshot | null {
+  const { area, bonus, dob, today, view, widgetSize } = input;
+
+  if (widgetSize === 'small' || !area) return null;
+
+  const layout = computeGridLayout(view, area.width, area.height);
+  if (layout.dotSize < MIN_WIDGET_DOT_SIZE) return null;
+
+  return {
+    layout,
+    dots: buildDotStates(view, dob, today),
+    dotSize: layout.dotSize,
+    todayRing: bonus ? null : 'static',
+  };
+}
+
+function colorsForTheme(theme: ResolvedWidgetTheme): WidgetColors {
+  return theme === 'dark' ? darkSkiaTokens : lightSkiaTokens;
+}
+
+function resolveWidgetTheme(
+  theme: ThemePreference,
+  resolvedColorScheme: ResolvedWidgetTheme,
+): ResolvedWidgetTheme {
+  return theme === 'system' ? resolvedColorScheme : theme;
+}
+
+function formatCount(value: number): string {
+  return NUMBER_FORMAT.format(value);
+}
+
+function nextViewBoundaryDate(view: View, dob: string, today: string): string {
+  const headline = buildHeadlineState({ view, dob, today });
+  const start = parseCivilDate(dob);
+  const nextUnit = headline.lived + 1;
+
+  if (view === 'weeks') return toCivilDateString(addWeeks(start, nextUnit));
+  if (view === 'months') return toCivilDateString(addMonths(start, nextUnit));
+  return toCivilDateString(addYears(start, nextUnit));
+}

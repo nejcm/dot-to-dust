@@ -72,6 +72,14 @@ Fits all dots in the available canvas without scroll:
 - Chooses the column count per measured canvas that maximizes dot size.
 - Rows are derived from the active view's total dot count.
 
+### `src/features/widget/lib/widget-snapshot.ts`
+
+Builds the derived JSON model native widgets render:
+
+- Uses the saved view, theme, DOB, and current civil date.
+- Emits summary counts, progress, colors, optional Widget Grid data, and refresh dates.
+- Keeps native widget code from reimplementing life math.
+
 ### `src/lib/storage/preferences-store.ts`
 
 Persists `{ dob, theme, defaultView }` to MMKV using a plain JSON record. Invalid persisted state falls back to defaults.

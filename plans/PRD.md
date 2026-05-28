@@ -53,6 +53,7 @@ The product's distinguishing commitments:
 27. As a user travelling across timezones, I want today's dot to track the local civil date rather than UTC, so the "today" marker stays correct in the place I am.
 28. As a user, I want a 240ms cross-fade between views when toggling, so transitions feel intentional rather than abrupt — and zero-duration when reduced-motion is on.
 29. As a designer of my own home screen, I want the headline subordinated to the grid, so what I read first is the visualization, not a number.
+30. As a user, I want a home-screen widget that refreshes around the selected view's meaningful boundary, so my ambient progress surface stays current without noisy updates.
 
 ## Implementation Decisions
 
@@ -87,6 +88,7 @@ A fifth narrower module — **`use-reduced-motion`** — exposes a single boolea
 - **Headline framing is "ahead", not "left".** ICU plurals for count-bearing English strings. Bonus-time copy is `every week is bonus`.
 - **Grid is the visual hero**; headline is a slim Inter caption docked at the top alongside the segmented control. Skia owns the rest of the canvas.
 - **Defaults on first launch**: theme = system, defaultView = weeks, dob = null.
+- **Home-screen widgets are in scope.** Widgets follow the saved default view and theme. Small widgets show `lived / total`, percent, and a single progress bar; medium and large widgets add a Widget Grid when dots can render at least 2 px. Widgets refresh at the next active-view boundary plus a daily safety refresh.
 
 ### Type shapes that encode decisions
 
@@ -128,7 +130,7 @@ End-to-end coverage is one Maestro happy path covering: fresh install → welcom
 
 ## Out of Scope
 
-- Notifications, widgets, watch app, cloud sync
+- Notifications, watch app, cloud sync
 - Country/gender-adjusted lifespan
 - Days view
 - Tagging individual dots with life events
