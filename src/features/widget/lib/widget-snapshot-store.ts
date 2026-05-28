@@ -1,4 +1,11 @@
-import type { ResolvedWidgetTheme, WidgetSnapshot } from './widget-snapshot';
+import type {
+  ResolvedWidgetTheme,
+  WidgetColors,
+  WidgetDisplay,
+  WidgetReadySnapshot,
+  WidgetSetupSnapshot,
+  WidgetSnapshot,
+} from './widget-snapshot';
 import type { PreferencesState } from '@/lib/storage/preferences-store';
 
 import { mmkv } from '@/lib/storage/mmkv';
@@ -6,11 +13,32 @@ import { writeNativeWidgetSnapshot } from './native-widget-bridge';
 import { buildWidgetSnapshot } from './widget-snapshot';
 
 export const WIDGET_SNAPSHOT_KEY = 'widget-snapshot';
-export const WIDGET_SNAPSHOT_VERSION = 2;
+export const WIDGET_SNAPSHOT_VERSION = 3;
+
+type PersistedWidgetSnapshotValue
+  = | PersistedWidgetReadySnapshot
+    | WidgetSetupSnapshot;
+
+interface PersistedWidgetReadySnapshot {
+  kind: 'ready';
+  dob: string;
+  view: WidgetReadySnapshot['view'];
+  theme: WidgetReadySnapshot['theme'];
+  resolvedTheme: WidgetReadySnapshot['resolvedTheme'];
+  lived: number;
+  total: number;
+  percent: number;
+  progress: number;
+  bonus: boolean;
+  display: WidgetDisplay;
+  colors: WidgetColors;
+  nextViewBoundaryDate: string;
+  nextSafetyRefreshDate: string;
+}
 
 export interface PersistedWidgetSnapshot {
   schemaVersion: typeof WIDGET_SNAPSHOT_VERSION;
-  snapshot: WidgetSnapshot;
+  snapshot: PersistedWidgetSnapshotValue;
 }
 
 export interface SyncWidgetSnapshotInput {
@@ -37,12 +65,49 @@ export function syncWidgetSnapshot(input: SyncWidgetSnapshotInput): WidgetSnapsh
 export function writeWidgetSnapshot(snapshot: WidgetSnapshot): void {
   const persisted: PersistedWidgetSnapshot = {
     schemaVersion: WIDGET_SNAPSHOT_VERSION,
-    snapshot,
+    snapshot: toPersistedWidgetSnapshot(snapshot),
   };
 
   const payload = JSON.stringify(persisted);
   mmkv.set(WIDGET_SNAPSHOT_KEY, payload);
   writeNativeWidgetSnapshot(payload);
+}
+
+function toPersistedWidgetSnapshot(snapshot: WidgetSnapshot): PersistedWidgetSnapshotValue {
+  if (snapshot.kind === 'setup') return snapshot;
+
+  const {
+    colors,
+    display,
+    dob,
+    lived,
+    total,
+    percent,
+    progress,
+    bonus,
+    view,
+    theme,
+    resolvedTheme,
+    nextViewBoundaryDate,
+    nextSafetyRefreshDate,
+  } = snapshot;
+
+  return {
+    kind: 'ready',
+    dob,
+    view,
+    theme,
+    resolvedTheme,
+    lived,
+    total,
+    percent,
+    progress,
+    bonus,
+    display,
+    colors,
+    nextViewBoundaryDate,
+    nextSafetyRefreshDate,
+  };
 }
 
 export function readPersistedWidgetSnapshot(): PersistedWidgetSnapshot | null {

@@ -2,6 +2,12 @@ import SwiftUI
 import WidgetKit
 
 private let widgetSnapshotKey = "widget-snapshot"
+private let civilDateFormatter: DateFormatter = {
+  let formatter = DateFormatter()
+  formatter.calendar = Calendar(identifier: .gregorian)
+  formatter.dateFormat = "yyyy-MM-dd"
+  return formatter
+}()
 
 struct PersistedWidgetSnapshot: Decodable {
   let schemaVersion: Int
@@ -88,7 +94,7 @@ struct DotToDustProvider: TimelineProvider {
       let payload = UserDefaults(suiteName: appGroupIdentifier)?.string(forKey: widgetSnapshotKey),
       let data = payload.data(using: .utf8),
       let persisted = try? JSONDecoder().decode(PersistedWidgetSnapshot.self, from: data),
-      persisted.schemaVersion == 2
+      persisted.schemaVersion == 3
     else {
       return nil
     }
@@ -108,11 +114,7 @@ struct DotToDustProvider: TimelineProvider {
   }
 
   private func startOfDay(_ value: String) -> Date? {
-    let formatter = DateFormatter()
-    formatter.calendar = Calendar(identifier: .gregorian)
-    formatter.dateFormat = "yyyy-MM-dd"
-
-    guard let date = formatter.date(from: value) else { return nil }
+    guard let date = civilDateFormatter.date(from: value) else { return nil }
     return gregorianCalendar.startOfDay(for: date)
   }
 }
@@ -292,18 +294,12 @@ extension WidgetSnapshot {
   }
 
   private static func civilDate(_ value: String) -> Date? {
-    let formatter = DateFormatter()
-    formatter.calendar = Calendar(identifier: .gregorian)
-    formatter.dateFormat = "yyyy-MM-dd"
-    return formatter.date(from: value).map { gregorianCalendar.startOfDay(for: $0) }
+    return civilDateFormatter.date(from: value).map { gregorianCalendar.startOfDay(for: $0) }
   }
 
   private static func civilString(_ date: Date?) -> String? {
     guard let date else { return nil }
-    let formatter = DateFormatter()
-    formatter.calendar = Calendar(identifier: .gregorian)
-    formatter.dateFormat = "yyyy-MM-dd"
-    return formatter.string(from: date)
+    return civilDateFormatter.string(from: date)
   }
 
   private static func total(for view: String) -> Int {

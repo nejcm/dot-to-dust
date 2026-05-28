@@ -111,7 +111,7 @@ class DotToDustWidgetProvider : AppWidgetProvider() {
     private fun parseSnapshot(payload: String): AndroidWidgetSnapshot? {
       return runCatching {
         val persisted = JSONObject(payload)
-        if (persisted.optInt("schemaVersion") != 2) return@runCatching null
+        if (persisted.optInt("schemaVersion") != 3) return@runCatching null
 
         val snapshot = persisted.getJSONObject("snapshot")
         if (snapshot.getString("kind") == "setup") {
@@ -132,7 +132,6 @@ class DotToDustWidgetProvider : AppWidgetProvider() {
           percent = display.getString("percent"),
           progress = snapshot.getDouble("progress"),
           bonus = snapshot.optBoolean("bonus"),
-          dots = snapshot.getJSONArray("dots"),
           stages = colors.getJSONArray("stages"),
           future = colors.getString("future"),
           ring = colors.getString("ring"),
@@ -276,10 +275,9 @@ data class AndroidWidgetSnapshot(
   }
 }
 
-private fun AndroidWidgetSnapshot.refreshedForToday(): AndroidWidgetSnapshot {
+internal fun AndroidWidgetSnapshot.refreshedFor(today: Calendar): AndroidWidgetSnapshot {
   if (kind != "ready" || dob == null) return this
 
-  val today = todayCalendar()
   val birthDate = parseCivilDate(dob) ?: return this
   val view = viewLabel
   val total = totalForView(view)
@@ -304,11 +302,14 @@ private fun AndroidWidgetSnapshot.refreshedForToday(): AndroidWidgetSnapshot {
   )
 }
 
+private fun AndroidWidgetSnapshot.refreshedForToday(): AndroidWidgetSnapshot {
+  return refreshedFor(todayCalendar())
+}
+
 private const val WEEKS_TOTAL = 4160
 private const val MONTHS_TOTAL = 960
 private const val YEARS_TOTAL = 80
 private val NUMBER_FORMAT: NumberFormat = NumberFormat.getIntegerInstance(Locale.US)
-private val LOCAL_TIME_ZONE: TimeZone = TimeZone.getDefault()
 
 private fun totalForView(view: String): Int {
   return when (view) {
@@ -322,14 +323,14 @@ private fun unitsLived(view: String, dob: Calendar, today: Calendar): Int {
   val units = when (view) {
     "months" -> monthsBetween(dob, today)
     "years" -> yearsBetween(dob, today)
-    else -> daysBetween(dob, today) / 7
+    else -> weeksBetween(dob, today)
   }
 
   return max(units, 0)
 }
 
 private fun weeksLived(dob: Calendar, today: Calendar): Int {
-  return max(daysBetween(dob, today) / 7, 0)
+  return max(weeksBetween(dob, today), 0)
 }
 
 private fun nextViewBoundaryDate(view: String, dob: Calendar, lived: Int): String {
@@ -374,17 +375,17 @@ private fun toWeekIndex(view: String, index: Int): Int {
 
 private fun stageForWeek(weekIndex: Int): Int {
   val age = floor((weekIndex - 1).toDouble() / 52).toInt()
-  return when {
-    age <= 11 -> 0
-    age <= 22 -> 1
-    age <= 39 -> 2
-    age <= 59 -> 3
+  return when (age) {
+    in Int.MIN_VALUE..11 -> 0
+    in 12..22 -> 1
+    in 23..39 -> 2
+    in 40..59 -> 3
     else -> 4
   }
 }
 
 private fun todayCalendar(): Calendar {
-  val now = GregorianCalendar(LOCAL_TIME_ZONE)
+  val now = GregorianCalendar(TimeZone.getDefault())
   return civilCalendar(
     now.get(Calendar.YEAR),
     now.get(Calendar.MONTH) + 1,
@@ -402,16 +403,33 @@ private fun parseCivilDate(value: String): Calendar? {
 }
 
 private fun civilCalendar(year: Int, month: Int, day: Int): Calendar {
-  return GregorianCalendar(LOCAL_TIME_ZONE).apply {
+  return GregorianCalendar(TimeZone.getDefault()).apply {
     clear()
     set(year, month - 1, day, 0, 0, 0)
     set(Calendar.MILLISECOND, 0)
   }
 }
 
+private fun weeksBetween(start: Calendar, end: Calendar): Int {
+  return daysBetween(start, end) / 7
+}
+
 private fun daysBetween(start: Calendar, end: Calendar): Int {
-  val millisPerDay = 24L * 60L * 60L * 1000L
-  return ((end.timeInMillis - start.timeInMillis) / millisPerDay).toInt()
+  return civilDayNumber(end) - civilDayNumber(start)
+}
+
+private fun civilDayNumber(date: Calendar): Int {
+  val year = date.get(Calendar.YEAR)
+  val month = date.get(Calendar.MONTH) + 1
+  val day = date.get(Calendar.DAY_OF_MONTH)
+  val shiftedMonth = (month + 9) % 12
+  val shiftedYear = year - shiftedMonth / 10
+  return 365 * shiftedYear +
+    shiftedYear / 4 -
+    shiftedYear / 100 +
+    shiftedYear / 400 +
+    (shiftedMonth * 306 + 5) / 10 +
+    day - 1
 }
 
 private fun monthsBetween(start: Calendar, end: Calendar): Int {

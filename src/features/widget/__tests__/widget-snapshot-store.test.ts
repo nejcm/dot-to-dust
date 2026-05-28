@@ -45,6 +45,9 @@ describe('widget snapshot store', () => {
         view: 'weeks',
       },
     });
+    const snapshot = JSON.parse(mmkvMock().__mockMmkvGetString(WIDGET_SNAPSHOT_KEY) ?? '').snapshot;
+    expect(snapshot.dots).toBeUndefined();
+    expect(snapshot.widgetGrid).toBeUndefined();
   });
 
   it('persists setup state when onboarding is incomplete', () => {
@@ -61,7 +64,7 @@ describe('widget snapshot store', () => {
     });
 
     expect(readPersistedWidgetSnapshot()).toEqual({
-      schemaVersion: 2,
+      schemaVersion: 3,
       snapshot: {
         cta: 'Set date of birth',
         kind: 'setup',
