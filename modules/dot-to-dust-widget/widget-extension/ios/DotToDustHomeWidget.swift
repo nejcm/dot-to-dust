@@ -126,11 +126,12 @@ struct DotToDustWidgetView: View {
 
   var body: some View {
     if let snapshot = entry.snapshot, snapshot.kind == "ready" {
-      VStack(alignment: .leading, spacing: 10) {
-        summary(snapshot)
+      VStack(alignment: .center, spacing: 8) {
+        summary(snapshot, showProgress: family == .systemSmall)
 
         if family != .systemSmall {
           widgetGrid(snapshot)
+            .frame(maxHeight: .infinity, alignment: .top)
         }
       }
       .padding(14)
@@ -145,26 +146,31 @@ struct DotToDustWidgetView: View {
     }
   }
 
-  private func summary(_ snapshot: WidgetSnapshot) -> some View {
-    VStack(alignment: .leading, spacing: 8) {
-      Text(snapshot.display?.viewLabel ?? "")
-        .font(.system(size: 12, weight: .regular, design: .serif).italic())
-        .foregroundStyle(secondaryTextColor(snapshot))
-
-      Text(snapshot.display?.hero ?? "")
-        .font(.system(size: 24, weight: .medium, design: .serif))
-        .foregroundStyle(textColor(snapshot))
-        .minimumScaleFactor(0.7)
+  private func summary(_ snapshot: WidgetSnapshot, showProgress: Bool) -> some View {
+    VStack(alignment: .center, spacing: 8) {
+      Text(viewLabel(snapshot))
+        .font(.system(size: labelTextSize, weight: .regular, design: .serif).italic())
+        .foregroundStyle(labelTextColor)
+        .frame(maxWidth: .infinity, alignment: .center)
         .lineLimit(1)
 
-      ProgressView(value: snapshot.progress ?? 0)
-        .tint(color(snapshot.colors?.accent))
-        .background(color(snapshot.colors?.progressTrack))
+      hero(snapshot)
 
-      Text(snapshot.display?.percent ?? "")
-        .font(.system(size: 11, weight: .medium, design: .default))
-        .foregroundStyle(secondaryTextColor(snapshot))
+      if showProgress {
+        ProgressView(value: snapshot.progress ?? 0)
+          .tint(color(snapshot.colors?.accent))
+          .background(color(snapshot.colors?.progressTrack))
+      }
     }
+  }
+
+  private func hero(_ snapshot: WidgetSnapshot) -> some View {
+    Text(snapshot.display?.hero ?? "")
+      .font(.system(size: heroTextSize, weight: .medium, design: .serif))
+      .foregroundStyle(textColor(snapshot))
+      .frame(maxWidth: .infinity, alignment: .center)
+      .minimumScaleFactor(0.55)
+      .lineLimit(1)
   }
 
   private func widgetGrid(_ snapshot: WidgetSnapshot) -> some View {
@@ -178,6 +184,7 @@ struct DotToDustWidgetView: View {
           ForEach(dots) { dot in
             Circle()
               .fill(dotColor(dot, snapshot: snapshot))
+              .frame(width: size, height: size)
               .overlay {
                 if dot.isToday == true && snapshot.bonus != true {
                   Circle().stroke(color(snapshot.colors?.ring), lineWidth: 1)
@@ -185,6 +192,7 @@ struct DotToDustWidgetView: View {
               }
           }
         }
+        .frame(maxWidth: .infinity, alignment: .center)
       }
     }
   }
@@ -192,15 +200,16 @@ struct DotToDustWidgetView: View {
   private func gridColumns(count: Int, width: CGFloat, height: CGFloat) -> [GridItem] {
     guard count > 0, width > 0, height > 0 else { return [] }
 
-    let ratio = max(width / max(height, 1), 1)
+    let ratio = max(width / max(height, 1), 0.01)
     let columnCount = max(1, Int((Double(count) * Double(ratio)).squareRoot()))
-    return Array(repeating: GridItem(.flexible(minimum: 2), spacing: 1), count: columnCount)
+    let size = dotSize(count: count, width: width, height: height)
+    return Array(repeating: GridItem(.fixed(size), spacing: 1), count: columnCount)
   }
 
   private func dotSize(count: Int, width: CGFloat, height: CGFloat) -> CGFloat {
     guard count > 0, width > 0, height > 0 else { return 0 }
 
-    let ratio = max(width / max(height, 1), 1)
+    let ratio = max(width / max(height, 1), 0.01)
     let columns = max(1, Int((Double(count) * Double(ratio)).squareRoot()))
     let rows = Int(ceil(Double(count) / Double(columns)))
     return min(
@@ -235,8 +244,20 @@ struct DotToDustWidgetView: View {
     color(snapshot.colors?.text)
   }
 
-  private func secondaryTextColor(_ snapshot: WidgetSnapshot) -> Color {
-    color(snapshot.colors?.secondaryText)
+  private var labelTextColor: Color {
+    Color(hex: "#8a8a8a")
+  }
+
+  private var labelTextSize: CGFloat {
+    family == .systemSmall ? 11 : 12
+  }
+
+  private var heroTextSize: CGFloat {
+    family == .systemSmall ? 20 : 24
+  }
+
+  private func viewLabel(_ snapshot: WidgetSnapshot) -> String {
+    (snapshot.display?.viewLabel ?? "").capitalized
   }
 
   private func color(_ hex: String?) -> Color {

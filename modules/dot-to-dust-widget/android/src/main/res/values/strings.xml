@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="dot_to_dust_widget_description">Your life progress at a glance.</string>
+  <string name="dot_to_dust_widget_preview_label">Weeks</string>
+  <string name="dot_to_dust_widget_preview_hero">1,863 / 4,160</string>
 </resources>

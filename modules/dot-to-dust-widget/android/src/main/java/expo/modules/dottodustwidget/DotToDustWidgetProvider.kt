@@ -12,6 +12,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.View
 import android.widget.RemoteViews
 import org.json.JSONArray
@@ -59,6 +60,14 @@ class DotToDustWidgetProvider : AppWidgetProvider() {
   companion object {
     private const val ACTION_REFRESH = "expo.modules.dottodustwidget.REFRESH"
     private const val MIN_DOT_SIZE_PX = 2f
+    private const val GRID_WIDGET_MIN_HEIGHT_DP = 100
+    private const val WIDGET_PADDING_DP = 14
+    private const val REGULAR_GRID_RESERVED_HEIGHT_DP = 49
+    private const val LABEL_TEXT_SIZE_SP = 12f
+    private const val COMPACT_LABEL_TEXT_SIZE_SP = 11f
+    private const val HERO_TEXT_SIZE_SP = 24f
+    private const val COMPACT_HERO_TEXT_SIZE_SP = 18f
+    private const val LABEL_TEXT_COLOR = "#8a8a8a"
 
     fun updateAll(context: Context) {
       val manager = AppWidgetManager.getInstance(context)
@@ -73,30 +82,38 @@ class DotToDustWidgetProvider : AppWidgetProvider() {
       widgetId: Int,
     ) {
       val snapshot = DotToDustWidgetStorage.read(context)?.let(::parseSnapshot)?.refreshedForToday()
-      val views = RemoteViews(context.packageName, R.layout.dot_to_dust_widget)
       val options = manager.getAppWidgetOptions(widgetId)
       val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 110)
       val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 110)
+      val maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH, minWidth)
+      val maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, minHeight)
+      val isCompact = minHeight < GRID_WIDGET_MIN_HEIGHT_DP
+      val layout = if (isCompact) R.layout.dot_to_dust_widget_compact else R.layout.dot_to_dust_widget
+      val views = RemoteViews(context.packageName, layout)
 
       views.setOnClickPendingIntent(R.id.widget_root, launchPendingIntent(context))
+      applyTextSizes(views, isCompact)
 
       if (snapshot == null || snapshot.kind == "setup") {
         applyTheme(views, snapshot)
         views.setTextViewText(R.id.widget_view_label, "")
         views.setTextViewText(R.id.widget_hero, snapshot?.cta ?: "Set date of birth")
-        views.setTextViewText(R.id.widget_percent, "")
         views.setProgressBar(R.id.widget_progress, 100, 0, false)
         views.setImageViewBitmap(R.id.widget_grid, Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888))
         views.setViewVisibility(R.id.widget_grid, View.GONE)
       } else {
         applyTheme(views, snapshot)
-        views.setTextViewText(R.id.widget_view_label, snapshot.viewLabel)
+        views.setTextViewText(R.id.widget_view_label, snapshot.viewLabel.capitalized())
         views.setTextViewText(R.id.widget_hero, snapshot.hero)
-        views.setTextViewText(R.id.widget_percent, snapshot.percent)
         views.setProgressBar(R.id.widget_progress, 100, (snapshot.progress * 100).toInt(), false)
 
-        val grid = drawGrid(snapshot, minWidth, minHeight, context.resources.displayMetrics.density)
-        if (grid == null) {
+        val grid = if (isCompact) null else drawGrid(
+          snapshot,
+          max(minWidth, maxWidth),
+          max(minHeight, maxHeight),
+          context.resources.displayMetrics.density,
+        )
+        if (isCompact || grid == null) {
           views.setViewVisibility(R.id.widget_grid, View.GONE)
         } else {
           views.setImageViewBitmap(R.id.widget_grid, grid)
@@ -146,28 +163,25 @@ class DotToDustWidgetProvider : AppWidgetProvider() {
 
     private fun drawGrid(
       snapshot: AndroidWidgetSnapshot,
-      minWidthDp: Int,
-      minHeightDp: Int,
+      widgetWidthDp: Int,
+      widgetHeightDp: Int,
       density: Float,
     ): Bitmap? {
-      val width = max((minWidthDp * density).toInt(), 1)
-      val height = max(((minHeightDp - 76) * density).toInt(), 1)
+      val width = max(((widgetWidthDp - WIDGET_PADDING_DP * 2) * density).toInt(), 1)
+      val height = max(((widgetHeightDp - WIDGET_PADDING_DP * 2 - REGULAR_GRID_RESERVED_HEIGHT_DP) * density).toInt(), 1)
       val dots = snapshot.dots ?: return null
       val count = dots.length()
       if (count == 0) return null
 
-      val ratio = max(width.toDouble() / max(height, 1), 1.0)
-      val cols = max(sqrt(count * ratio).toInt(), 1)
-      val rows = ceil(count.toDouble() / cols).toInt()
       val gap = 1f
-      val dotSize = min(
-        (width.toFloat() - gap * (cols - 1)) / cols,
-        (height.toFloat() - gap * (rows - 1)) / rows,
-      )
+      val layout = gridLayout(count, width, height, gap)
+      val cols = layout.cols
+      val dotSize = layout.dotSize
+      val bitmapHeight = max(ceil(layout.usedHeight).toInt(), 1)
 
       if (dotSize < MIN_DOT_SIZE_PX) return null
 
-      val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+      val bitmap = Bitmap.createBitmap(width, bitmapHeight, Bitmap.Config.ARGB_8888)
 
       val canvas = Canvas(bitmap)
       val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -196,15 +210,53 @@ class DotToDustWidgetProvider : AppWidgetProvider() {
       return bitmap
     }
 
+    private fun gridLayout(count: Int, width: Int, height: Int, gap: Float): GridLayout {
+      val ratio = max(width.toDouble() / max(height, 1), 0.01)
+      val estimatedCols = max(sqrt(count * ratio).toInt(), 1)
+      val minCols = max(1, estimatedCols / 2)
+      val maxCols = min(count, estimatedCols * 2)
+      var best = GridLayout(cols = estimatedCols, rows = ceil(count.toDouble() / estimatedCols).toInt(), dotSize = 0f, gap = gap)
+
+      for (cols in minCols..maxCols) {
+        val rows = ceil(count.toDouble() / cols).toInt()
+        val dotSize = min(
+          (width.toFloat() - gap * (cols - 1)) / cols,
+          (height.toFloat() - gap * (rows - 1)) / rows,
+        )
+        if (dotSize < MIN_DOT_SIZE_PX) continue
+
+        val candidate = GridLayout(cols, rows, dotSize, gap)
+        if (
+          candidate.usedHeight > best.usedHeight
+          || (candidate.usedHeight == best.usedHeight && candidate.dotSize > best.dotSize)
+        ) {
+          best = candidate
+        }
+      }
+
+      return best
+    }
+
     private fun applyTheme(views: RemoteViews, snapshot: AndroidWidgetSnapshot?) {
       val background = parseColor(snapshot?.background ?: "#faf8f5")
       val text = parseColor(snapshot?.text ?: "#2b2520")
-      val secondaryText = parseColor(snapshot?.secondaryText ?: "#80766f")
 
       views.setInt(R.id.widget_root, "setBackgroundColor", background)
-      views.setTextColor(R.id.widget_view_label, secondaryText)
+      views.setTextColor(R.id.widget_view_label, parseColor(LABEL_TEXT_COLOR))
       views.setTextColor(R.id.widget_hero, text)
-      views.setTextColor(R.id.widget_percent, secondaryText)
+    }
+
+    private fun applyTextSizes(views: RemoteViews, isCompact: Boolean) {
+      views.setTextViewTextSize(
+        R.id.widget_view_label,
+        TypedValue.COMPLEX_UNIT_SP,
+        if (isCompact) COMPACT_LABEL_TEXT_SIZE_SP else LABEL_TEXT_SIZE_SP,
+      )
+      views.setTextViewTextSize(
+        R.id.widget_hero,
+        TypedValue.COMPLEX_UNIT_SP,
+        if (isCompact) COMPACT_HERO_TEXT_SIZE_SP else HERO_TEXT_SIZE_SP,
+      )
     }
 
     private fun launchPendingIntent(context: Context): PendingIntent? {
@@ -246,6 +298,21 @@ class DotToDustWidgetProvider : AppWidgetProvider() {
       return runCatching { Color.parseColor(hex ?: "#d8d4cf") }.getOrDefault(Color.LTGRAY)
     }
   }
+}
+
+private fun String.capitalized(): String {
+  return replaceFirstChar { char ->
+    if (char.isLowerCase()) char.titlecase(Locale.US) else char.toString()
+  }
+}
+
+private data class GridLayout(
+  val cols: Int,
+  val rows: Int,
+  val dotSize: Float,
+  val gap: Float,
+) {
+  val usedHeight: Float = rows * dotSize + gap * max(rows - 1, 0)
 }
 
 data class AndroidWidgetSnapshot(
