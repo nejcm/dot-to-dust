@@ -39,6 +39,7 @@ describe('widget snapshot store', () => {
     expect(JSON.parse(mmkvMock().__mockMmkvGetString(WIDGET_SNAPSHOT_KEY) ?? '')).toMatchObject({
       schemaVersion: WIDGET_SNAPSHOT_VERSION,
       snapshot: {
+        dob: '2000-01-01',
         kind: 'ready',
         resolvedTheme: 'dark',
         view: 'weeks',
@@ -60,7 +61,7 @@ describe('widget snapshot store', () => {
     });
 
     expect(readPersistedWidgetSnapshot()).toEqual({
-      schemaVersion: 1,
+      schemaVersion: 2,
       snapshot: {
         cta: 'Set date of birth',
         kind: 'setup',

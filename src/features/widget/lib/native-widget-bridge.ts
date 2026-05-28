@@ -9,6 +9,11 @@ const nativeWidgetModule = requireOptionalNativeModule<DotToDustWidgetModule>('D
 export function writeNativeWidgetSnapshot(payload: string): boolean {
   if (!nativeWidgetModule) return false;
 
-  nativeWidgetModule.writeSnapshot(payload);
-  return true;
+  try {
+    nativeWidgetModule.writeSnapshot(payload);
+    return true;
+  }
+  catch {
+    return false;
+  }
 }

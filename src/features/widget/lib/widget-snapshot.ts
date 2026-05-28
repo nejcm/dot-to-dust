@@ -9,7 +9,7 @@ import { buildDotStates } from '@/features/grid/lib/dot-states';
 import { computeGridLayout } from '@/features/grid/lib/grid-layout';
 import { buildHeadlineState, buildLifeGridHeaderState } from '@/features/grid/lib/life-grid-state';
 import { parseCivilDate, toCivilDateString } from '@/lib/civil-date';
-import { darkSkiaTokens, lightSkiaTokens } from '@/lib/theme/tokens';
+import { darkSkiaTokens, darkTokens, lightSkiaTokens, lightTokens, toHex } from '@/lib/theme/tokens';
 
 export type WidgetSize = 'small' | 'medium' | 'large';
 export type ResolvedWidgetTheme = 'light' | 'dark';
@@ -47,6 +47,10 @@ export interface WidgetColors {
   future: string;
   ring: string;
   accent: string;
+  background: string;
+  text: string;
+  secondaryText: string;
+  progressTrack: string;
 }
 
 export type WidgetSnapshot
@@ -55,6 +59,7 @@ export type WidgetSnapshot
 
 export interface WidgetReadySnapshot {
   kind: 'ready';
+  dob: string;
   view: View;
   theme: ThemePreference;
   resolvedTheme: ResolvedWidgetTheme;
@@ -108,6 +113,7 @@ export function buildWidgetSnapshot(input: BuildWidgetSnapshotInput): WidgetSnap
 
   return {
     kind: 'ready',
+    dob,
     view,
     theme,
     resolvedTheme,
@@ -119,7 +125,7 @@ export function buildWidgetSnapshot(input: BuildWidgetSnapshotInput): WidgetSnap
     dots,
     display: {
       hero: headline.bonus
-        ? `+${formatCount(headline.count)} ${view}`
+        ? `+${formatCount(headline.count)} ${view} ahead`
         : `${formatCount(header.lived)} / ${formatCount(header.total)}`,
       percent: `${headline.bonus ? 100 : header.percent}%`,
       viewLabel: view,
@@ -162,7 +168,16 @@ function buildWidgetGridSnapshot(input: BuildWidgetGridSnapshotInput): WidgetGri
 }
 
 function colorsForTheme(theme: ResolvedWidgetTheme): WidgetColors {
-  return theme === 'dark' ? darkSkiaTokens : lightSkiaTokens;
+  const skiaTokens = theme === 'dark' ? darkSkiaTokens : lightSkiaTokens;
+  const tokens = theme === 'dark' ? darkTokens : lightTokens;
+
+  return {
+    ...skiaTokens,
+    background: toHex(tokens.surface),
+    text: toHex(tokens.ink),
+    secondaryText: toHex(tokens.inkSoft),
+    progressTrack: toHex(tokens.hairline),
+  };
 }
 
 function resolveWidgetTheme(

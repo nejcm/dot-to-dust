@@ -14,6 +14,7 @@ describe('buildWidgetSnapshot', () => {
     if (snapshot.kind !== 'ready') return;
 
     expect(snapshot.view).toBe('weeks');
+    expect(snapshot.dob).toBe('2000-01-01');
     expect(snapshot.lived).toBe(52);
     expect(snapshot.total).toBe(4160);
     expect(snapshot.percent).toBe(1);
@@ -23,6 +24,12 @@ describe('buildWidgetSnapshot', () => {
       hero: '52 / 4,160',
       percent: '1%',
       viewLabel: 'weeks',
+    });
+    expect(snapshot.colors).toMatchObject({
+      background: expect.stringMatching(/^#/),
+      progressTrack: expect.stringMatching(/^#/),
+      secondaryText: expect.stringMatching(/^#/),
+      text: expect.stringMatching(/^#/),
     });
     expect(snapshot.widgetGrid).toBeNull();
   });
@@ -77,7 +84,7 @@ describe('buildWidgetSnapshot', () => {
 
     expect(snapshot.bonus).toBe(true);
     expect(snapshot.progress).toBe(1);
-    expect(snapshot.display.hero).toMatch(/^\+\d+ weeks$/);
+    expect(snapshot.display.hero).toMatch(/^\+\d+ weeks ahead$/);
     expect(snapshot.widgetGrid?.todayRing).toBeNull();
   });
 

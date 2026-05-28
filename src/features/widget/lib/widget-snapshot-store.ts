@@ -6,7 +6,7 @@ import { writeNativeWidgetSnapshot } from './native-widget-bridge';
 import { buildWidgetSnapshot } from './widget-snapshot';
 
 export const WIDGET_SNAPSHOT_KEY = 'widget-snapshot';
-export const WIDGET_SNAPSHOT_VERSION = 1;
+export const WIDGET_SNAPSHOT_VERSION = 2;
 
 export interface PersistedWidgetSnapshot {
   schemaVersion: typeof WIDGET_SNAPSHOT_VERSION;
@@ -60,14 +60,25 @@ export function readPersistedWidgetSnapshot(): PersistedWidgetSnapshot | null {
 }
 
 function isPersistedWidgetSnapshot(value: unknown): value is PersistedWidgetSnapshot {
-  return Boolean(
-    value
-    && typeof value === 'object'
-    && 'schemaVersion' in value
-    && value.schemaVersion === WIDGET_SNAPSHOT_VERSION
-    && 'snapshot' in value
-    && value.snapshot
-    && typeof value.snapshot === 'object'
-    && 'kind' in value.snapshot,
+  if (
+    !value
+    || typeof value !== 'object'
+    || !('schemaVersion' in value)
+    || value.schemaVersion !== WIDGET_SNAPSHOT_VERSION
+    || !('snapshot' in value)
+    || !value.snapshot
+    || typeof value.snapshot !== 'object'
+    || !('kind' in value.snapshot)
+  ) {
+    return false;
+  }
+
+  if (value.snapshot.kind === 'setup') return true;
+
+  return (
+    value.snapshot.kind === 'ready'
+    && 'dob' in value.snapshot
+    && typeof value.snapshot.dob === 'string'
+    && 'colors' in value.snapshot
   );
 }
