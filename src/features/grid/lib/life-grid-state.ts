@@ -36,6 +36,20 @@ export interface LifeGridState {
   todayRing: TodayRingPolicy;
 }
 
+interface BuildLifeGridProjectionInput {
+  view: View;
+  dob: string;
+  today: string;
+}
+
+export interface LifeGridProjection {
+  view: View;
+  dots: DotState[];
+  header: LifeGridHeaderState;
+  headline: HeadlineState;
+  bonus: boolean;
+}
+
 interface BuildHeadlineStateInput {
   view: View;
   dob: string;
@@ -55,13 +69,27 @@ export interface HeadlineState extends LifeGridHeaderState {
 
 export function buildLifeGridState(input: BuildLifeGridStateInput): LifeGridState {
   const { dob, height, platformOS, reducedMotion, today, view, width } = input;
-  const headline = buildHeadlineState({ view, dob, today });
+  const projection = buildLifeGridProjection({ view, dob, today });
 
   return {
     view,
     width,
     height,
     layout: computeGridLayout(view, width, height),
+    dots: projection.dots,
+    header: projection.header,
+    headline: projection.headline,
+    bonus: projection.bonus,
+    todayRing: todayRingPolicyFor(view, reducedMotion, platformOS),
+  };
+}
+
+export function buildLifeGridProjection(input: BuildLifeGridProjectionInput): LifeGridProjection {
+  const { dob, today, view } = input;
+  const headline = buildHeadlineState({ view, dob, today });
+
+  return {
+    view,
     dots: buildDotStates(view, dob, today),
     header: {
       lived: headline.lived,
@@ -70,7 +98,6 @@ export function buildLifeGridState(input: BuildLifeGridStateInput): LifeGridStat
     },
     headline,
     bonus: headline.bonus,
-    todayRing: todayRingPolicyFor(view, reducedMotion, platformOS),
   };
 }
 

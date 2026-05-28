@@ -3,11 +3,11 @@ import type { GridLayout } from '@/features/grid/lib/grid-layout';
 import type { ThemePreference } from '@/lib/storage/preferences-store';
 import type { View } from '@/lib/view';
 
-import { addDays, addMonths, addWeeks, addYears } from 'date-fns';
+import { addDays } from 'date-fns';
 
-import { buildDotStates } from '@/features/grid/lib/dot-states';
 import { computeGridLayout } from '@/features/grid/lib/grid-layout';
-import { buildHeadlineState, buildLifeGridHeaderState } from '@/features/grid/lib/life-grid-state';
+import { buildLifeGridProjection } from '@/features/grid/lib/life-grid-state';
+import { nextViewBoundaryDate } from '@/features/grid/lib/view-policy';
 import { parseCivilDate, toCivilDateString } from '@/lib/civil-date';
 import { darkSkiaTokens, darkTokens, lightSkiaTokens, lightTokens, toHex } from '@/lib/theme/tokens';
 
@@ -106,9 +106,8 @@ export function buildWidgetSnapshot(input: BuildWidgetSnapshotInput): WidgetSnap
     };
   }
 
-  const header = buildLifeGridHeaderState(view, dob, today);
-  const headline = buildHeadlineState({ view, dob, today });
-  const dots = buildDotStates(view, dob, today);
+  const projection = buildLifeGridProjection({ view, dob, today });
+  const { dots, header, headline } = projection;
   const progress = headline.bonus ? 1 : Math.min(1, header.lived / header.total);
 
   return {
@@ -121,7 +120,7 @@ export function buildWidgetSnapshot(input: BuildWidgetSnapshotInput): WidgetSnap
     total: header.total,
     percent: header.percent,
     progress,
-    bonus: headline.bonus,
+    bonus: projection.bonus,
     dots,
     display: {
       hero: headline.bonus
@@ -133,7 +132,7 @@ export function buildWidgetSnapshot(input: BuildWidgetSnapshotInput): WidgetSnap
     colors: colorsForTheme(resolvedTheme),
     widgetGrid: buildWidgetGridSnapshot({
       area: widgetGridArea,
-      bonus: headline.bonus,
+      bonus: projection.bonus,
       dots,
       view,
       widgetSize,
@@ -189,14 +188,4 @@ function resolveWidgetTheme(
 
 function formatCount(value: number): string {
   return NUMBER_FORMAT.format(value);
-}
-
-function nextViewBoundaryDate(view: View, dob: string, today: string): string {
-  const headline = buildHeadlineState({ view, dob, today });
-  const start = parseCivilDate(dob);
-  const nextUnit = headline.lived + 1;
-
-  if (view === 'weeks') return toCivilDateString(addWeeks(start, nextUnit));
-  if (view === 'months') return toCivilDateString(addMonths(start, nextUnit));
-  return toCivilDateString(addYears(start, nextUnit));
 }
