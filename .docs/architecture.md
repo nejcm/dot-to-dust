@@ -86,6 +86,8 @@ Provides native widget integration:
 
 - iOS writes the app-generated snapshot to App Group `UserDefaults`.
 - WidgetKit extension templates read the same payload for small, medium, and large home-screen widgets.
+- Android writes the app-generated snapshot to module `SharedPreferences`.
+- Android AppWidget renders summary rows and draws the Widget Grid into a bitmap when there is room.
 
 ### `src/lib/storage/preferences-store.ts`
 
