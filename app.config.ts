@@ -32,7 +32,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: false,
     bundleIdentifier: Env.EXPO_PUBLIC_BUNDLE_ID,
+    entitlements: {
+      'com.apple.security.application-groups': [`group.${Env.EXPO_PUBLIC_BUNDLE_ID}`],
+    },
     infoPlist: {
+      AppGroupIdentifier: `group.${Env.EXPO_PUBLIC_BUNDLE_ID}`,
       ITSAppUsesNonExemptEncryption: false,
     },
   },

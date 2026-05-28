@@ -2,6 +2,7 @@ import type { ResolvedWidgetTheme, WidgetSnapshot } from './widget-snapshot';
 import type { PreferencesState } from '@/lib/storage/preferences-store';
 
 import { mmkv } from '@/lib/storage/mmkv';
+import { writeNativeWidgetSnapshot } from './native-widget-bridge';
 import { buildWidgetSnapshot } from './widget-snapshot';
 
 export const WIDGET_SNAPSHOT_KEY = 'widget-snapshot';
@@ -39,7 +40,9 @@ export function writeWidgetSnapshot(snapshot: WidgetSnapshot): void {
     snapshot,
   };
 
-  mmkv.set(WIDGET_SNAPSHOT_KEY, JSON.stringify(persisted));
+  const payload = JSON.stringify(persisted);
+  mmkv.set(WIDGET_SNAPSHOT_KEY, payload);
+  writeNativeWidgetSnapshot(payload);
 }
 
 export function readPersistedWidgetSnapshot(): PersistedWidgetSnapshot | null {

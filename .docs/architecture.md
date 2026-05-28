@@ -80,6 +80,13 @@ Builds the derived JSON model native widgets render:
 - Emits summary counts, progress, colors, optional Widget Grid data, and refresh dates.
 - Keeps native widget code from reimplementing life math.
 
+### `modules/dot-to-dust-widget`
+
+Provides native widget integration:
+
+- iOS writes the app-generated snapshot to App Group `UserDefaults`.
+- WidgetKit extension templates read the same payload for small, medium, and large home-screen widgets.
+
 ### `src/lib/storage/preferences-store.ts`
 
 Persists `{ dob, theme, defaultView }` to MMKV using a plain JSON record. Invalid persisted state falls back to defaults.
