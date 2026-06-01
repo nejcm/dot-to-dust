@@ -36,6 +36,9 @@ coverage/
 /ios
 /android
 
+# Native module build artifacts
+/modules/*/android/build/
+
 # Expo generated
 expo-env.d.ts
 
